@@ -128,10 +128,10 @@ void drawBoard() {
 	gotoXY(LEFT + 1, TOP);
 	for (int i = 0; i < (2 * _SIZE); i++) {
 		if (i % 2) {
-			printf("%c", 194);
+			cout << char(194);
 		}
 		else {
-			printf("%c%c%c", 196, 196, 196);
+			cout << char(196) << char(196) << char(196);
 		}
 	}
 
@@ -139,28 +139,28 @@ void drawBoard() {
 	gotoXY(LEFT + 1, BOT);
 	for (int i = 0; i < (2 * _SIZE); i++) {
 		if (i % 2) {
-			printf("%c", 193);
+			cout << char(193);
 		}
 		else {
-			printf("%c%c%c", 196, 196, 196);
+			cout << char(196) << char(196) << char(196);
 		}
 	}
 
 	for (int i = 0; i < 2 * _SIZE; i++) {
 		gotoXY(LEFT, TOP + i);
 		if (i % 2) {
-			printf("%c", 179);
+			cout << char(179);
 		}
 		else {
-			printf("%c", 195);
+			cout << char(195);
 		}
 
 		gotoXY(RIGHT, TOP + i);
 		if (i % 2) {
-			printf("%c", 179);
+			cout << char(179);
 		}
 		else {
-			printf("%c", 180);
+			cout << char(180);
 		}
 	}
 
@@ -189,17 +189,17 @@ void drawBoard() {
 	int i = 1;
 	while (i < 2 * _SIZE - 1) {
 		gotoXY(LEFT, TOP + i++);
-		printf("%s", s1);
+		cout << s1;
 
 		gotoXY(LEFT + 1, TOP + i++);
-		printf("%s", s2);
+		cout << s2;
 	}
 
-	gotoXY(LEFT, TOP + i); printf("%s", s1);
-	gotoXY(LEFT, TOP); printf("%c", 218);
-	gotoXY(RIGHT, TOP); printf("%c", 191);
-	gotoXY(LEFT, BOT); printf("%c", 192);
-	gotoXY(RIGHT, BOT); printf("%c", 217);
+	gotoXY(LEFT, TOP + i); cout << s1;
+	gotoXY(LEFT, TOP); cout << char(218);
+	gotoXY(RIGHT, TOP); cout << char(191);
+	gotoXY(LEFT, BOT); cout << char(192);
+	gotoXY(RIGHT, BOT); cout << char(217);
 }
 
 void gotoXY(int x, int y) {
