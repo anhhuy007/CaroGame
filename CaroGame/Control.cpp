@@ -3,16 +3,17 @@
 #include "Model.h"
 #include <iostream>
 
+int** board; bool escPressed = false;
+
 void startNewGame() {
 	resetGame();
 	fixConsoleWindow();
 	drawBoard();
 
-	int** board = new int* [_SIZE];
+	board = new int* [_SIZE];
 	for (int i = 0; i < _SIZE; i++) {
 		board[i] = new int[_SIZE];
 	}
-
 
 	for (int i = 0; i < _SIZE; i++) {
 		for (int j = 0; j < _SIZE; j++) {
@@ -20,14 +21,18 @@ void startNewGame() {
 		}
 	}
 
-	bool isFirstPlayerTurn = true;
+	int player = 1; 
 
-	while (1) {
-		playGame(isFirstPlayerTurn, board);
-		playGame(!isFirstPlayerTurn, board);
+	while (!checkResult(player, board) && !escPressed) {
+		playGame(player, board);
 	}
 }
 
 void resetGame() {
+	system("cls");
+}
+
+void exitGame() {
+	escPressed = true;
 	system("cls");
 }
