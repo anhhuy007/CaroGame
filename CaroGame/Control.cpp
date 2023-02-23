@@ -23,8 +23,11 @@ void startNewGame() {
 
 	int player = 1; 
 
-	while (!checkResult(player, board) && !escPressed) {
+	while (!escPressed) {
 		playGame(player, board);
+		if (checkResult(player == 1 ? 2 : 1, board) != 0) {
+			break;
+		}
 	}
 }
 

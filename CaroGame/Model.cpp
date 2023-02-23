@@ -121,6 +121,9 @@ void playGame(int &player, int**& board) {
 // 3 : draw
 
 int checkResult(int player, int**& board) {
+	gotoXY(1, 1);
+	cout << player;
+	
 	int count = 0;
 	for (int i = 0; i < _SIZE; i++) {
 		for (int j = 0; j < _SIZE; j++) {

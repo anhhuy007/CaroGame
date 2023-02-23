@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClCompile Include="CaroGame.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>

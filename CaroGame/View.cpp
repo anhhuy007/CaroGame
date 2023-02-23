@@ -1,3 +1,6 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 #include "View.h"
 #include <windows.h>
 #include <stdio.h>
@@ -99,4 +102,44 @@ void fixConsoleWindow() {
 	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
+}
+
+void textColor(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void textStyle() {
+	CONSOLE_FONT_INFOEX cfi;
+	cfi.cbSize = sizeof(cfi);
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = 0;                   // Width of each character in the font
+	cfi.dwFontSize.Y = 24;                  // Height
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = FW_NORMAL;
+	std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+}
+
+void clearRectangleArea(COORD start, int width, int height) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD dwWritten;
+	
+	for (int i = 0; i < height; i++) {
+		gotoXY(start.X, start.Y + i);
+		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
+	}
+}
+
+void testFunction() {
+	COORD spot = { 0,0 };
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD Written;
+
+	for (int i = 0; 60 < 256; i++)
+	{
+		//FillConsoleOutputAttribute(hOut, 7, 1, spot, &Written);
+		FillConsoleOutputCharacterW(hOut, char(i), 10, spot, &Written);
+
+		spot.Y++;
+	}
 }
