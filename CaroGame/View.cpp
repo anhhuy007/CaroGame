@@ -81,6 +81,101 @@ void drawBoard() {
 	gotoXY(RIGHT, BOT); cout << char(217);
 }
 
+void drawInfoBorder(int x, int y) {
+	int right = y + 25;
+	int bot = x + 13;
+
+	gotoXY(y, x); printf("%c", 201);
+	gotoXY(right, x); printf("%c", 187);
+	gotoXY(y, bot); printf("%c", 200);
+	gotoXY(right, bot); printf("%c", 188);
+	for (int i = y + 1; i < right; i++) {
+		gotoXY(i, x);
+		printf("%c", (char)205);
+	}
+
+
+	for (int i = y + 1; i < right; i++) {
+
+		gotoXY(i, bot);
+		printf("%c", (char)205);
+	}
+
+	//2 sides
+
+	for (int i = x + 1; i < bot; i++) {
+		gotoXY(y, i);
+		printf("%c", (char)186);
+	}
+
+	for (int i = x + 1; i < bot; i++) {
+		gotoXY(right, i);
+		printf("%c\n", (char)186);
+	}
+}
+
+void drawOtherDetail() {
+	vector<string> a;
+
+	a.resize(0);
+	a.push_back(" 0=======================0 ");
+	a.push_back(" |                       | ");
+	a.push_back(" |      Y88b   d88P      | ");
+	a.push_back(" |       Y88b d88P       | ");
+	a.push_back(" |        Y88o88P        | ");
+	a.push_back(" |         Y888P         | ");
+	a.push_back(" |          888          | ");
+	a.push_back(" |          888          | ");
+	a.push_back(" |          888          | ");
+	a.push_back(" |          888          | ");
+	a.push_back(" |                       | ");
+	a.push_back(" 0=======================0 ");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(100, 2 + i);
+		cout << a[i];
+
+	}
+
+	a.resize(0);
+	a.push_back(" 0======================0 ");
+	a.push_back(" |                      | ");
+	a.push_back(" |     Y88b   d88P      | ");
+	a.push_back(" |      Y88b d88P       | ");
+	a.push_back(" |       Y88o88P        | ");
+	a.push_back(" |        Y888P         | ");
+	a.push_back(" |        d888b         | ");
+	a.push_back(" |       d88888b        | ");
+	a.push_back(" |      d88P Y88b       | ");
+	a.push_back(" |     d88P   Y88b      | ");
+	a.push_back(" |                      | ");
+	a.push_back(" 0======================0 ");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(70, 2 + i);
+		cout << a[i];
+
+	}
+	a.resize(0);
+	
+	//info board
+	a.push_back("F1 : New game   ");
+	a.push_back("");
+	a.push_back("F2 : Save game  ");
+	a.push_back("");
+	a.push_back("F3 : Load game  ");
+	a.push_back("");
+	a.push_back("F4 : Undo       ");
+	a.push_back("");
+	a.push_back("Esc: Return home");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(90, 17 + i);
+		cout << a[i];
+	}
+
+}
+
 void gotoXY(int x, int y) {
 	static HANDLE h = NULL;
 	if (!h) h = GetStdHandle(STD_OUTPUT_HANDLE);

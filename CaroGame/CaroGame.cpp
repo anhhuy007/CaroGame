@@ -6,8 +6,7 @@
 using namespace std;
 
 int main() {
-	system("color f0");
-	showMenu(65, 10, 5);
-	/*startNewGame();*/
+	//showMenu(65, 10, 5);
+	startNewGame();
 	return 0;
 }

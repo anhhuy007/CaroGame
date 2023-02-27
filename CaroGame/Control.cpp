@@ -3,9 +3,11 @@
 int** board; bool escPressed = false;
 
 void startNewGame() {
+	system("color f0");
 	resetGame();
 	fixConsoleWindow();
 	drawBoard();
+	drawOtherDetail();
 
 	board = new int* [_SIZE];
 	for (int i = 0; i < _SIZE; i++) {
