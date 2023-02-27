@@ -2,8 +2,25 @@
 
 int** board; bool escPressed = false;
 
-void startNewGame() {
-	system("color f0");
+void startGame() {
+	int option = 0;
+
+	while (option != 6) {
+		system("cls");
+		option = MenuScreen(65, 10, 5);
+
+		switch (option) {
+		case 1:
+			newGame();
+			break;
+		}
+	}
+
+	system("cls");
+	return;
+}
+
+void newGame() {
 	resetGame();
 	fixConsoleWindow();
 	drawBoard();
@@ -20,7 +37,7 @@ void startNewGame() {
 		}
 	}
 
-	int player = 1; 
+	int player = 1;  escPressed = false;
 
 	while (!escPressed) {
 		playGame(player, board);
@@ -28,9 +45,15 @@ void startNewGame() {
 			break;
 		}
 	}
+
+	for (int i = 0; i < _SIZE; i++) {
+		delete[] board[i];
+	}
+	delete[] board;
 }
 
 void resetGame() {
+	PlaySound(NULL, NULL, 0);
 	system("cls");
 }
 

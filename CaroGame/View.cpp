@@ -157,7 +157,7 @@ void drawOtherDetail() {
 
 	}
 	a.resize(0);
-	
+
 	//info board
 	a.push_back("F1 : New game   ");
 	a.push_back("");
@@ -212,7 +212,7 @@ void textStyle() {
 void clearRectangleArea(COORD start, int width, int height) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
-	
+
 	for (int i = 0; i < height; i++) {
 		gotoXY(start.X, start.Y + i);
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);

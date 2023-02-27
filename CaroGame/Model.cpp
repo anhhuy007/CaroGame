@@ -9,10 +9,10 @@ int preY = curY;
 
 bool endGame = false;
 
-void previousMove(int &player, int**& board) {
+void previousMove(int& player, int**& board) {
 	int i = (preY - TOP - 1) / 2;
 	int j = (preX - LEFT - 2) / 4;
-	
+
 	board[i][j] = 0;
 	player = player == 1 ? 2 : 1;
 	curX = preX; curY = preY;
@@ -21,8 +21,8 @@ void previousMove(int &player, int**& board) {
 	cout << char(32);
 }
 
-void playGame(int &player, int**& board) {
-	char key;
+void playGame(int& player, int**& board) {
+	char key; endGame = false;
 
 	while (!endGame) {
 		gotoXY(curX, curY);
@@ -33,23 +33,23 @@ void playGame(int &player, int**& board) {
 			int j = (curX - LEFT - 2) / 4;
 
 			switch ((int)key) {
-			// press F4
+				// press F4
 			case 62:
 				previousMove(player, board);
 				break;
-				
-			// press ESC
+
+				// press ESC
 			case 27:
 				endGame = true;
 				exitGame();
 				break;
 
-			// press Enter
+				// press Enter
 			case 13:
 				if (board[i][j] == 0) {
 					if (player == 1) {
 						cout << "X";
-						
+
 						player = 2;
 						board[i][j] = 1;
 						preX = curX;
@@ -57,7 +57,7 @@ void playGame(int &player, int**& board) {
 					}
 					else {
 						cout << "O";
-						
+
 						player = 1;
 						board[i][j] = 2;
 						preX = curX;
@@ -67,7 +67,7 @@ void playGame(int &player, int**& board) {
 				}
 				break;
 
-			// press UP
+				// press UP
 			case 72:
 				if (curY - 2 < TOP + 1) {
 					curY = BOT - 1;
@@ -77,7 +77,7 @@ void playGame(int &player, int**& board) {
 				}
 				break;
 
-			// press LEFT
+				// press LEFT
 			case 75:
 				if (curX - 4 < LEFT + 2) {
 					curX = RIGHT - 2;
@@ -86,8 +86,8 @@ void playGame(int &player, int**& board) {
 					curX -= 4;
 				}
 				break;
-			
-			// press RIGHT 
+
+				// press RIGHT 
 			case 77:
 				if (curX + 4 > RIGHT) {
 					curX = LEFT + 2;
@@ -96,8 +96,8 @@ void playGame(int &player, int**& board) {
 					curX += 4;
 				}
 				break;
-			
-			// press DOWN
+
+				// press DOWN
 			case 80:
 				if (curY + 2 > BOT) {
 					curY = TOP + 1;
@@ -119,18 +119,18 @@ void playGame(int &player, int**& board) {
 int checkResult(int player, int**& board) {
 	gotoXY(1, 1);
 	cout << player;
-	
+
 	int count = 0;
 	for (int i = 0; i < _SIZE; i++) {
 		for (int j = 0; j < _SIZE; j++) {
 			if (board[i][j] != 0) count++;
-			
+
 			if (board[i][j] == player) {
 				if (checkRow(i, j, player, board) ||
 					checkCol(i, j, player, board) ||
 					checkMainDiagonal(i, j, player, board) ||
 					checkSubDiagonal(i, j, player, board)
-				) {
+					) {
 					return player;
 				}
 			}
@@ -146,11 +146,11 @@ bool checkRow(int i, int j, int player, int**& board) {
 	}
 
 	return (board[i][j] == player &&
-			board[i][j + 1] == player &&
-			board[i][j + 2] == player &&
-			board[i][j + 3] == player &&
-			board[i][j + 4] == player
-	);
+		board[i][j + 1] == player &&
+		board[i][j + 2] == player &&
+		board[i][j + 3] == player &&
+		board[i][j + 4] == player
+		);
 }
 
 bool checkCol(int i, int j, int player, int**& board) {

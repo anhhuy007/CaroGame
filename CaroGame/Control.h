@@ -1,8 +1,10 @@
 #pragma once
 #include "View.h"
 #include "Model.h"
+#include "Menu.h"
 #include <iostream>
 
 void resetGame();
-void startNewGame();
+void newGame();
 void exitGame();
+void startGame();
