@@ -1,7 +1,4 @@
 #include "Control.h"
-#include "View.h"
-#include "Model.h"
-#include <iostream>
 
 int** board; bool escPressed = false;
 

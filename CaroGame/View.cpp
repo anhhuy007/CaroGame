@@ -1,11 +1,4 @@
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
 #include "View.h"
-#include <windows.h>
-#include <stdio.h>
-#include <conio.h>
-#include <iostream>
 
 using namespace std;
 

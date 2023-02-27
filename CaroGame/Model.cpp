@@ -1,8 +1,4 @@
 #include "Model.h"
-#include "View.h"
-#include "Control.h"
-#include <iostream>
-#include <conio.h>
 
 using namespace std;
 
