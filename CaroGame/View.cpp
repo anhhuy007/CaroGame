@@ -185,6 +185,7 @@ void gotoXY(int x, int y) {
 
 // set full screen console and fix it _SIZE
 void fixConsoleWindow() {
+	system("color f0");
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 	HWND consoleWindow = GetConsoleWindow();
 	LONG style = GetWindowLong(consoleWindow, GWL_STYLE);
@@ -230,4 +231,112 @@ void testFunction() {
 
 		spot.Y++;
 	}
+}
+
+void xWinScreen() {
+	fixConsoleWindow();
+	vector <string> a;
+
+	a.resize(0);
+
+	a.push_back("     ===========================================================   ");
+	a.push_back("     o      O       o          `O ooOoOOo o.     O      oO oO oO   ");
+	a.push_back("      O    o        O           o    O    Oo     o      OO OO OO   ");
+	a.push_back("       o  O         o           O    o    O O    O      oO oO oO   ");
+	a.push_back("        oO          O           O    O    O  o   o      Oo Oo Oo   ");
+	a.push_back("        Oo          o     o     o    o    O   o  O      oO oO oO   ");
+	a.push_back("       o  o         O     O     O    O    o    O O                 ");
+	a.push_back("      O    O        `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
+	a.push_back("     O      o        `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
+	a.push_back("     ===========================================================   ");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(30, 10 + i);
+		cout << a[i];
+	}
+
+	a.resize(0);
+
+	a.push_back("Yes[Press 'Y']   : New Game");
+	a.push_back("");
+	a.push_back("No[N / press any key]   : Back to Menu");
+
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(50, 23 + i);
+		cout << a[i];
+	}
+	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+}
+
+void yWinScreen() {
+	fixConsoleWindow();
+	vector <string> a;
+
+	a.resize(0);
+
+	a.push_back("         ===========================================================   ");
+	a.push_back("         o       O      o          `O ooOoOOo o.     O      oO oO oO   ");
+	a.push_back("         O       o      O           o    O    Oo     o      OO OO OO   ");
+	a.push_back("         `o     O'      o           O    o    O O    O      oO oO oO   ");
+	a.push_back("           O   o        O           O    O    O  o   o      Oo Oo Oo   ");
+	a.push_back("            `O'         o     o     o    o    O   o  O      oO oO oO   ");
+	a.push_back("             o          O     O     O    O    o    O O                 ");
+	a.push_back("             O          `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
+	a.push_back("             O           `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
+	a.push_back("         ===========================================================   ");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(30, 10 + i);
+		cout << a[i];
+	}
+
+	a.resize(0);
+
+	a.push_back("Yes[Press 'Y']   : New Game");
+	a.push_back("");
+	a.push_back("No[N / press any key]   : Back to Menu");
+
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(50, 23 + i);
+		cout << a[i];
+	}
+	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+}
+
+void drawScreen() {
+	fixConsoleWindow();
+	vector <string> a;
+
+	a.resize(0);
+
+	a.push_back("         ===========================================================   ");
+	a.push_back("        o.OOOo.   `OooOOo.     Oo    o          `O       oO oO oO      ");
+	a.push_back("         O    `o   o     `o   o  O   O           o       OO OO OO      ");
+	a.push_back("         o      O  O      O  O    o  o           O       oO oO oO      ");
+	a.push_back("         O      o  o     .O oOooOoOo O           O       Oo Oo Oo      ");
+	a.push_back("         o      O  OOooOO'  o      O o     o     o       oO oO oO      ");
+	a.push_back("         O      o  o    o   O      o O     O     O                     ");
+	a.push_back("         o    .O'  O     O  o      O `o   O o   O'       Oo Oo Oo      ");
+	a.push_back("         OooOO'    O      o O.     O  `OoO' `OoO'        oO oO oO      ");
+	a.push_back("         ===========================================================   ");
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(30, 10 + i);
+		cout << a[i];
+	}
+
+	a.resize(0);
+
+	a.push_back("Yes[Press 'Y']   : New Game");
+	a.push_back("");
+	a.push_back("No[N / press any key]   : Back to Menu");
+
+
+	for (int i = 0; i < a.size(); i++) {
+		gotoXY(50, 23 + i);
+		cout << a[i];
+	}
+	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
 }

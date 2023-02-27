@@ -26,3 +26,6 @@ void testFunction();
 void clearRectangleArea(COORD start, int width, int height);
 void changeMenuItemColor(int x, int y, int t_color, char content[][257], char content2[][257], int index, int num);
 void drawOtherDetail();
+void xWinScreen();
+void yWinScreen();
+void drawScreen();

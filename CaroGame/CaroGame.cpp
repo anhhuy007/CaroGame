@@ -6,7 +6,12 @@
 using namespace std;
 
 int main() {
+	// use this function to show menu game
 	//showMenu(65, 10, 5);
-	startNewGame();
+	
+	// use this function to start new game with two player
+	//startNewGame();
+
+	xWinScreen();
 	return 0;
 }
