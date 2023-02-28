@@ -233,6 +233,16 @@ void testFunction() {
 	}
 }
 
+void drawCharactors(char *c, COORD spot) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD Written;
+
+	for (int i = 0; i < strlen(c); i++) {
+		FillConsoleOutputCharacterW(hOut, c[i], 1, spot, &Written);
+		spot.X++;
+	}
+}
+
 void xWinScreen() {
 	fixConsoleWindow();
 	vector <string> a;

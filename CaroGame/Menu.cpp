@@ -8,13 +8,15 @@ void changeMenuItemColor(int x, int y, int t_color, char content[][257], char co
 	//int tmp = x - int(strlen(content2[0])) / 2;
 	for (int i = 0; i < num; i++) {
 		if (i == index) {
-			gotoXY(x - int(strlen(content2[i])) / 2, y + (i * 2));
-			cout << content2[i];
+			/*gotoXY(x - int(strlen(content2[i])) / 2, y + (i * 2));
+			cout << content2[i];*/
+			drawCharactors(content2[i], { (short)(x - int(strlen(content2[i])) / 2), (short)(y + (i * 2)) });
 			textColor(15);
 			continue;
 		}
-		gotoXY(x - int(strlen(content[i])) / 2, y + (i * 2));
-		cout << content[i];
+		/*gotoXY(x - int(strlen(content[i])) / 2, y + (i * 2));
+		cout << content[i];*/
+		drawCharactors(content[i], { (short)(x - int(strlen(content[i])) / 2), (short)(y + (i * 2)) });
 	}
 	system("color f0");
 }
@@ -38,56 +40,74 @@ void menuItem(int x, int y, int textcolor, char content[][257], char content2[][
 	LPCWSTR right = L"D:\\Caro\\Right.wav";
 	LPCWSTR error = L"D:\\Caro\\Error.wav";
 	LPCWSTR background = L"D:\\Caro\\Cipher2.wav";
-	playSoundTrack(background);
+	playSound(background);
 	for (int i = 0; i < num; i++) {
-		gotoXY(x - int(strlen(content[i])) / 2, y + (i * 2));
-		cout << content[i];
+		/*gotoXY(x - int(strlen(content[i])) / 2, y + (i * 2));
+		cout << content[i];*/
+		drawCharactors(content[i], { (short)(x - int(strlen(content[i])) / 2), (short)(y + (i * 2)) });
 	}
 	while (true) {
 		char c = _getch();
+		if (c == 27) {
+			playSound(right);
+			*index = -1;
+			return;
+		} else
 		if (c == 'w' || c == 'W') {
 			(*index)--;
 			if (checkIndex(index, num)) {
-				playSoundTrack(error);
+				playSound(error);
 				continue;
 			}
-			playSoundTrack(right);
+			playSound(right);
 			changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
 		}
-		if (c == 13) {
+		else if (c == 's' || c == 'S') {
+			(*index)++;
+			if (checkIndex(index, num)) {
+				playSound(error);
+				continue;
+			}
+			playSound(right);
+			changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
+		}
+		else if (c == 13) {
 			break;
 		}
-		if (c == -32) {
+		else if (c == -32) {
 			c = _getch();
 			if (c == 72) {
 				(*index)--;
 				if (checkIndex(index, num)) {
-					playSoundTrack(error);
+					playSound(error);
 					continue;
 				}
-				playSoundTrack(right);
+				playSound(right);
 				changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
 			}
 			if (c == 80) {
 				(*index)++;
 				if (checkIndex(index, num)) {
-					playSoundTrack(error);
+					playSound(error);
 					continue;
 				}
-				playSoundTrack(right);
+				playSound(right);
 				changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
 			}
 			if (c == 75) {
-				playSoundTrack(error);
+				playSound(error);
 				continue;
 			}
 			if (c == 77) {
-				playSoundTrack(error);
+				playSound(error);
 				continue;
 			}
 		}
+		else if (c == 27) {
+			menuItem(x, y, textcolor, content, content2, index, num);
+		}
 		else {
-			playSoundTrack(error);
+			playSound(error);
 			continue;
 		}
 	}
@@ -141,23 +161,23 @@ int newGameMenu(int x, int y, int textcolor) {
 	menuItem(x, y, textcolor, newgame_content, newgame_content2, &index, number_element);
 	system("cls");
 	switch (index) {
-	case 0:
-		//VS human
-		return 1;
+		case 0:
+			//VS human
+			return 1;
 
-	case 1:
-		//VS computer
-		return playWithComputerMenu(x, y, textcolor);
+		case 1:
+			//VS computer
+			return playWithComputerMenu(x, y, textcolor);
 	}
 
-	return 0;
+	return -1;
 }
 
 int MenuScreen(int x, int y, int textcolor) {
 	system("color f0");
 	fixConsoleWindow();
 	textStyle();
-
+	playSound(L"D:\\Caro\\Cipher2.wav");
 	int index = -1;
 	char menu_content[5][257] = { "CONTINUE", "NEW GAME", "SETTING", "ABOUT", "QUIT" };
 	char menu_content2[5][257] = { ">> CONTINUE <<",">> NEW GAME <<",">>  SETTING <<",">>   ABOUT  <<",">>   QUIT   <<" };

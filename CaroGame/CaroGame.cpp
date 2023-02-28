@@ -8,15 +8,10 @@ using namespace std;
 int main() {
 	/*This file is not contain any sound effect because of the lack of memory*/
 
-	/*use this function to show menu game*/
-	//showMenu(65, 10, 5);
-
-
-	/*use this function to start new game with two player*/
+	/*use this function to start Caro Game
+	however, this program only have play with human mode in new game 
+	Choose New Game -> VS Human to start new game*/
 	startGame();
-
-	/*show result screen*/
-	//xWinScreen();
 
 	return 0;
 }

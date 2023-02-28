@@ -29,3 +29,4 @@ void drawOtherDetail();
 void xWinScreen();
 void yWinScreen();
 void drawScreen();
+void drawCharactors(char *c, COORD spot);
