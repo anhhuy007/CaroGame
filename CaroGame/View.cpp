@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void drawBoard() {
+void View::drawBoard() {
 	// draw TOP
 	gotoXY(LEFT + 1, TOP);
 	for (int i = 0; i < (2 * _SIZE); i++) {
@@ -11,7 +11,7 @@ void drawBoard() {
 		}
 		else {
 			cout << char(196) << char(196) << char(196);
-		}
+		}		
 	}
 
 	// draw BOTTOM
@@ -81,7 +81,7 @@ void drawBoard() {
 	gotoXY(RIGHT, BOT); cout << char(217);
 }
 
-void drawInfoBorder(int x, int y) {
+void View::drawInfoBorder(int x, int y) {
 	int right = y + 25;
 	int bot = x + 13;
 
@@ -114,7 +114,7 @@ void drawInfoBorder(int x, int y) {
 	}
 }
 
-void drawOtherDetail() {
+void View::drawOtherDetail() {
 	vector<string> a;
 
 	a.resize(0);
@@ -176,7 +176,7 @@ void drawOtherDetail() {
 
 }
 
-void gotoXY(int x, int y) {
+void View::gotoXY(int x, int y) {
 	static HANDLE h = NULL;
 	if (!h) h = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coord = { x, y };
@@ -184,7 +184,7 @@ void gotoXY(int x, int y) {
 }
 
 // set full screen console and fix it _SIZE
-void fixConsoleWindow() {
+void View::fixConsoleWindow() {
 	system("color f0");
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
 	HWND consoleWindow = GetConsoleWindow();
@@ -193,11 +193,11 @@ void fixConsoleWindow() {
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
 
-void textColor(int color) {
+void View::textColor(int color) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void textStyle() {
+void View::textStyle() {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
@@ -209,41 +209,39 @@ void textStyle() {
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
-void clearRectangleArea(COORD start, int width, int height) {
+void View::clearRectangleArea(COORD start, int width, int height) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
-
-	for (int i = 0; i < height; i++) {
-		gotoXY(start.X, start.Y + i);
+	int startY = start.Y;
+	
+	for (int i = startY; i < height; i++) {
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
+		start.Y++;
 	}
 }
 
-void testFunction() {
-	COORD spot = { 0,0 };
+void View::drawCharactors(char* ch, COORD spot) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD Written;
 
-	for (int i = 0; 60 < 256; i++)
-	{
-		//FillConsoleOutputAttribute(hOut, 7, 1, spot, &Written);
-		FillConsoleOutputCharacterW(hOut, char(i), 10, spot, &Written);
-
-		spot.Y++;
-	}
-}
-
-void drawCharactors(char *c, COORD spot) {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	DWORD Written;
-
-	for (int i = 0; i < strlen(c); i++) {
-		FillConsoleOutputCharacterW(hOut, c[i], 1, spot, &Written);
+	for (int i = 0; i < strlen(ch); i++) {
+		FillConsoleOutputCharacterW(hOut, ch[i], 1, spot, &Written);
 		spot.X++;
 	}
 }
 
-void xWinScreen() {
+void View::writeCharactors(std::wstring content, COORD spot, int color) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD Written;
+
+	for (int i = 0; i < content.length(); i++) {
+		FillConsoleOutputCharacterW(hOut, content[i], 1, spot, &Written);
+		FillConsoleOutputAttribute(hOut, (short)color, 1, spot, &Written);
+		spot.X++;
+	}
+}
+
+void View::xWinScreen() {
 	fixConsoleWindow();
 	vector <string> a;
 
@@ -279,7 +277,7 @@ void xWinScreen() {
 	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
 }
 
-void yWinScreen() {
+void View::yWinScreen() {
 	fixConsoleWindow();
 	vector <string> a;
 
@@ -315,7 +313,7 @@ void yWinScreen() {
 	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
 }
 
-void drawScreen() {
+void View::drawScreen() {
 	fixConsoleWindow();
 	vector <string> a;
 

@@ -1,15 +1,19 @@
 #include "Control.h"
+#include "View.h"
+#include "Model.h"
+#include "Menu.h"
 
 int** board; bool escPressed = false;
 
-void startGame() {
+void Control::startGame() {
 	int option = 0;
 
 	while (option != 6) {
 		system("cls");
-		option = MenuScreen(65, 10, 5);
+		option = Menu::MenuScreen(65, 10, 5);
 
 		switch (option) {
+		// Game screen
 		case 1:
 			newGame();
 			break;
@@ -20,11 +24,11 @@ void startGame() {
 	return;
 }
 
-void newGame() {
+void Control::newGame() {
 	resetGame();
-	fixConsoleWindow();
-	drawBoard();
-	drawOtherDetail();
+	View::fixConsoleWindow();
+	View::drawBoard();
+	View::drawOtherDetail();
 
 	board = new int* [_SIZE];
 	for (int i = 0; i < _SIZE; i++) {
@@ -40,8 +44,8 @@ void newGame() {
 	int player = 1;  escPressed = false;
 
 	while (!escPressed) {
-		playGame(player, board);
-		if (checkResult(player == 1 ? 2 : 1, board) != 0) {
+		Model::playGame(player, board);
+		if (Model::checkResult(player == 1 ? 2 : 1, board) != 0) {
 			break;
 		}
 	}
@@ -52,12 +56,12 @@ void newGame() {
 	delete[] board;
 }
 
-void resetGame() {
+void Control::resetGame() {
 	PlaySound(NULL, NULL, 0);
 	system("cls");
 }
 
-void exitGame() {
+void Control::exitGame() {
 	escPressed = true;
 	system("cls");
 }

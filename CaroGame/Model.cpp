@@ -1,5 +1,7 @@
 #include "Model.h"
-
+#include "InputHandle.h"
+#include "View.h"
+#include "Control.h"
 using namespace std;
 
 int curX = LEFT + 38;
@@ -9,7 +11,7 @@ int preY = curY;
 
 bool endGame = false;
 
-void previousMove(int& player, int**& board) {
+void Model::previousMove(int& player, int**& board) {
 	int i = (preY - TOP - 1) / 2;
 	int j = (preX - LEFT - 2) / 4;
 
@@ -17,97 +19,16 @@ void previousMove(int& player, int**& board) {
 	player = player == 1 ? 2 : 1;
 	curX = preX; curY = preY;
 
-	gotoXY(preX, preY);
+	View::gotoXY(preX, preY);
 	cout << char(32);
 }
 
-void playGame(int& player, int**& board) {
-	char key; endGame = false;
+void Model::playGame(int& player, int**& board) {
+	wstring key; endGame = false;
 
 	while (!endGame) {
-		gotoXY(curX, curY);
-		if (_kbhit()) {
-			key = _getch();
-
-			int i = (curY - TOP - 1) / 2;
-			int j = (curX - LEFT - 2) / 4;
-
-			switch ((int)key) {
-				// press F4
-			case 62:
-				previousMove(player, board);
-				break;
-
-				// press ESC
-			case 27:
-				endGame = true;
-				exitGame();
-				break;
-
-				// press Enter
-			case 13:
-				if (board[i][j] == 0) {
-					if (player == 1) {
-						cout << "X";
-
-						player = 2;
-						board[i][j] = 1;
-						preX = curX;
-						preY = curY;
-					}
-					else {
-						cout << "O";
-
-						player = 1;
-						board[i][j] = 2;
-						preX = curX;
-						preY = curY;
-					}
-					return;
-				}
-				break;
-
-				// press UP
-			case 72:
-				if (curY - 2 < TOP + 1) {
-					curY = BOT - 1;
-				}
-				else {
-					curY -= 2;
-				}
-				break;
-
-				// press LEFT
-			case 75:
-				if (curX - 4 < LEFT + 2) {
-					curX = RIGHT - 2;
-				}
-				else {
-					curX -= 4;
-				}
-				break;
-
-				// press RIGHT 
-			case 77:
-				if (curX + 4 > RIGHT) {
-					curX = LEFT + 2;
-				}
-				else {
-					curX += 4;
-				}
-				break;
-
-				// press DOWN
-			case 80:
-				if (curY + 2 > BOT) {
-					curY = TOP + 1;
-				}
-				else {
-					curY += 2;
-				}
-				break;
-			}
-		}
+		View::gotoXY(curX, curY);
+		key = InputHandle::Get();
 	}
 }
 
@@ -116,8 +37,8 @@ void playGame(int& player, int**& board) {
 // 2 : player 2 win
 // 3 : draw
 
-int checkResult(int player, int**& board) {
-	gotoXY(1, 1);
+int Model::checkResult(int player, int**& board) {
+	View::gotoXY(1, 1);
 	cout << player;
 
 	int count = 0;
@@ -140,7 +61,7 @@ int checkResult(int player, int**& board) {
 	return count == _SIZE * _SIZE ? 3 : 0;
 }
 
-bool checkRow(int i, int j, int player, int**& board) {
+bool Model::checkRow(int i, int j, int player, int**& board) {
 	if (j + 4 > _SIZE) {
 		return false;
 	}
@@ -153,7 +74,7 @@ bool checkRow(int i, int j, int player, int**& board) {
 		);
 }
 
-bool checkCol(int i, int j, int player, int**& board) {
+bool Model::checkCol(int i, int j, int player, int**& board) {
 	if (i + 4 > _SIZE) {
 		return false;
 	}
@@ -166,7 +87,7 @@ bool checkCol(int i, int j, int player, int**& board) {
 		);
 }
 
-bool checkMainDiagonal(int i, int j, int player, int**& board) {
+bool Model::checkMainDiagonal(int i, int j, int player, int**& board) {
 	if (i + 4 > _SIZE || j + 4 > _SIZE) {
 		return false;
 	}
@@ -179,7 +100,7 @@ bool checkMainDiagonal(int i, int j, int player, int**& board) {
 		);
 }
 
-bool checkSubDiagonal(int i, int j, int player, int**& board) {
+bool Model::checkSubDiagonal(int i, int j, int player, int**& board) {
 
 	if (i - 4 < 0 || j + 4 > _SIZE) {
 		return false;

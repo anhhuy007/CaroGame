@@ -3,6 +3,7 @@
 #include "View.h"
 #include "Model.h"
 #include "Menu.h"
+#include "InputHandle.h"
 using namespace std;
 
 int main() {
@@ -11,7 +12,10 @@ int main() {
 	/*use this function to start Caro Game
 	however, this program only have play with human mode in new game 
 	Choose New Game -> VS Human to start new game*/
-	startGame();
+	
+	Control::startGame();
+	
+	//xWinScreen();
 
 	return 0;
 }
