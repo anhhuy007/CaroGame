@@ -1,19 +1,11 @@
 ﻿#include "Menu.h"
 #include "View.h"
 #include "Sound.h"
+#include "InputHandle.h"
+#include <string.h>
 using namespace std;
 
-void Menu::changeMenuItemColor(int x, int y, int t_color, char content[][257], char content2[][257], int index, int num) {
-	View::clearRectangleArea({ 50, 10 }, 50, 50);
-	for (int i = 0; i < num; i++) {
-		if (i == index) {
-			View::drawCharactors(content2[i], { (short)(x - int(strlen(content2[i])) / 2), (short)(y + (i * 2)) });
-			View::textColor(15);
-		} else
-		View::drawCharactors(content[i], { (short)(x - int(strlen(content[i])) / 2), (short)(y + (i * 2)) });
-	}
-}
-
+// check if current menu index is valid index
 bool Menu::checkIndex(int* index, int num) {
 	num -= 1;
 	if (*index < 0) {
@@ -27,162 +19,95 @@ bool Menu::checkIndex(int* index, int num) {
 	return 0;
 }
 
-void Menu::menuItem(int x, int y, int textcolor, char content[][257], char content2[][257], int* index, int num) {
-	Sound::playSound(Sound::background);
-	for (int i = 0; i < num; i++) {
-		View::drawCharactors(content[i], { (short)(x - int(strlen(content[i])) / 2), (short)(y + (i * 2)) });
-	}
-	while (true) {
-		char c = _getch();
-		if (c == 27) {
-			Sound::playSound(Sound::right);
-			*index = -1;
-			return;
-		} else
-		if (c == 'w' || c == 'W') {
-			(*index)--;
-			if (checkIndex(index, num)) {
-				Sound::playSound(Sound::error);
-				continue;
-			}
-			Sound::playSound(Sound::right);
-			changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
-		}
-		else if (c == 's' || c == 'S') {
-			(*index)++;
-			if (checkIndex(index, num)) {
-				Sound::playSound(Sound::error);
-				continue;
-			}
-			Sound::playSound(Sound::right);
-			changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
-		}
-		else if (c == 13) {
-			break;
-		}
-		else if (c == -32) {
-			c = _getch();
-			if (c == 72) {
-				(*index)--;
-				if (checkIndex(index, num)) {
-					Sound::playSound(Sound::error);
-					continue;
-				}
-				Sound::playSound(Sound::right);
-				changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
-			}
-			if (c == 80) {
-				(*index)++;
-				if (checkIndex(index, num)) {
-					Sound::playSound(Sound::error);
-					continue;
-				}
-				Sound::playSound(Sound::right);
-				changeMenuItemColor(x, y, textcolor, content, content2, *index, num);
-			}
-			if (c == 75) {
-				Sound::playSound(Sound::error);
-				continue;
-			}
-			if (c == 77) {
-				Sound::playSound(Sound::error);
-				continue;
-			}
-		}
-		else if (c == 27) {
-			menuItem(x, y, textcolor, content, content2, index, num);
+// draw menu 
+void Menu::drawMenu(MenuItem menu_items[], COORD start, int textcolor, int selected_textcolor, int cur_index, int menu_size) {
+	View::clearRectangleArea({ 50, 10 }, 50, 50);
+	for (int i = 0; i < menu_size; i++) {
+		short y = start.Y + (i * 2);
+		if (i == cur_index) {
+			wstring selected_content = L">> " + menu_items[i].content + L" <<";
+			short x = start.X - selected_content.length() / 2;
+			View::printCharactors(selected_content, {x, y}, selected_textcolor);
 		}
 		else {
-			Sound::playSound(Sound::error);
-			continue;
+			short x = start.X - menu_items[i].content.length() / 2;
+			View::printCharactors(menu_items[i].content, { x, y }, textcolor);
 		}
 	}
 }
 
-int Menu::aboutMenu(int x, int y, int textcolor) {
-	int index = -1;
-	int number_element = 4;
-	char about_content[4][257] = { "HUONG DAN","LUAT CHOI","NHOM VA GIAO VIEN HUONG DAN","THONG TIN LIEN HE" };
-	char about_content2[4][257] = { ">> HUONG DAN <<",">> LUAT CHOI <<",">> NHOM VA GIAO VIEN HUONG DAN <<",">> THONG TIN LIEN HE <<" };
-	menuItem(x, y, textcolor, about_content, about_content2, &index, number_element);
-	system("cls");
-	switch (index) {
-	case 0:
-		//Hướng dẫn
-	case 1:
-		//Luật chơi
-	case 2:
-		//Nhom va giao vien huong dan
-	case 3:
-		//Thong tin lien he
-		break;
-	}
+// listen on keyboard input and return the index of selected menu item
+void Menu::menuOptionChanged(Menu::MenuItem menu_items[], COORD start, int text_color, int selected_text_color, int* cur_index, int menu_size) {
+	wstring selected_item = InputHandle::Get();
 
-	return 4;
+	while (selected_item != L"ENTER") {
+		View::gotoXY(0, 0);
+		wcout << selected_item;
+		
+		if (selected_item == L"UP") {
+			*cur_index -= 1;
+			if (Menu::checkIndex(cur_index, menu_size)) {
+				Sound::playSound(Sound::error);
+			}
+			else {
+				Sound::playSound(Sound::right);
+			}
+		}
+		else if (selected_item == L"DOWN") {
+			*cur_index += 1;
+			if (Menu::checkIndex(cur_index, menu_size)) {
+				Sound::playSound(Sound::error);
+			}
+			else {
+				Sound::playSound(Sound::right);
+			}
+		}
+		
+		Menu::drawMenu(menu_items, start, text_color, selected_text_color, *cur_index, menu_size);
+		selected_item = InputHandle::Get();
+	}
 }
 
-int Menu::playWithComputerMenu(int x, int y, int textcolor) {
+// draw main menu screen
+int Menu::MainMenuScreen(COORD start) {
 	int index = -1;
-	int number_element = 2;
-	char vscom_content[2][257] = { "EASY","HARD" };
-	char vscom_content2[2][257] = { ">> EASY <<",">> HARD <<" };
-	menuItem(x, y, textcolor, vscom_content, vscom_content2, &index, number_element);
-	switch (index) {
-	case 0:
-		//Easy
-		return 2;
+	int menu_size = 6;
+	start = { 65, 10 };
+	int text_color = 15;
+	int selected_text_color = 7;
+	Menu::MenuItem main_menu_items[6] = {
+		{0, L"CONTINUE"},
+		{1, L"NEW GAME"},
+		{2, L"LOAD GAME"},
+		{3, L"SETTING"},
+		{4, L"ABOUT"},
+		{5, L"QUIT"}
+	};
 
-	case 1:
-		//Hard
-		return 3;
-	}
-	return 1;
-}
+	Menu::drawMenu(main_menu_items, start, text_color, selected_text_color, index, menu_size);
+	Menu::menuOptionChanged(main_menu_items, start, text_color, selected_text_color, &index, menu_size);
 
-int Menu::newGameMenu(int x, int y, int textcolor) {
-	int index = -1;
-	int number_element = 2;
-	char newgame_content[2][257] = { "VS HUMAN","VS COMPUTER" };
-	char newgame_content2[2][257] = { ">> VS HUMAN <<", ">> VS COMPUTER <<" };
-	menuItem(x, y, textcolor, newgame_content, newgame_content2, &index, number_element);
-	system("cls");
-	switch (index) {
-		case 0:
-			//VS human
-			return 1;
-
-		case 1:
-			//VS computer
-			return playWithComputerMenu(x, y, textcolor);
-	}
-
-	return -1;
+	return index;
 }
 
 int Menu::MenuScreen(int x, int y, int textcolor) {
 	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
 	int index = -1;
-	char menu_content[5][257] = { "CONTINUE", "NEW GAME", "SETTING", "ABOUT", "QUIT" };
-	char menu_content2[5][257] = { ">> CONTINUE <<",">> NEW GAME <<",">>  SETTING <<",">>   ABOUT  <<",">>   QUIT   <<" };
-	int number_element = 5;
-	menuItem(x, y, textcolor, menu_content, menu_content2, &index, number_element);
-	system("cls");
+	Menu::MainMenuScreen({ 65, 10 });
+
+	// Return menu options selected
 	switch (index) {
 	case 0:
-		//Continue 
-		View::gotoXY(0, 0);
-		cout << "Continue";
+		//Continue game
 		return 0;
 	case 1:
 		//New game
-		View::gotoXY(0, 0);
-		cout << "New Game";
-		return newGameMenu(x, y, textcolor);
+		//return newGameMenu(x, y, textcolor);
 	case 2:
 		// Setting
 	case 3:
 		//About
-		return aboutMenu(x, y, textcolor);
+		//return aboutMenu(x, y, textcolor);
 	case 4:
 		//Quit
 		return 6;

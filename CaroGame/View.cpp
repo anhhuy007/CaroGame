@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// draw board with Size x Size cells
 void View::drawBoard() {
 	// draw TOP
 	gotoXY(LEFT + 1, TOP);
@@ -183,7 +184,6 @@ void View::gotoXY(int x, int y) {
 	SetConsoleCursorPosition(h, coord);
 }
 
-// set full screen console and fix it _SIZE
 void View::fixConsoleWindow() {
 	system("color f0");
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
@@ -220,23 +220,16 @@ void View::clearRectangleArea(COORD start, int width, int height) {
 	}
 }
 
-void View::drawCharactors(char* ch, COORD spot) {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	DWORD Written;
-
-	for (int i = 0; i < strlen(ch); i++) {
-		FillConsoleOutputCharacterW(hOut, ch[i], 1, spot, &Written);
-		spot.X++;
-	}
-}
-
-void View::writeCharactors(std::wstring content, COORD spot, int color) {
+void View::printCharactors(std::wstring content, COORD spot, int color) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD Written;
 
 	for (int i = 0; i < content.length(); i++) {
+		// set text background color
+		SetConsoleTextAttribute(hOut, color);
+		// print 1 character 
 		FillConsoleOutputCharacterW(hOut, content[i], 1, spot, &Written);
-		FillConsoleOutputAttribute(hOut, (short)color, 1, spot, &Written);
+		//FillConsoleOutputAttribute(hOut, color, 1, spot, &Written);
 		spot.X++;
 	}
 }

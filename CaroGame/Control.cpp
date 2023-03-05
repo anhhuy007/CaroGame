@@ -6,10 +6,11 @@
 int** board; bool escPressed = false;
 
 void Control::startGame() {
+	system("color f0");
+	View::fixConsoleWindow();
 	int option = 0;
 
 	while (option != 6) {
-		system("cls");
 		option = Menu::MenuScreen(65, 10, 5);
 
 		switch (option) {

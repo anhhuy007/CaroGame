@@ -1,6 +1,8 @@
 #include "InputHandle.h"
 using namespace std;
 
+// this function is used for get the input from keyboard
+// there are 6 main types of input: UP, DOWN, LEFT, RIGHT, ENTER, ESC
 wstring InputHandle::Get() {
 	wchar_t ch = _getwch();
 	

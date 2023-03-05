@@ -29,8 +29,7 @@ namespace View {
 	void xWinScreen();
 	void yWinScreen();
 	void drawScreen();
-	void writeCharactors(std::wstring content, COORD spot, int color);
-	void drawCharactors(char* ch, COORD spot);
+	void printCharactors(std::wstring content, COORD spot, int color);
 }
 
 
