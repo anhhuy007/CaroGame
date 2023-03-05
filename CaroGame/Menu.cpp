@@ -1,5 +1,4 @@
 ﻿#include "Menu.h"
-#include "View.h"
 #include "Sound.h"
 #include "InputHandle.h"
 #include <string.h>
@@ -20,30 +19,40 @@ bool Menu::checkIndex(int* index, int num) {
 }
 
 // draw menu 
-void Menu::drawMenu(MenuItem menu_items[], COORD start, int textcolor, int selected_textcolor, int cur_index, int menu_size) {
+void Menu::drawMenu(
+	MenuItem menu_items[], 
+	COORD start, 
+	View::Color textcolor, 
+	View::Color selected_textcolor, 
+	int* cur_index, 
+	int menu_size) {
 	View::clearRectangleArea({ 50, 10 }, 50, 50);
 	for (int i = 0; i < menu_size; i++) {
 		short y = start.Y + (i * 2);
-		if (i == cur_index) {
+		if (i == *cur_index) {
 			wstring selected_content = L">> " + menu_items[i].content + L" <<";
 			short x = start.X - selected_content.length() / 2;
-			View::printCharactors(selected_content, {x, y}, selected_textcolor);
+			View::printCharactors(selected_content, {x, y}, selected_textcolor, View::Color::WHITE);
 		}
 		else {
 			short x = start.X - menu_items[i].content.length() / 2;
-			View::printCharactors(menu_items[i].content, { x, y }, textcolor);
+			View::printCharactors(menu_items[i].content, { x, y }, textcolor, View::Color::WHITE);
 		}
 	}
 }
 
 // listen on keyboard input and return the index of selected menu item
-void Menu::menuOptionChanged(Menu::MenuItem menu_items[], COORD start, int text_color, int selected_text_color, int* cur_index, int menu_size) {
+void Menu::menuOptionChanged(
+	Menu::MenuItem menu_items[], 
+	COORD start, 
+	View::Color text_color, 
+	View::Color selected_text_color, 
+	int* cur_index, 
+	int menu_size
+) {
 	wstring selected_item = InputHandle::Get();
 
 	while (selected_item != L"ENTER") {
-		View::gotoXY(0, 0);
-		wcout << selected_item;
-		
 		if (selected_item == L"UP") {
 			*cur_index -= 1;
 			if (Menu::checkIndex(cur_index, menu_size)) {
@@ -63,18 +72,20 @@ void Menu::menuOptionChanged(Menu::MenuItem menu_items[], COORD start, int text_
 			}
 		}
 		
-		Menu::drawMenu(menu_items, start, text_color, selected_text_color, *cur_index, menu_size);
+		Menu::drawMenu(menu_items, start, text_color, selected_text_color, cur_index, menu_size);
 		selected_item = InputHandle::Get();
 	}
 }
 
 // draw main menu screen
-int Menu::MainMenuScreen(COORD start) {
+int Menu::MainMenuScreen(
+	COORD start, 
+	View::Color text_color, 
+	View::Color selected_textcolor
+) {
 	int index = -1;
 	int menu_size = 6;
 	start = { 65, 10 };
-	int text_color = 15;
-	int selected_text_color = 7;
 	Menu::MenuItem main_menu_items[6] = {
 		{0, L"CONTINUE"},
 		{1, L"NEW GAME"},
@@ -84,16 +95,16 @@ int Menu::MainMenuScreen(COORD start) {
 		{5, L"QUIT"}
 	};
 
-	Menu::drawMenu(main_menu_items, start, text_color, selected_text_color, index, menu_size);
-	Menu::menuOptionChanged(main_menu_items, start, text_color, selected_text_color, &index, menu_size);
+	Menu::drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	Menu::menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 
 	return index;
 }
 
-int Menu::MenuScreen(int x, int y, int textcolor) {
+int Menu::MenuScreen() {
 	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
 	int index = -1;
-	Menu::MainMenuScreen({ 65, 10 });
+	Menu::MainMenuScreen({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
 
 	// Return menu options selected
 	switch (index) {

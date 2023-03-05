@@ -220,16 +220,19 @@ void View::clearRectangleArea(COORD start, int width, int height) {
 	}
 }
 
-void View::printCharactors(std::wstring content, COORD spot, int color) {
+void View::printCharactors(std::wstring content, COORD spot, Color text_color, Color background_color) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD Written;
 
+	// convert text color and background color to WORD that in range of 0-265 in color code table
+	int color = (int)text_color + (int)background_color * 16;
+
 	for (int i = 0; i < content.length(); i++) {
 		// set text background color
-		SetConsoleTextAttribute(hOut, color);
+		FillConsoleOutputAttribute(hOut, color, 1, spot, &Written);
+		
 		// print 1 character 
 		FillConsoleOutputCharacterW(hOut, content[i], 1, spot, &Written);
-		//FillConsoleOutputAttribute(hOut, color, 1, spot, &Written);
 		spot.X++;
 	}
 }

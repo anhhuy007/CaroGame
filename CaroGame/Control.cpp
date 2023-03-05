@@ -11,7 +11,7 @@ void Control::startGame() {
 	int option = 0;
 
 	while (option != 6) {
-		option = Menu::MenuScreen(65, 10, 5);
+		option = Menu::MenuScreen();
 
 		switch (option) {
 		// Game screen
