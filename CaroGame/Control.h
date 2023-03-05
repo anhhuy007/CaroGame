@@ -4,7 +4,7 @@
 namespace Control {
 	void resetGame();
 	void newGame();
-	void exitGame();
+	void quitGame();
 	void startGame();
 }
 

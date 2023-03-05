@@ -5,14 +5,33 @@
 #include <Windows.h>
 #include "View.h"
 
-namespace Menu {
+	enum class MenuOption {
+		NONE = -1,
+		CONTINUE = 0,
+		NEW_GAME_VS_PLAYER = 1,
+		NEW_GAME_VS_COMPUTER_EASY = 2,
+		NEW_GAME_VS_COMPUTER_HARD = 3,
+		LOAD_GAME = 4,
+		SETTING = 5,
+		ABOUT = 6,
+		QUIT = 7,
+		BACK = 8,
+		NEW_GAME = 9
+	};
+
 	struct MenuItem {
 		int index;
 		std::wstring content;
+		MenuOption menu_option;
 	};
 	
 	// input 3 parameters: menu's position, normal text color and selected text color
-	int MainMenuScreen(
+	MenuOption mainMenu(
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor
+	);
+	MenuOption newGameMenu(
 		COORD start,
 		View::Color text_color,
 		View::Color selected_textcolor
@@ -33,8 +52,11 @@ namespace Menu {
 		int* cur_index, 
 		int menu_size
 	);
-	int MenuScreen();
-	bool checkIndex(int* index, int num);
-}
+	MenuOption MenuScreen();
+	bool checkIndex(
+		int* index, 
+		int num
+	);
+
 
 

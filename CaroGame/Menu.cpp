@@ -3,9 +3,10 @@
 #include "InputHandle.h"
 #include <string.h>
 using namespace std;
+//using namespace Menu;
 
 // check if current menu index is valid index
-bool Menu::checkIndex(int* index, int num) {
+bool checkIndex(int* index, int num) {
 	num -= 1;
 	if (*index < 0) {
 		*index = 0;
@@ -19,7 +20,7 @@ bool Menu::checkIndex(int* index, int num) {
 }
 
 // draw menu 
-void Menu::drawMenu(
+void drawMenu(
 	MenuItem menu_items[], 
 	COORD start, 
 	View::Color textcolor, 
@@ -42,8 +43,8 @@ void Menu::drawMenu(
 }
 
 // listen on keyboard input and return the index of selected menu item
-void Menu::menuOptionChanged(
-	Menu::MenuItem menu_items[], 
+void menuOptionChanged(
+	MenuItem menu_items[], 
 	COORD start, 
 	View::Color text_color, 
 	View::Color selected_text_color, 
@@ -55,7 +56,7 @@ void Menu::menuOptionChanged(
 	while (selected_item != L"ENTER") {
 		if (selected_item == L"UP") {
 			*cur_index -= 1;
-			if (Menu::checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, menu_size)) {
 				Sound::playSound(Sound::error);
 			}
 			else {
@@ -64,7 +65,7 @@ void Menu::menuOptionChanged(
 		}
 		else if (selected_item == L"DOWN") {
 			*cur_index += 1;
-			if (Menu::checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, menu_size)) {
 				Sound::playSound(Sound::error);
 			}
 			else {
@@ -72,57 +73,64 @@ void Menu::menuOptionChanged(
 			}
 		}
 		
-		Menu::drawMenu(menu_items, start, text_color, selected_text_color, cur_index, menu_size);
+		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, menu_size);
 		selected_item = InputHandle::Get();
 	}
 }
 
 // draw main menu screen
-int Menu::MainMenuScreen(
+MenuOption mainMenu(
 	COORD start, 
 	View::Color text_color, 
 	View::Color selected_textcolor
-) {
+) {	
 	int index = -1;
 	int menu_size = 6;
 	start = { 65, 10 };
-	Menu::MenuItem main_menu_items[6] = {
-		{0, L"CONTINUE"},
-		{1, L"NEW GAME"},
-		{2, L"LOAD GAME"},
-		{3, L"SETTING"},
-		{4, L"ABOUT"},
-		{5, L"QUIT"}
+	MenuItem main_menu_items[6] = {
+		{ 0, L"CONTINUE", MenuOption::CONTINUE },
+		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
+		{ 2, L"LOAD GAME", MenuOption::LOAD_GAME },
+		{ 3, L"SETTING", MenuOption::SETTING },
+		{ 4, L"ABOUT", MenuOption::ABOUT },
+		{ 5, L"QUIT", MenuOption::QUIT }
 	};
 
-	Menu::drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	Menu::menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 
-	return index;
+	return main_menu_items[index].menu_option;
 }
 
-int Menu::MenuScreen() {
-	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
+MenuOption newGameMenu(
+	COORD start,
+	View::Color text_color,
+	View::Color selected_textcolor
+) {	
 	int index = -1;
-	Menu::MainMenuScreen({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
+	int menu_size = 6;
+	start = { 65, 10 };
+	MenuItem main_menu_items[6] = {
+		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
+		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
+		{2, L"VS COMPUTER (HARD)", MenuOption::NEW_GAME_VS_COMPUTER_HARD },
+		{3, L"BACK", MenuOption::BACK }
+	};
 
-	// Return menu options selected
-	switch (index) {
-	case 0:
-		//Continue game
-		return 0;
-	case 1:
-		//New game
-		//return newGameMenu(x, y, textcolor);
-	case 2:
-		// Setting
-	case 3:
-		//About
-		//return aboutMenu(x, y, textcolor);
-	case 4:
-		//Quit
-		return 6;
+	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+
+	return main_menu_items[index].menu_option;
+}
+
+MenuOption MenuScreen() {
+	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
+	MenuOption option = mainMenu({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
+	
+	switch (option) {
+	case MenuOption::NEW_GAME:
+		return newGameMenu({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
 	}
-
-	return 0;
+	
+	return option;
 }
