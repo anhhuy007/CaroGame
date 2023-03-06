@@ -4,10 +4,10 @@
 #include "Control.h"
 using namespace std;
 
-int curX = LEFT + 38;
-int curY = TOP + 19;
-int preX = curX;
-int preY = curY;
+short curX = LEFT + 38;
+short curY = TOP + 19;
+short preX = curX;
+short preY = curY;
 
 bool endGame = false;
 
@@ -29,6 +29,73 @@ void Model::playGame(int& player, int**& board) {
 	while (!endGame) {
 		View::gotoXY(curX, curY);
 		key = InputHandle::Get();
+
+		// move up
+		if (key == L"UP") {
+			if (curY > TOP + 1) {
+				preX = curX; preY = curY;
+				curY -= 2;
+			}
+			else {
+				curY = BOT - 1;
+			}
+		}
+
+		// move down
+		else if (key == L"DOWN") {
+			if (curY < BOT - 1) {
+				preX = curX; preY = curY;
+				curY += 2; 
+			} 
+			else {
+				curY = TOP + 1;
+			}
+		}
+
+		// move left
+		else if (key == L"LEFT") {
+			if (curX > LEFT + 2) {
+				preX = curX; preY = curY;
+				curX -= 4;
+			}
+			else {
+				curX = RIGHT - 2;
+			}
+		}
+
+		// move right
+		else if (key == L"RIGHT") {
+			if (curX < RIGHT - 2) {
+				preX = curX; preY = curY;
+				curX += 4;
+			}
+			else {
+				curX = LEFT + 2;
+			}
+		}
+
+		// enter -> mark a player move
+		else if (key == L"ENTER") {
+			int i = (curY - TOP - 1) / 2;
+			int j = (curX - LEFT - 2) / 4;
+
+			if (board[i][j] == 0) {
+				board[i][j] = player;
+				wstring ch = player == 1 ? L"X" : L"O";
+				View::printCharactors(ch, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
+				player = player == 1 ? 2 : 1;
+			}
+			
+			break;
+		}
+		
+		else if (key == L"ESC") {
+			endGame = true;
+			Control::quitGame();
+		}
+		else if (key == L"F4") {
+			previousMove(player, board);
+		}
 	}
 }
 
@@ -36,7 +103,6 @@ void Model::playGame(int& player, int**& board) {
 // 1 : player 1 win
 // 2 : player 2 win
 // 3 : draw
-
 int Model::checkResult(int player, int**& board) {
 	View::gotoXY(1, 1);
 	cout << player;

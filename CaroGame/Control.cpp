@@ -63,6 +63,10 @@ void Control::newGame() {
 	while (!escPressed) {
 		Model::playGame(player, board);
 		if (Model::checkResult(player == 1 ? 2 : 1, board) != 0) {
+			// show winner here
+			// ....
+			
+			quitGame();
 			break;
 		}
 	}

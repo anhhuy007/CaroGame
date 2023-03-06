@@ -209,7 +209,11 @@ void View::textStyle() {
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
-void View::clearRectangleArea(COORD start, int width, int height) {
+void View::clearRectangleArea(
+	COORD start, 
+	int width, 
+	int height
+) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
 	int startY = start.Y;
@@ -220,7 +224,12 @@ void View::clearRectangleArea(COORD start, int width, int height) {
 	}
 }
 
-void View::printCharactors(std::wstring content, COORD spot, Color text_color, Color background_color) {
+void View::printCharactors(
+	std::wstring content, 
+	COORD spot, 
+	Color text_color,
+	Color background_color
+) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD Written;
 
