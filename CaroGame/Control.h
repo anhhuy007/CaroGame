@@ -6,5 +6,6 @@ namespace Control {
 	void newGame();
 	void quitGame();
 	void startGame();
+	void returnMenu();
 }
 

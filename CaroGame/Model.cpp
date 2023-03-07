@@ -103,28 +103,54 @@ void Model::playGame(int& player, int**& board) {
 // 1 : player 1 win
 // 2 : player 2 win
 // 3 : draw
-int Model::checkResult(int player, int**& board) {
-	View::gotoXY(1, 1);
-	cout << player;
-
+// if game ended, return a pair of result and a vector of coordinates of winning line
+Model::GameResult Model::checkResult(int player, int**& board) {
+	vector<COORD> winPos(0, { 0, 0 });
+	
 	int count = 0;
 	for (int i = 0; i < _SIZE; i++) {
 		for (int j = 0; j < _SIZE; j++) {
 			if (board[i][j] != 0) count++;
 
 			if (board[i][j] == player) {
-				if (checkRow(i, j, player, board) ||
-					checkCol(i, j, player, board) ||
-					checkMainDiagonal(i, j, player, board) ||
-					checkSubDiagonal(i, j, player, board)
-					) {
-					return player;
+				if (Model::checkRow(i, j, player, board) == true) {
+					for (int k = 0; k < 5; k++) {
+						short x = LEFT + 2 + 4 * (j - k);
+						short y = TOP + 1 + 2 * i;
+						winPos.push_back({ x, y });
+					}
+					return { player, winPos };
+				}
+				else if (Model::checkCol(i, j, player, board) == true) {
+					for (int k = 0; k < 5; k++) {
+						short x = LEFT + 2 + 4 * j;
+						short y = TOP + 1 + 2 * (i - k);
+						winPos.push_back({ x, y });
+					}
+					return { player, winPos };
+				}
+				else if (Model::checkMainDiagonal(i, j, player, board) == true) {
+					for (int k = 0; k < 5; k++) {
+						short x = LEFT + 2 + 4 * (j - k);
+						short y = TOP + 1 + 2 * (i - k);
+						winPos.push_back({ x, y });
+					}
+					return { player, winPos };
+				}
+				else if (Model::checkSubDiagonal(i, j, player, board) == true) {
+					for (int k = 0; k < 5; k++) {
+						short x = LEFT + 2 + 4 * (j - k);
+						short y = TOP + 1 + 2 * (i + k);
+						winPos.push_back({ x, y });
+					}
+					return { player, winPos };
 				}
 			}
 		}
 	}
 
-	return count == _SIZE * _SIZE ? 3 : 0;
+	int result = count == _SIZE * _SIZE ? 3 : 0;
+	return { result, winPos };	
 }
 
 bool Model::checkRow(int i, int j, int player, int**& board) {

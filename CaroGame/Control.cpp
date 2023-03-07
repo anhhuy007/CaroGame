@@ -62,9 +62,19 @@ void Control::newGame() {
 
 	while (!escPressed) {
 		Model::playGame(player, board);
-		if (Model::checkResult(player == 1 ? 2 : 1, board) != 0) {
+
+		Model::GameResult result = Model::checkResult(player == 1 ? 2 : 1, board);
+		
+		if (result.first != 0) {
 			// show winner here
 			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+			/*for (int i = 0; i < result.second.size(); i++) {
+				cout << result.second[i].X << " " << result.second[i].Y << endl;
+			}*/
+
+			system("pause");
 			
 			quitGame();
 			break;
@@ -75,6 +85,8 @@ void Control::newGame() {
 		delete[] board[i];
 	}
 	delete[] board;
+
+	Control::returnMenu();
 }
 
 void Control::resetGame() {
@@ -85,4 +97,10 @@ void Control::resetGame() {
 void Control::quitGame() {
 	escPressed = true;
 	system("cls");
+}
+
+void Control::returnMenu() {
+	// return to menu screen
+	system("cls");
+	Control::startGame();
 }
