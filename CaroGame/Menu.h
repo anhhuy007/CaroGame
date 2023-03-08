@@ -14,9 +14,10 @@
 		LOAD_GAME = 4,
 		SETTING = 5,
 		ABOUT = 6,
-		QUIT = 7,
+		QUIT = 7,	
 		BACK = 8,
-		NEW_GAME = 9
+		NEW_GAME = 9,
+		INSTRUCTION = 10,
 	};
 
 	struct MenuItem {
@@ -32,6 +33,11 @@
 		View::Color selected_textcolor
 	);
 	MenuOption newGameMenu(
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor
+	);
+	MenuOption aboutMenu(
 		COORD start,
 		View::Color text_color,
 		View::Color selected_textcolor
@@ -58,5 +64,14 @@
 		int num
 	);
 
+	MenuOption aboutMenu(
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor
+	);
 
-
+	MenuOption instructionMenu(
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor
+	);

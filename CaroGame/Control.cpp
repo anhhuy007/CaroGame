@@ -29,11 +29,19 @@ void Control::startGame() {
 	case MenuOption::LOAD_GAME:
 		//Control::loadGame();
 		break;
+	case MenuOption::INSTRUCTION:
+		aboutMenu({ 65, 10 }, View::Color::BLACK, View::Color::WHITE);
+		Control::returnMenu();
+		break;
 	case MenuOption::SETTING:
 		//Control::setting();
 		break;
 	case MenuOption::ABOUT:
-		//Control::about();
+		aboutMenu({ 65, 10 }, View::Color::BLACK, View::Color::WHITE);
+		Control::returnMenu();
+		break;
+	case MenuOption::BACK:
+		Control::returnMenu();
 		break;
 	case MenuOption::QUIT:
 		Control::quitGame();
