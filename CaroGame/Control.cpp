@@ -9,6 +9,7 @@ void Control::startGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
+	View::textStyle();
 
 	// start menu screen
 	MenuOption option = MenuScreen();
@@ -47,13 +48,13 @@ void Control::newGame() {
 	View::drawOtherDetail();
 
 	// create board
-	board = new int* [_SIZE];
-	for (int i = 0; i < _SIZE; i++) {
-		board[i] = new int[_SIZE];
+	board = new int* [View::_SIZE];
+	for (int i = 0; i < View::_SIZE; i++) {
+		board[i] = new int[View::_SIZE];
 	}
 
-	for (int i = 0; i < _SIZE; i++) {
-		for (int j = 0; j < _SIZE; j++) {
+	for (int i = 0; i < View::_SIZE; i++) {
+		for (int j = 0; j < View::_SIZE; j++) {
 			board[i][j] = 0;
 		}
 	}
@@ -81,7 +82,7 @@ void Control::newGame() {
 		}
 	}
 
-	for (int i = 0; i < _SIZE; i++) {
+	for (int i = 0; i < View::_SIZE; i++) {
 		delete[] board[i];
 	}
 	delete[] board;

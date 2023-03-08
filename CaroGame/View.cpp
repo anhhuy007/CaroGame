@@ -1,4 +1,4 @@
-#include "View.h"
+﻿#include "View.h"
 
 using namespace std;
 
@@ -82,36 +82,22 @@ void View::drawBoard() {
 	gotoXY(RIGHT, BOT); cout << char(217);
 }
 
-void View::drawInfoBorder(int x, int y) {
-	int right = y + 25;
-	int bot = x + 13;
+void View::drawRectangleBorder(COORD spot, int width, int height, Color color) {
 
-	gotoXY(y, x); printf("%c", 201);
-	gotoXY(right, x); printf("%c", 187);
-	gotoXY(y, bot); printf("%c", 200);
-	gotoXY(right, bot); printf("%c", 188);
-	for (int i = y + 1; i < right; i++) {
-		gotoXY(i, x);
-		printf("%c", (char)205);
+	for (short i = spot.X; i < spot.X + width; i++) {
+		for (short j = spot.Y; j < spot.Y + height; j++) {
+			View::printCharactors(L" ", { i, j }, Color::BLACK, Color::WHITE);
+		}
+	}
+	
+	for (short i = spot.X; i < spot.X + width; i++) {
+		View::printCharactors(L"=", { i, spot.Y}, color, Color::WHITE);
+		View::printCharactors(L"=", { i, short(spot.Y + height - 1) }, color, Color::WHITE);
 	}
 
-
-	for (int i = y + 1; i < right; i++) {
-
-		gotoXY(i, bot);
-		printf("%c", (char)205);
-	}
-
-	//2 sides
-
-	for (int i = x + 1; i < bot; i++) {
-		gotoXY(y, i);
-		printf("%c", (char)186);
-	}
-
-	for (int i = x + 1; i < bot; i++) {
-		gotoXY(right, i);
-		printf("%c\n", (char)186);
+	for (short i = spot.Y + 1; i < spot.Y + height - 1; i++) {
+		View::printCharactors(L"||", { spot.X, i }, color, Color::WHITE);
+		View::printCharactors(L"||", { short(spot.X + width - 2), i }, color, Color::WHITE);
 	}
 }
 
@@ -209,6 +195,17 @@ void View::textStyle() {
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
+std::ostream& View::bold_on(std::ostream& os)
+{
+	return os << "\e[1m";
+}
+
+std::ostream& View::bold_off(std::ostream& os)
+{
+	return os << "\e[0m";
+}
+
+
 void View::clearRectangleArea(
 	COORD start, 
 	int width, 
@@ -244,6 +241,64 @@ void View::printCharactors(
 		FillConsoleOutputCharacterW(hOut, content[i], 1, spot, &Written);
 		spot.X++;
 	}
+}
+
+void View::printVerticalCenteredCharactors(
+	std::wstring content,
+	SMALL_RECT box,
+	short y_offset,
+	View::Color text_color,
+	View::Color background_color
+) {
+	short x = box.Left + (box.Right - box.Left) / 2 - content.length() / 2;
+ 	printCharactors(content, { x, short(box.Top + y_offset) }, text_color, background_color);
+}
+
+PCHAR_INFO View::getScreenBuffer() {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	PCHAR_INFO buffer = new CHAR_INFO[View::SCREEN_WIDTH * View::SCREEN_HEIGHT];
+	SMALL_RECT readRegion = { 0, 0, View::SCREEN_WIDTH - 1, View::SCREEN_HEIGHT - 1 };
+
+	ReadConsoleOutput(hOut, buffer, { View::SCREEN_WIDTH, View::SCREEN_HEIGHT }, { 0, 0 }, &readRegion);
+	
+	return buffer;
+}
+
+void View::writeScreenBuffer(PCHAR_INFO buffer) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	SMALL_RECT writeRegion = { 0, 0, View::SCREEN_WIDTH - 1, View::SCREEN_HEIGHT - 1 };
+
+	WriteConsoleOutput(hOut, buffer, { View::SCREEN_WIDTH, View::SCREEN_HEIGHT }, { 0, 0 }, &writeRegion);
+}
+
+void View::confirmDialog(
+	std::wstring content,
+	COORD spot,
+	function<void()> positiveAction,
+	function<void()> negativeAction
+) {
+	View::drawRectangleBorder(spot, 60, 10, View::Color::BLACK);
+	// print dialog title
+	View::printVerticalCenteredCharactors(
+		L"Confirm Dialog",
+		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		2,
+		View::Color::BLACK,
+		View::Color::WHITE
+	);
+	
+	// print dialog content
+	View::printVerticalCenteredCharactors(
+		content,
+		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		4,
+		View::Color::BLACK,
+		View::Color::WHITE
+	);
+
+	// print dialog buttons
+	int indx = 0;
+	
 }
 
 void View::xWinScreen() {

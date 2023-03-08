@@ -10,14 +10,17 @@
 #include <vector>
 #include <string.h>
 #include <wchar.h>
-
-const int _SIZE = 15;
-const int LEFT = 1;
-const int RIGHT = LEFT + 4 * _SIZE;
-const int TOP = 1;
-const int BOT = TOP + 2 * _SIZE;
+#include <functional>
 
 namespace View {
+	const int _SIZE = 15;
+	const int LEFT = 1;
+	const int RIGHT = LEFT + 4 * _SIZE;
+	const int TOP = 1;
+	const int BOT = TOP + 2 * _SIZE;
+	const int SCREEN_WIDTH = 120;
+	const int SCREEN_HEIGHT = 30;
+	
 	enum class Color {
 		BLACK = 0,
 		BLUE = 1,
@@ -39,7 +42,7 @@ namespace View {
 
 	void gotoXY(int x, int y);
 	void drawBoard();
-	void drawInfoBorder(int x, int y);
+	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void fixConsoleWindow();
 	void textColor(int color);
 	void textStyle();	
@@ -48,7 +51,31 @@ namespace View {
 	void xWinScreen();
 	void yWinScreen();
 	void drawScreen();
-	void printCharactors(std::wstring content, COORD spot, Color text_color, Color background_color);
+	void printCharactors(
+		std::wstring content, 
+		COORD spot, 
+		Color text_color, 
+		Color background_color
+	);
+	void printVerticalCenteredCharactors(
+		std::wstring content, 
+		SMALL_RECT box,
+		short y_offset,
+		Color text_color, 
+		Color background_color
+	);
+	PCHAR_INFO getScreenBuffer();
+	void writeScreenBuffer(PCHAR_INFO buffer);
+	void confirmDialog(
+		std::wstring content,
+		COORD spot,
+		std::function<void()> positiveAction,
+		std::function<void()> negativeAction
+	);
+	std::ostream& bold_on(std::ostream& os);
+
+	std::ostream& bold_off(std::ostream& os);
+
 }
 
-
+	
