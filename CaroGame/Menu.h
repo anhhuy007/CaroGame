@@ -75,3 +75,9 @@
 		View::Color text_color,
 		View::Color selected_textcolor
 	);
+
+	MenuOption settingMenu(
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor
+	);

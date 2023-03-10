@@ -31,14 +31,14 @@ void Control::startGame() {
 		//Control::loadGame();
 		break;
 	case MenuOption::INSTRUCTION:
-		aboutMenu({ 65, 10 }, View::Color::BLACK, View::Color::WHITE);
+		instructionMenu({ 60,0 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
-		//Control::setting();
+		Control::setting();
 		break;
 	case MenuOption::ABOUT:
-		aboutMenu({ 65, 10 }, View::Color::BLACK, View::Color::WHITE);
+		aboutMenu({ 65, 0 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::BACK:
@@ -112,4 +112,8 @@ void Control::returnMenu() {
 	// return to menu screen
 	system("cls");
 	Control::startGame();
+}
+
+void Control::setting() {
+	// setting screen
 }
