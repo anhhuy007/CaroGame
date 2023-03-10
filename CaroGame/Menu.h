@@ -18,6 +18,8 @@
 		BACK = 8,
 		NEW_GAME = 9,
 		INSTRUCTION = 10,
+		YES = 11,
+		NO = 12,
 	};
 
 	struct MenuItem {
@@ -75,3 +77,8 @@
 		View::Color text_color,
 		View::Color selected_textcolor
 	);
+
+	void clearMenu(
+		MenuItem menu_items[],
+		COORD start,
+		int menu_size);

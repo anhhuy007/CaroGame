@@ -21,6 +21,21 @@ bool checkIndex(int* index, int num) {
 	return 0;
 }
 
+void clearMenu(
+	MenuItem menu_items[],
+	COORD start,
+	int menu_size
+) {
+	for (int i = 0; i < menu_size; i++) {
+		short y = start.Y + (i * 2);
+		wstring selected_content = L">> " + menu_items[i].content + L" <<";
+		short x = start.X - selected_content.length() / 2;
+		for (short i = 0; i < selected_content.length(); i++) {
+			View::printCharactors(L" ", { short(x + i), y }, View::Color::WHITE, View::Color::WHITE);
+		}
+	}
+}
+
 // draw menu 
 void drawMenu(
 	MenuItem menu_items[], 
@@ -29,7 +44,7 @@ void drawMenu(
 	View::Color selected_textcolor, 
 	int* cur_index, 
 	int menu_size) {
-	View::clearRectangleArea({ 50, 10 }, 50, 50);
+	//clearMenu(menu_items, start, menu_size);
 	for (int i = 0; i < menu_size; i++) {
 		short y = start.Y + (i * 2);
 		if (i == *cur_index) {
@@ -77,6 +92,7 @@ void menuOptionChanged(
 		/*else if (selected_item == L"ESC") {
 			Control::returnMenu();
 		}*/
+		clearMenu(menu_items, start, menu_size);
 		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, menu_size);
 		selected_item = InputHandle::Get();
 	}
@@ -103,6 +119,7 @@ MenuOption mainMenu(
 
 	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	clearMenu(main_menu_items, start, menu_size);
 
 	return main_menu_items[index].menu_option;
 }
@@ -115,17 +132,18 @@ MenuOption newGameMenu(
 	int index = -1;
 	int menu_size = 4;
 	start = { 65, 10 };
-	MenuItem main_menu_items[4] = {
+	MenuItem newgame_menu_items[4] = {
 		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
 		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
 		{2, L"VS COMPUTER (HARD)", MenuOption::NEW_GAME_VS_COMPUTER_HARD },
 		{3, L"BACK", MenuOption::BACK},
 	};
 
-	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	drawMenu(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	menuOptionChanged(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	clearMenu(newgame_menu_items, start, menu_size);
 
-	return main_menu_items[index].menu_option;
+	return newgame_menu_items[index].menu_option;
 }
 
 MenuOption MenuScreen() {
