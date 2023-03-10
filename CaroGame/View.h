@@ -18,8 +18,8 @@ namespace View {
 	const int RIGHT = LEFT + 4 * _SIZE;
 	const int TOP = 1;
 	const int BOT = TOP + 2 * _SIZE;
-	const int SCREEN_WIDTH = 120;
-	const int SCREEN_HEIGHT = 30;
+	const int SCREEN_WIDTH = 135;
+	const int SCREEN_HEIGHT = 35;
 	
 	enum class Color {
 		BLACK = 0,
@@ -72,6 +72,8 @@ namespace View {
 		std::function<void()> positiveAction,
 		std::function<void()> negativeAction
 	);
+	
+	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 	std::ostream& bold_on(std::ostream& os);
 
 	std::ostream& bold_off(std::ostream& os);

@@ -79,12 +79,14 @@ void Control::newGame() {
 			// ....
 			View::gotoXY(0, 0);
 			cout << "Player " << result.first << " win!" << endl;
-			/*for (int i = 0; i < result.second.size(); i++) {
-				cout << result.second[i].X << " " << result.second[i].Y << endl;
-			}*/
-
-			system("pause");
 			
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+				
+			
+			system("pause");
 			quitGame();
 			break;
 		}

@@ -7,14 +7,6 @@
 #include <functional>
 using namespace std;
 
-void dosomething1() {
-	cout << "dosomething1" << endl;
-}
-
-void dosomething2() {
-	cout << "dosomething2" << endl;
-}
-
 int main() {
 	/*This file is not contain any sound effect because of the lack of memory*/
 
@@ -23,11 +15,16 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 	
 	Control::startGame();
+
+	/*wstring key = InputHandle::Get();
+
+	while (key != L"ESC") {
+		key = InputHandle::Get();
+		wcout << key << endl;
+	}*/
+
 	/*View::fixConsoleWindow();
-	View::textStyle();
-	View::confirmDialog(L"Are you sure you want to leave?", { 40, 10 }, &dosomething1, &dosomething2);*/
-
-	//xWinScreen();
-
+	View::textStyle();*/
+	
 	return 0;
 }

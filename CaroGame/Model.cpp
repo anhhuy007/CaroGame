@@ -2,16 +2,22 @@
 #include "InputHandle.h"
 #include "View.h"
 #include "Control.h"
+#include <stack>
 using namespace std;
 
 short curX = View::LEFT + 38;
 short curY = View::TOP + 19;
-short preX = curX;
-short preY = curY;
+stack <COORD> undoStack;
 
 bool endGame = false;
 
 void Model::previousMove(int& player, int**& board) {
+	if (undoStack.size() == 0) return;
+
+	int preX = undoStack.top().X;
+	int preY = undoStack.top().Y;
+	undoStack.pop();
+
 	int i = (preY - View::TOP - 1) / 2;
 	int j = (preX - View::LEFT - 2) / 4;
 
@@ -33,7 +39,6 @@ void Model::playGame(int& player, int**& board) {
 		// move up
 		if (key == L"UP") {
 			if (curY > View::TOP + 1) {
-				preX = curX; preY = curY;
 				curY -= 2;
 			}
 			else {
@@ -44,7 +49,6 @@ void Model::playGame(int& player, int**& board) {
 		// move down
 		else if (key == L"DOWN") {
 			if (curY < View::BOT - 1) {
-				preX = curX; preY = curY;
 				curY += 2; 
 			} 
 			else {
@@ -55,7 +59,6 @@ void Model::playGame(int& player, int**& board) {
 		// move left
 		else if (key == L"LEFT") {
 			if (curX > View::LEFT + 2) {
-				preX = curX; preY = curY;
 				curX -= 4;
 			}
 			else {
@@ -66,7 +69,6 @@ void Model::playGame(int& player, int**& board) {
 		// move right
 		else if (key == L"RIGHT") {
 			if (curX < View::RIGHT - 2) {
-				preX = curX; preY = curY;
 				curX += 4;
 			}
 			else {
@@ -80,6 +82,7 @@ void Model::playGame(int& player, int**& board) {
 			int j = (curX - View::LEFT - 2) / 4;
 
 			if (board[i][j] == 0) {
+				undoStack.push({ curX, curY });
 				board[i][j] = player;
 				wstring ch = player == 1 ? L"X" : L"O";
 				View::printCharactors(ch, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
@@ -90,10 +93,27 @@ void Model::playGame(int& player, int**& board) {
 		}
 		
 		else if (key == L"ESC") {
-			endGame = true;
-			Control::quitGame();
+			// show a dialog that ask user to confirm to exit
+			PCHAR_INFO buffer = View::getScreenBuffer();
+			
+			system("cls");
+			View::confirmDialog(
+				L"Are you sure to exit?",
+				{ 40, 10 },
+				[]() -> void {
+					// if click YES then return menu
+					endGame = true;
+					Control::quitGame();
+				},
+				[&]() -> void {
+					// continue game
+					View::writeScreenBuffer(buffer);
+				}
+			);
 		}
 		else if (key == L"F4") {
+			View::gotoXY(0, 0);
+			cout << "PRESS F44444";
 			previousMove(player, board);
 		}
 	}
@@ -105,8 +125,7 @@ void Model::playGame(int& player, int**& board) {
 // 3 : draw
 // if game ended, return a pair of result and a vector of coordinates of winning line
 Model::GameResult Model::checkResult(int player, int**& board) {
-	vector<COORD> winPos(0, { 0, 0 });
-	
+	vector<COORD> winPos;
 	int count = 0;
 	for (int i = 0; i < View::_SIZE; i++) {
 		for (int j = 0; j < View::_SIZE; j++) {
@@ -115,7 +134,7 @@ Model::GameResult Model::checkResult(int player, int**& board) {
 			if (board[i][j] == player) {
 				if (Model::checkRow(i, j, player, board) == true) {
 					for (int k = 0; k < 5; k++) {
-						short x = View::LEFT + 2 + 4 * (j - k);
+						short x = View::LEFT + 2 + 4 * (j + k);
 						short y = View::TOP + 1 + 2 * i;
 						winPos.push_back({ x, y });
 					}
@@ -124,23 +143,23 @@ Model::GameResult Model::checkResult(int player, int**& board) {
 				else if (Model::checkCol(i, j, player, board) == true) {
 					for (int k = 0; k < 5; k++) {
 						short x = View::LEFT + 2 + 4 * j;
-						short y = View::TOP + 1 + 2 * (i - k);
+						short y = View::TOP + 1 + 2 * (i + k);
 						winPos.push_back({ x, y });
 					}
 					return { player, winPos };
 				}
 				else if (Model::checkMainDiagonal(i, j, player, board) == true) {
 					for (int k = 0; k < 5; k++) {
-						short x = View::LEFT + 2 + 4 * (j - k);
-						short y = View::TOP + 1 + 2 * (i - k);
+						short x = View::LEFT + 2 + 4 * (j + k);
+						short y = View::TOP + 1 + 2 * (i + k);
 						winPos.push_back({ x, y });
 					}
 					return { player, winPos };
 				}
 				else if (Model::checkSubDiagonal(i, j, player, board) == true) {
 					for (int k = 0; k < 5; k++) {
-						short x = View::LEFT + 2 + 4 * (j - k);
-						short y = View::TOP + 1 + 2 * (i + k);
+						short x = View::LEFT + 2 + 4 * (j + k);
+						short y = View::TOP + 1 + 2 * (i - k);
 						winPos.push_back({ x, y });
 					}
 					return { player, winPos };

@@ -1,4 +1,5 @@
 ﻿#include "View.h"
+#include "Menu.h"
 
 using namespace std;
 
@@ -298,7 +299,35 @@ void View::confirmDialog(
 
 	// print dialog buttons
 	int indx = 0;
+	MenuItem items[] = {
+		{ 0, L"YES", MenuOption::YES },
+		{ 1, L"NO", MenuOption::NO }
+	};
+
+	short center_x = spot.X + 60 / 2;
 	
+	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
+	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
+
+	switch (items[indx].menu_option) {
+	case MenuOption::YES:
+		positiveAction();
+		break;
+	case MenuOption::NO:
+		negativeAction();
+		break;
+
+	default:
+		negativeAction();
+		break;
+	}
+}
+
+void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {
+	wstring winner_ws = player == 1 ? L"X" : L"O";
+	for (int i = 0; i < winning_moves.size(); i++) {
+		View::printCharactors(winner_ws, winning_moves[i], View::Color::BLACK, View::Color::YELLOW);
+	}
 }
 
 void View::xWinScreen() {
