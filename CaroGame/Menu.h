@@ -27,6 +27,14 @@
 		std::wstring content;
 		MenuOption menu_option;
 	};
+
+	struct SettingItem {
+		int indx;
+		std::wstring content;
+		bool status;
+		std::wstring status_true;
+		std::wstring status_false;
+	};
 	
 	// input 3 parameters: menu's position, normal text color and selected text color
 	MenuOption mainMenu(
@@ -81,11 +89,19 @@
 	void clearMenu(
 		MenuItem menu_items[],
 		COORD start,
-		int menu_size);
+		int menu_size
 	);
 
-	MenuOption settingMenu(
+	void settingMenu(
 		COORD start,
 		View::Color text_color,
 		View::Color selected_textcolor
+	);
+	void settingMenuOptionChanged(
+		SettingItem setting_items[],
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor,
+		int* cur_index,
+		int menu_size
 	);

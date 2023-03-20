@@ -92,8 +92,10 @@ void Model::playGame(int& player, int**& board) {
 			break;
 		}
 		
+		// quit game
 		else if (key == L"ESC") {
 			// show a dialog that ask user to confirm to exit
+			// get current screen's information before display confirm dialog
 			PCHAR_INFO buffer = View::getScreenBuffer();
 			
 			system("cls");
@@ -107,14 +109,20 @@ void Model::playGame(int& player, int**& board) {
 				},
 				[&]() -> void {
 					// continue game
+					// restore screen's information
 					View::writeScreenBuffer(buffer);
 				}
 			);
 		}
+		// undo move
 		else if (key == L"F4") {
 			View::gotoXY(0, 0);
-			cout << "PRESS F44444";
 			previousMove(player, board);
+		}
+
+		// save game
+		else if (key == L"F2") {
+			
 		}
 	}
 }

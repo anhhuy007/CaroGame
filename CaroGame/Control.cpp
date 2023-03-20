@@ -31,14 +31,15 @@ void Control::startGame() {
 		//Control::loadGame();
 		break;
 	case MenuOption::INSTRUCTION:
-		instructionMenu({ 60,0 }, View::Color::BLACK, View::Color::WHITE);
+		instructionMenu({ 60, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
-		Control::setting();
+		settingMenu({ 60, 10 }, View::Color::BLACK, View::Color::PURPLE);
+		Control::returnMenu();
 		break;
 	case MenuOption::ABOUT:
-		aboutMenu({ 65, 0 }, View::Color::BLACK, View::Color::WHITE);
+		aboutMenu({ 65, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::BACK:
@@ -92,6 +93,7 @@ void Control::newGame() {
 		}
 	}
 
+	// delete board
 	for (int i = 0; i < View::_SIZE; i++) {
 		delete[] board[i];
 	}
@@ -116,6 +118,3 @@ void Control::returnMenu() {
 	Control::startGame();
 }
 
-void Control::setting() {
-	// setting screen
-}

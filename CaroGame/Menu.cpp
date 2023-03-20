@@ -238,28 +238,51 @@ MenuOption instructionMenu(
 	return MenuOption::INSTRUCTION;
 }
 
-MenuOption settingMenu(
+void drawSettingMenu(
+	SettingItem setting_items[],
+	COORD start,
+	View::Color textcolor,
+	View::Color selected_textcolor,
+	int* cur_index,
+	int menu_size
+) {
+	//clearMenu(menu_items, start, menu_size);
+	for (int i = 0; i < menu_size; i++) {
+		short y = start.Y + (i * 2);
+		wstring content = setting_items[i].content;
+		if (setting_items[i].status == true) {
+			content += setting_items[i].status_true;
+		}
+		else {
+			content += setting_items[i].status_false;
+		}
+		
+		if (i == *cur_index) {
+			wstring selected_content = L">> " + content + L" <<";
+			short x = start.X - selected_content.length() / 2;
+			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
+		}
+		else {
+			short x = start.X - content.length() / 2;
+			View::printCharactors(content, { x, y }, textcolor, View::Color::WHITE);
+		}
+	}
+}
+
+void settingMenuOptionChanged(
+	SettingItem setting_items[],
 	COORD start,
 	View::Color text_color,
-	View::Color selected_textcolor
+	View::Color selected_textcolor,
+	int* cur_index,
+	int menu_size
 ) {
-	int index = -1;
-	int menu_size = 4;
-	int background = 0;
-	int effect = 0;
-	MenuItem setting_items[3] = {
-		{0, L"Background sound", MenuOption::NONE },
-		{1, L"Effect sound", MenuOption::NONE},
-		{2, L"BACK", MenuOption::BACK},
-	};
-
-	wstring on_off[2]= {L"ON", L"OFF"};
 	wstring selected_item = InputHandle::Get();
 
-	while (selected_item != L"ENTER") {
+	while (selected_item != L"ESC") {
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
-			index -= 1;
-			if (checkIndex(&index, menu_size)) {
+			*cur_index -= 1;
+			if (checkIndex(cur_index, menu_size)) {
 				Sound::playSound(Sound::error);
 			}
 			else {
@@ -267,43 +290,43 @@ MenuOption settingMenu(
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
-			index += 1;
-			if (checkIndex(&index, menu_size)) {
+			*cur_index += 1;
+			if (checkIndex(cur_index, menu_size)) {
 				Sound::playSound(Sound::error);
 			}
 			else {
 				Sound::playSound(Sound::right);
 			}
 		}
-		View::clearRectangleArea({ 50, 10 }, 50, 50);
-		for (int i = 0; i < menu_size; i++) {
-			short y = start.Y + (i * 2);
-			if (i == index && index == 0) {
-				wstring selected_content = L">> " + setting_items[i].content + L": " + on_off[background] + L" <<";
-				background = background == 0 ? 1 : 0;
-				short x = start.X - selected_content.length() / 2;
-				View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
-				continue;
+		else if (selected_item == L"ENTER") {
+			if (*cur_index == 2) {
+				return;
 			}
-			else if (i == index && index == 1) {
-				wstring selected_content = L">> " + setting_items[i].content + L": " + on_off[background] + L" <<";
-				effect = effect == 0 ? 1 : 0;
-				short x = start.X - selected_content.length() / 2;
-				View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
-				continue;
-			}
-			else if (i == index && index == 2) {
-				wstring selected_content = L">> " + setting_items[i].content + L" <<";
-				short x = start.X - selected_content.length() / 2;
-				View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
-				continue;
-			}
-			else {
-				short x = start.X - setting_items[i].content.length() / 2;
-				View::printCharactors(setting_items[i].content, { x, y }, text_color, View::Color::WHITE);
-			}
+
+			setting_items[*cur_index].status = !setting_items[*cur_index].status;
+			Sound::playSound(Sound::right);
 		}
+		system("cls");
+		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
 		selected_item = InputHandle::Get();
 	}
-	return setting_items[index].menu_option;
+}
+
+void settingMenu(
+	COORD start,
+	View::Color text_color,
+	View::Color selected_textcolor
+) {
+	int index = -1;
+	int menu_size = 3;
+	bool background = 1;
+	bool effect = 1;
+	SettingItem setting_items[3] = {
+		{ 0, L"BACKGROUND SOUND: ", background, L"ON", L"OFF"},
+		{ 1, L"SOUND EFFECT: ", effect, L"ON", L"OFF"}, 
+		{ 2, L"BACK", false, L"", L""}
+	};
+
+	drawSettingMenu(setting_items, start, text_color, selected_textcolor, &index, menu_size);
+	settingMenuOptionChanged(setting_items, start, text_color, selected_textcolor, &index, menu_size);
 }

@@ -1,4 +1,5 @@
 #pragma comment(lib, "winmm.lib")
+#pragma once
 #include <Windows.h>
 
 namespace Sound {
@@ -6,6 +7,6 @@ namespace Sound {
 	const LPCWSTR error = L"D:\\Caro\\Error.wav";
 	const LPCWSTR background = L"D:\\Caro\\Cipher2.wav";
 
-	void playSound(LPCWSTR s);
+	void playSound(LPCWSTR path);
 }
 
