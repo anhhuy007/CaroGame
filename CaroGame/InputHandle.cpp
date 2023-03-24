@@ -55,3 +55,7 @@ wstring InputHandle::Get() {
 
 	return wstring(1, ch);
 }
+
+bool InputHandle::isMoveKey(std::wstring key) {
+	return key == L"UP" || key == L"DOWN" || key == L"LEFT" || key == L"RIGHT";
+}

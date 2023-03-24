@@ -1,9 +1,25 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 #include "Control.h"
 #include "View.h"
 #include "Model.h"
 #include "Menu.h"
+#include "FileIO.h"
 
-int** board; bool escPressed = false;
+bool escPressed = false;
+
+Model::GameInformation Control::initNewGame() {
+	Model::GameInformation game_info;
+	game_info.player1.isFirstPlayer = true;
+	game_info.isFirstPlayerTurn = true;
+	game_info.timeRemained = 1200;
+	game_info.curX = 0;
+	game_info.curY = 0;
+	game_info.endGame = false;
+	memset(game_info.board, 0, sizeof(game_info.board));
+	return game_info;
+}
 
 void Control::startGame() {
 	// initialize default configuration
@@ -19,7 +35,7 @@ void Control::startGame() {
 		//Control::continueGame();
 		break;
 	case MenuOption::NEW_GAME_VS_PLAYER:
-		Control::newGame();
+		Control::newGame(true, true);
 		break;
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
 		//Control::newGame();
@@ -51,54 +67,51 @@ void Control::startGame() {
 	}
 }
 
-void Control::newGame() {
+void Control::newGame(bool vsHuman, bool isEasy) {
 	Control::resetGame();
 	View::drawBoard();
-	View::drawOtherDetail();
+	View::drawOtherDetail(); 
+	Model::GameInformation game_info = Control::initNewGame();
 
-	// create board
-	board = new int* [View::_SIZE];
-	for (int i = 0; i < View::_SIZE; i++) {
-		board[i] = new int[View::_SIZE];
-	}
-
-	for (int i = 0; i < View::_SIZE; i++) {
-		for (int j = 0; j < View::_SIZE; j++) {
-			board[i][j] = 0;
-		}
-	}
-
-	int player = 1;  escPressed = false;
-
-	while (!escPressed) {
-		Model::playGame(player, board);
-
-		Model::GameResult result = Model::checkResult(player == 1 ? 2 : 1, board);
-		
+	while (!game_info.endGame) {
+		Model::playerTurn(game_info.player1, game_info);
+		Model::GameResult result = Model::checkResult(1, game_info.board);
+		// check if player 1 win
 		if (result.first != 0) {
 			// show winner here
 			// ....
 			View::gotoXY(0, 0);
 			cout << "Player " << result.first << " win!" << endl;
-			
+
 			// show winning moves
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-				
-			
-			system("pause");
-			quitGame();
+
+			game_info.endGame = true;
+			break;
+		}
+
+		Model::playerTurn(game_info.player2, game_info);
+		result = Model::checkResult(2, game_info.board);
+		// check if player 2 win
+		if (result.first != 0) {
+			// show winner here
+			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+
+			game_info.endGame = true;
 			break;
 		}
 	}
-
-	// delete board
-	for (int i = 0; i < View::_SIZE; i++) {
-		delete[] board[i];
-	}
-	delete[] board;
-
+	
+	system("pause");
 	Control::returnMenu();
 }
 
@@ -117,4 +130,21 @@ void Control::returnMenu() {
 	system("cls");
 	Control::startGame();
 }
+
+// save game to file
+void Control::saveGame(Model::GameInformation game_info) {
+	// create file name
+	char fileName[50];
+	strcpy(fileName, game_info.name);
+	// write game information to file
+	FileIO::writeGameInfoToFile(fileName, game_info);
+}
+
+// load game from file
+void Control::loadGame(char* name) {
+	// read game information from file
+	Model::GameInformation game_info = FileIO::readGameInfoFromFile(name);
+	// load game
+}
+
 

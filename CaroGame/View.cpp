@@ -1,5 +1,6 @@
 ﻿#include "View.h"
 #include "Menu.h"
+#include "Control.h"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ using namespace std;
 void View::drawBoard() {
 	// draw TOP
 	gotoXY(LEFT + 1, TOP);
-	for (int i = 0; i < (2 * _SIZE); i++) {
+	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
 		if (i % 2) {
 			cout << char(194);
 		}
@@ -18,7 +19,7 @@ void View::drawBoard() {
 
 	// draw BOTTOM
 	gotoXY(LEFT + 1, BOT);
-	for (int i = 0; i < (2 * _SIZE); i++) {
+	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
 		if (i % 2) {
 			cout << char(193);
 		}
@@ -27,7 +28,7 @@ void View::drawBoard() {
 		}
 	}
 
-	for (int i = 0; i < 2 * _SIZE; i++) {
+	for (int i = 0; i < 2 * BOARD_SIZE; i++) {
 		gotoXY(LEFT, TOP + i);
 		if (i % 2) {
 			cout << char(179);
@@ -46,7 +47,7 @@ void View::drawBoard() {
 	}
 
 	char s1[200], s2[200];
-	for (int j = 0; j < 4 * _SIZE - 1; j++) {
+	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
 		if (j % 4) {
 			s1[j] = ' ';
 		}
@@ -55,7 +56,7 @@ void View::drawBoard() {
 		}
 	}
 
-	for (int j = 0; j < 4 * _SIZE - 1; j++) {
+	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
 		if ((j + 1) % 4) {
 			s2[j] = 196;
 		}
@@ -64,11 +65,11 @@ void View::drawBoard() {
 		}
 	}
 
-	s1[4 * _SIZE - 1] = '\0';
-	s2[4 * _SIZE - 1] = '\0';
+	s1[4 * BOARD_SIZE - 1] = '\0';
+	s2[4 * BOARD_SIZE - 1] = '\0';
 
 	int i = 1;
-	while (i < 2 * _SIZE - 1) {
+	while (i < 2 * BOARD_SIZE - 1) {
 		gotoXY(LEFT, TOP + i++);
 		cout << s1;
 
@@ -164,7 +165,7 @@ void View::drawOtherDetail() {
 
 }
 
-void View::gotoXY(int x, int y) {
+void View::gotoXY(short x, short y) {
 	static HANDLE h = NULL;
 	if (!h) h = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coord = { x, y };

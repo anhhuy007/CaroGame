@@ -5,5 +5,6 @@
 
 namespace InputHandle {
 	std::wstring Get();
+	bool isMoveKey(std::wstring key);
 }
 

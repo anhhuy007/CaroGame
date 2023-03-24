@@ -5,6 +5,8 @@
 #include "Menu.h"
 #include "InputHandle.h"
 #include <functional>
+#include "FileIO.h"
+#include <string>
 using namespace std;
 
 int main() {
@@ -15,16 +17,5 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 	
 	Control::startGame();
-
-	/*wstring key = InputHandle::Get();
-
-	while (key != L"ESC") {
-		key = InputHandle::Get();
-		wcout << key << endl;
-	}*/
-
-	/*View::fixConsoleWindow();
-	View::textStyle();*/
-	
 	return 0;
 }

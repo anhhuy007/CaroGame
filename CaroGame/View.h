@@ -13,11 +13,11 @@
 #include <functional>
 
 namespace View {
-	const int _SIZE = 15;
+	const int BOARD_SIZE = 15;
 	const int LEFT = 1;
-	const int RIGHT = LEFT + 4 * _SIZE;
+	const int RIGHT = LEFT + 4 * BOARD_SIZE;
 	const int TOP = 1;
-	const int BOT = TOP + 2 * _SIZE;
+	const int BOT = TOP + 2 * BOARD_SIZE;
 	const int SCREEN_WIDTH = 135;
 	const int SCREEN_HEIGHT = 35;
 	
@@ -40,7 +40,7 @@ namespace View {
 		WHITE = 15
 	};
 
-	void gotoXY(int x, int y);
+	void gotoXY(short x, short y);
 	void drawBoard();
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void fixConsoleWindow();
@@ -75,9 +75,7 @@ namespace View {
 	
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 	std::ostream& bold_on(std::ostream& os);
-
 	std::ostream& bold_off(std::ostream& os);
-
 }
 
 	
