@@ -20,6 +20,7 @@ namespace View {
 	const int BOT = TOP + 2 * BOARD_SIZE;
 	const int SCREEN_WIDTH = 135;
 	const int SCREEN_HEIGHT = 35;
+	const SMALL_RECT WINDOW_SIZE = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 	
 	enum class Color {
 		BLACK = 0,
@@ -48,9 +49,6 @@ namespace View {
 	void textStyle();	
 	void clearRectangleArea(COORD start, int width, int height);
 	void drawOtherDetail();
-	void xWinScreen();
-	void yWinScreen();
-	void drawScreen();
 	void printCharactors(
 		std::wstring content, 
 		COORD spot, 
@@ -76,6 +74,13 @@ namespace View {
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 	std::ostream& bold_on(std::ostream& os);
 	std::ostream& bold_off(std::ostream& os);
+	void drawCaroGameText(int delayTime);
+	void splashScreenInfo();
+	void splashScreen();
+	void drawPacman();
+	int GetRandom(int min, int max);
+	COORD getCenteredSpot(std::wstring content, SMALL_RECT box);
+	void printCenteredToast(std::wstring content, SMALL_RECT box, Color text_color, Color background_color);
 }
 
 	

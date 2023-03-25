@@ -10,6 +10,6 @@
 using namespace Model;
 
 namespace FileIO {
-	void writeGameInfoToFile(char fileName[], GameInformation game_info);
+	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
 	GameInformation readGameInfoFromFile(char fileName[]);
 }	

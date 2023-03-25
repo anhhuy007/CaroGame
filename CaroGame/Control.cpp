@@ -6,11 +6,14 @@
 #include "Model.h"
 #include "Menu.h"
 #include "FileIO.h"
+#include <string>
 
 bool escPressed = false;
 
 Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
+	
+	// init game information
 	game_info.player1.isFirstPlayer = true;
 	game_info.isFirstPlayerTurn = true;
 	game_info.timeRemained = 1200;
@@ -27,7 +30,17 @@ void Control::startGame() {
 	View::fixConsoleWindow();
 	View::textStyle();
 
+	// show splash screen
+	/*View::splashScreen();
+	system("cls");*/
+
+	// show menu screen
+	Control::startMenuScreen();
+}
+
+void Control::startMenuScreen() {
 	// start menu screen
+	View::drawCaroGameText(0);
 	MenuOption option = MenuScreen();
 
 	switch (option) {
@@ -72,8 +85,9 @@ void Control::newGame(bool vsHuman, bool isEasy) {
 	View::drawBoard();
 	View::drawOtherDetail(); 
 	Model::GameInformation game_info = Control::initNewGame();
+	escPressed = false;
 
-	while (!game_info.endGame) {
+	while (!game_info.endGame && !escPressed) {
 		Model::playerTurn(game_info.player1, game_info);
 		Model::GameResult result = Model::checkResult(1, game_info.board);
 		// check if player 1 win
@@ -91,6 +105,8 @@ void Control::newGame(bool vsHuman, bool isEasy) {
 			game_info.endGame = true;
 			break;
 		}
+
+		if (escPressed) break;
 
 		Model::playerTurn(game_info.player2, game_info);
 		result = Model::checkResult(2, game_info.board);
@@ -110,7 +126,6 @@ void Control::newGame(bool vsHuman, bool isEasy) {
 			break;
 		}
 	}
-	
 	system("pause");
 	Control::returnMenu();
 }
@@ -128,16 +143,81 @@ void Control::quitGame() {
 void Control::returnMenu() {
 	// return to menu screen
 	system("cls");
-	Control::startGame();
+	Control::startMenuScreen();
+}
+
+bool Control::isValidFileName(std::string file) {
+	for (int i = 0; i < file.length(); i++) {
+		// check if file contain only alphabet and number
+		if (!isalpha(file[i]) && !isdigit(file[i])) return false;
+ 	}
+
+	return true;
+}
+
+bool Control::fileNameExisted(std::string file) {
+	file += ".dat";
+	// check if file is already exist
+	std::ifstream ifs(file);
+	if (ifs.good()) return true;
+
+	return false;
 }
 
 // save game to file
-void Control::saveGame(Model::GameInformation game_info) {
-	// create file name
-	char fileName[50];
-	strcpy(fileName, game_info.name);
+void Control::saveGame(Model::GameInformation& game_info) {
+	char* file;
+	std::string fileName = "";
+	if (strlen(game_info.name) == 0) {
+		while (1) {
+			system("cls");
+			// input new file name
+			wstring wstr = L"Enter file name: ";
+			wstring note = L"(Note: File name must contain only alphabet and number)";
+			COORD spot = View::getCenteredSpot(note, View::WINDOW_SIZE);
+			View::gotoXY(spot.X, spot.Y + 1);
+			wcout << note;
+			View::gotoXY(spot.X, spot.Y);
+			wcout << wstr;
+			cin >> fileName;
+
+			// check if file name is valid
+			if (!Control::isValidFileName(fileName)) {
+				wstr = L"Invalid file name! Please try again.";
+				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+				Sleep(1000);
+			}
+			else if (Control::fileNameExisted(fileName)) {
+				wstr = L"File name already existed! Please try again.";
+				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+				Sleep(1000);
+			}
+			else break;
+		}
+		
+
+		file = new char[fileName.length() + 1];
+		strcpy(file, fileName.c_str());
+		strcpy(game_info.name, file);
+		strcat(file, ".dat");
+	}
+	else {
+		// get filename from game_info
+		file = new char[strlen(game_info.name) + 1];
+		strcpy(file, game_info.name);
+		strcat(file, ".dat");
+	}
 	// write game information to file
-	FileIO::writeGameInfoToFile(fileName, game_info);
+	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
+
+	if (isSuccess) {
+		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
+	}
+	else {
+		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
+	}
+	system("pause");
+	system("cls");
 }
 
 // load game from file

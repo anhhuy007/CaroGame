@@ -14,26 +14,28 @@ namespace Model {
 	typedef pair<int, vector<COORD>> GameResult;
 
 	struct Player {
-		char name[100];
+		char name[100] = "";
 		int numberOfMoves;
 		bool isFirstPlayer;
-	};
-
-	struct GameInformation {
-		char name[50];
-		Player player1;
-		Player player2;
-		bool isFirstPlayerTurn;
-		int timeRemained; // in seconds
-		int board[sz][sz];
-		int curX; 
-		int curY;
-		bool endGame;
 	};
 
 	struct PlayerMove {
 		COORD move;
 		int player;
+	};
+
+	struct GameInformation {
+		char name[50] = "";
+		Player player1;
+		Player player2;
+		bool isFirstPlayerTurn;
+		int timeRemained; // in seconds
+		int board[sz][sz];
+		PlayerMove playerMoveHistory[250];
+		int moveHistorySize = 0;
+		int curX; 
+		int curY;
+		bool endGame;
 	};
 	
 	void playerTurn(
@@ -75,8 +77,7 @@ namespace Model {
 		int board[sz][sz]
 	);
 	void previousMove(
-		int& player, 
-		int board[sz][sz]
+		Model::GameInformation& game_info
 	);
 }
 

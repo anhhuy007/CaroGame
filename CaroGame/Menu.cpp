@@ -106,7 +106,6 @@ MenuOption mainMenu(
 ) {	
 	int index = -1;
 	int menu_size = 7;
-	start = { 65, 10 };
 	MenuItem main_menu_items[7] = {
 		{ 0, L"CONTINUE", MenuOption::CONTINUE },
 		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
@@ -131,7 +130,7 @@ MenuOption newGameMenu(
 ) {	
 	int index = -1;
 	int menu_size = 4;
-	start = { 65, 10 };
+	start = { 65, 15 };
 	MenuItem newgame_menu_items[4] = {
 		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
 		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
@@ -148,11 +147,11 @@ MenuOption newGameMenu(
 
 MenuOption MenuScreen() {
 	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
-	MenuOption option = mainMenu({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
+	MenuOption option = mainMenu({ 65, 15 }, View::Color::BLACK, View::Color::PURPLE);
 	
 	switch (option) {
 	case MenuOption::NEW_GAME:
-		return newGameMenu({ 65, 10 }, View::Color::BLACK, View::Color::PURPLE);
+		return newGameMenu({ 65, 15 }, View::Color::BLACK, View::Color::PURPLE);
 	}
 	return option;
 }
@@ -180,7 +179,7 @@ MenuOption aboutMenu(
 		L"",
 		L"PRESS ESC TO BACK"
 	};
-	View::clearRectangleArea({ 50, 10 }, 50, 50);
+	View::clearRectangleArea({ 50, 15 }, 50, 50);
 	
 	for (int i = 0; i < 14; i++) {
 		
@@ -221,7 +220,7 @@ MenuOption instructionMenu(
 		L"",
 		L"PRESS ESC TO BACK"
 	};
-	View::clearRectangleArea({ 50, 10 }, 50, 50);
+	View::clearRectangleArea({ 50, 15 }, 50, 50);
 
 	for (int i = 0; i < 14; i++) {
 

@@ -7,26 +7,32 @@ using namespace std;
 
 short curX = View::LEFT + 38;
 short curY = View::TOP + 19;
-stack <Model::PlayerMove> moveStack;
-
 bool endTurn = false;
 
-void Model::previousMove(int& player, int board[sz][sz]) {
-	if (moveStack.size() == 0) return;
+void Model::previousMove(Model::GameInformation& game_info) {
+	int n = game_info.moveHistorySize;
 
-	int preX = moveStack.top().move.X;
-	int preY = moveStack.top().move.Y;
-	moveStack.pop();
+	if (n == 0) return;
+
+	int preX = game_info.playerMoveHistory[n - 1].move.X;
+	int preY = game_info.playerMoveHistory[n - 1].move.Y;
+	int player = game_info.playerMoveHistory[n - 1].player;
+	
+	// pop the last from the move history 
+	game_info.playerMoveHistory[n - 1] = { { 0, 0 }, 0 };
+	game_info.moveHistorySize--;
 
 	int i = (preY - View::TOP - 1) / 2;
 	int j = (preX - View::LEFT - 2) / 4;
 
-	board[i][j] = 0;
-	player = player == 1 ? 2 : 1;
-	curX = preX; curY = preY;
+	// change player turn
+	game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 
-	View::gotoXY(preX, preY);
-	cout << char(32);
+	// mark the previous move as empty
+	game_info.board[i][j] = 0;
+	curX = preX; curY = preY;
+	View::printCharactors(L" ", { curX, curY }, View::Color::WHITE, View::Color::WHITE);
+	View::gotoXY(curX, curY);
 }
 
 void Model::makePlayerMove(std::wstring key) {	
@@ -80,11 +86,15 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 	
 	// if the board is empty
 	if (game_info.board[i][j] == 0) {
-		// make move
+		// mark move
 		game_info.board[i][j] = playerNum;
-		moveStack.push({ spot, playerNum });
+		// add move to history
+		game_info.playerMoveHistory[game_info.moveHistorySize] = { spot, playerNum };
+		game_info.moveHistorySize++; 
+		// show move on the game board
 		wstring playerMark = playerNum == 1 ? L"X" : L"O";
 		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
+		// change player turn
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 		endTurn = true;
 	}
@@ -112,8 +122,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			
 			system("cls");
 			View::confirmDialog(
-				L"Are you sure to exit?",
-				{ 40, 10 },
+				L"Your current game will not be saved. Are you sure you want to exit?",
+				{ 25, 10 },
 				[]() -> void {
 					// if click YES then return menu
 					endTurn = true;
@@ -129,15 +139,35 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		
 		// undo move
 		else if (key == L"F4") {
-			View::gotoXY(0, 0);
-			//previousMove(player, game_info.board);
+			previousMove(game_info);
+			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
 		}
 
 		// save game
 		else if (key == L"F2") {
-			
+			// save current screen buffers
+			PCHAR_INFO buffer = View::getScreenBuffer();
+			system("cls");
+
+			// show a dialog that ask user to confirm to save
+			View::confirmDialog(
+				L"Are you sure you want to save this game?",
+				{ 40, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					endTurn = true;
+					Control::saveGame(game_info);
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				},
+				[&]() -> void {
+					// continue game
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				}
+			);
 		}
-		
+		// player's move
 		else {
 			Model::makePlayerMove(key);
 			View::gotoXY(curX, curY);

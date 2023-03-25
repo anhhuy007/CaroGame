@@ -1,15 +1,16 @@
 #include "FileIO.h" 
 
-void FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
+bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
 	ofstream ofs(fileName, ios::binary);
 
 	if (!ofs) {
 		std::cerr << "Cannot open file " << fileName << std::endl;
-		return;
+		return 0;
 	}
 
 	ofs.write((char*)&game_info, sizeof(Model::GameInformation));
 	ofs.close();
+	return 1;
 }
 
 GameInformation FileIO::readGameInfoFromFile(char fileName[]) {

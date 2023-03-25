@@ -1,6 +1,7 @@
 ﻿#include "View.h"
 #include "Menu.h"
 #include "Control.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -207,7 +208,6 @@ std::ostream& View::bold_off(std::ostream& os)
 	return os << "\e[0m";
 }
 
-
 void View::clearRectangleArea(
 	COORD start, 
 	int width, 
@@ -279,11 +279,12 @@ void View::confirmDialog(
 	function<void()> positiveAction,
 	function<void()> negativeAction
 ) {
-	View::drawRectangleBorder(spot, 60, 10, View::Color::BLACK);
+	int width = content.size() + 20;
+	View::drawRectangleBorder(spot, width, 10, View::Color::BLACK);
 	// print dialog title
 	View::printVerticalCenteredCharactors(
 		L"Confirm Dialog",
-		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		{ spot.X, spot.Y, short(spot.X + width), short(spot.Y + 10) },
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
@@ -292,7 +293,7 @@ void View::confirmDialog(
 	// print dialog content
 	View::printVerticalCenteredCharactors(
 		content,
-		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		{ spot.X, spot.Y, short(spot.X + width), short(spot.Y + 10) },
 		4,
 		View::Color::BLACK,
 		View::Color::WHITE
@@ -305,7 +306,7 @@ void View::confirmDialog(
 		{ 1, L"NO", MenuOption::NO }
 	};
 
-	short center_x = spot.X + 60 / 2;
+	short center_x = spot.X + width / 2;
 	
 	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
 	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
@@ -324,6 +325,18 @@ void View::confirmDialog(
 	}
 }
 
+COORD View::getCenteredSpot(std::wstring content, SMALL_RECT box) {
+	short x = box.Left + (box.Right - box.Left) / 2 - content.length() / 2;
+	short y = box.Top + (box.Bottom - box.Top) / 2;
+	return { x, y };
+}
+
+void View::printCenteredToast(std::wstring content, SMALL_RECT box, View::Color text_color, View::Color background_color) {
+	system("cls");
+	COORD spot = View::getCenteredSpot(content, box);
+	View::printCharactors(content, spot, text_color, background_color);
+}
+
 void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {
 	wstring winner_ws = player == 1 ? L"X" : L"O";
 	for (int i = 0; i < winning_moves.size(); i++) {
@@ -331,110 +344,86 @@ void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {
 	}
 }
 
-void View::xWinScreen() {
-	fixConsoleWindow();
-	vector <string> a;
+void View::splashScreenInfo() {
+	int x, y;
+	x = 50;
+	y = 12;
 
-	a.resize(0);
+	View::printCharactors(L"        NHÓM 10", { (short)(x + 10),(short)(y + 2) }, Color::BLACK, Color::WHITE); Sleep(300);
+	View::printCharactors(L" GV: Trương Toàn Thịnh", { (short)(x + 10),(short)(y + 4) }, Color::BLACK, Color::WHITE); Sleep(400);
 
-	a.push_back("     ===========================================================   ");
-	a.push_back("     o      O       o          `O ooOoOOo o.     O      oO oO oO   ");
-	a.push_back("      O    o        O           o    O    Oo     o      OO OO OO   ");
-	a.push_back("       o  O         o           O    o    O O    O      oO oO oO   ");
-	a.push_back("        oO          O           O    O    O  o   o      Oo Oo Oo   ");
-	a.push_back("        Oo          o     o     o    o    O   o  O      oO oO oO   ");
-	a.push_back("       o  o         O     O     O    O    o    O O                 ");
-	a.push_back("      O    O        `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
-	a.push_back("     O      o        `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
-	a.push_back("     ===========================================================   ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
-	}
-
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+	View::printCharactors(L" Huỳnh Anh Huy			", { (short)(x + 10),(short)(y + 6) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Phan Nguyễn Hoàng Quân	", { (short)(x + 10),(short)(y + 7) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Nguyễn Lâm Anh Duy		", { (short)(x + 10),(short)(y + 8) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Lê Hải Nam				", { (short)(x + 10),(short)(y + 9) }, Color::BLACK, Color::WHITE); Sleep(300);
 }
+void View::splashScreen() {
+	//system("cls");
+	View::fixConsoleWindow();
+	
+	Sound::playSound(Sound::background);
+	View::drawCaroGameText(200);
+	View::splashScreenInfo();
+	View::drawPacman();
 
-void View::yWinScreen() {
-	fixConsoleWindow();
-	vector <string> a;
-
-	a.resize(0);
-
-	a.push_back("         ===========================================================   ");
-	a.push_back("         o       O      o          `O ooOoOOo o.     O      oO oO oO   ");
-	a.push_back("         O       o      O           o    O    Oo     o      OO OO OO   ");
-	a.push_back("         `o     O'      o           O    o    O O    O      oO oO oO   ");
-	a.push_back("           O   o        O           O    O    O  o   o      Oo Oo Oo   ");
-	a.push_back("            `O'         o     o     o    o    O   o  O      oO oO oO   ");
-	a.push_back("             o          O     O     O    O    o    O O                 ");
-	a.push_back("             O          `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
-	a.push_back("             O           `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
-	a.push_back("         ===========================================================   ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
-	}
-
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+	system("pause");
+	gotoXY(10, 50);
 }
+void View::drawPacman() {
+	int x, y;
+	x = -5;
+	y = 25;
+	int color;
+	//srand((unsigned int)time(NULL));				//?
+	for (int i = 1; i <= 13; i++) {				//number of ghosts
 
-void View::drawScreen() {
-	fixConsoleWindow();
-	vector <string> a;
+		color = View::GetRandom(1, 13);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
 
-	a.resize(0);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
 
-	a.push_back("         ===========================================================   ");
-	a.push_back("        o.OOOo.   `OooOOo.     Oo    o          `O       oO oO oO      ");
-	a.push_back("         O    `o   o     `o   o  O   O           o       OO OO OO      ");
-	a.push_back("         o      O  O      O  O    o  o           O       oO oO oO      ");
-	a.push_back("         O      o  o     .O oOooOoOo O           O       Oo Oo Oo      ");
-	a.push_back("         o      O  OOooOO'  o      O o     o     o       oO oO oO      ");
-	a.push_back("         O      o  o    o   O      o O     O     O                     ");
-	a.push_back("         o    .O'  O     O  o      O `o   O o   O'       Oo Oo Oo      ");
-	a.push_back("         OooOO'    O      o O.     O  `OoO' `OoO'        oO oO oO      ");
-	a.push_back("         ===========================================================   ");
+		for (int i = 0; i <= 6; i++) {
+			View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color(color), Color::BLACK);
+		}
 
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		Sleep(100);
+
+		x += 10;
 	}
 
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+}
+void View::drawCaroGameText(int delayTime) {
+	int x, y;
+	x = 25;
+	y = 2;
+	Sleep(delayTime);
+	View::printCharactors(L"	░█████╗░░█████╗░██████╗░░█████╗░  ░██████╗░░█████╗░███╗░░░███╗███████╗		", { (short)(10 + x),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██╔══██╗██╔══██╗██╔══██╗██╔══██╗  ██╔════╝░██╔══██╗████╗░████║██╔════╝	    ", { (short)(10 + x),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██║░░╚═╝███████║██████╔╝██║░░██║  ██║░░██╗░███████║██╔████╔██║█████╗░░	    ", { (short)(10 + x),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██║░░██╗██╔══██║██╔══██╗██║░░██║  ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░	    ", { (short)(10 + x),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	╚█████╔╝██║░░██║██║░░██║╚█████╔╝  ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗	    ", { (short)(10 + x),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░  ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝		", { (short)(10 + x),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+}
+int View::GetRandom(int min, int max) {							//random function in range
+	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
 }
