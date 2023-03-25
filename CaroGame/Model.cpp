@@ -80,9 +80,6 @@ void Model::makePlayerMove(std::wstring key) {
 void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &game_info) {
 	int i = (spot.Y - View::TOP - 1) / 2;
 	int j = (spot.X - View::LEFT - 2) / 4;
-
-	View::gotoXY(0, 0);
-	cout << playerNum << endl;
 	
 	// if the board is empty
 	if (game_info.board[i][j] == 0) {
@@ -101,6 +98,10 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 }
 
 void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {
+	View::gotoXY(0, 0);
+	cout << "Player: " << player.name << endl;
+	cout << "Turn: " << game_info.isFirstPlayerTurn << endl;
+
 	View::gotoXY(curX, curY);
 	wstring key;
 	endTurn = false;
@@ -110,7 +111,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		// if is a player move
 		if (key == L"ENTER") {
 			// mark the move on the board and update game's information
-			int playerNum = player.isFirstPlayer == game_info.isFirstPlayerTurn ? 1 : 2;
+			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
 			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
 		} 
 		
@@ -155,7 +156,6 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				{ 40, 10 },
 				[&]() -> void {
 					// if click YES then return menu
-					endTurn = true;
 					Control::saveGame(game_info);
 					// restore screen's information
 					View::writeScreenBuffer(buffer);

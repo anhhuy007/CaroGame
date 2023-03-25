@@ -14,7 +14,8 @@ Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
 	
 	// init game information
-	game_info.player1.isFirstPlayer = true;
+	game_info.player1 = { "Player 1", 0, 1 };
+	game_info.player2 = { "Player 2", 0, 0 };
 	game_info.isFirstPlayerTurn = true;
 	game_info.timeRemained = 1200;
 	game_info.curX = 0;
@@ -194,18 +195,21 @@ void Control::saveGame(Model::GameInformation& game_info) {
 			}
 			else break;
 		}
-		
 
+		// save input name to game_info
+		strcpy(game_info.name, fileName.c_str());
+		
+		// save file to GameSaved folder
+		fileName = FileIO::folder + fileName + FileIO::extension;
 		file = new char[fileName.length() + 1];
 		strcpy(file, fileName.c_str());
-		strcpy(game_info.name, file);
-		strcat(file, ".dat");
 	}
 	else {
 		// get filename from game_info
-		file = new char[strlen(game_info.name) + 1];
-		strcpy(file, game_info.name);
-		strcat(file, ".dat");
+		string fileName = game_info.name;
+		fileName = FileIO::folder + fileName + FileIO::extension;
+		file = new char[fileName.length() + 1];
+		strcpy(file, fileName.c_str());
 	}
 	// write game information to file
 	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);

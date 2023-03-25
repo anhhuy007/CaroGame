@@ -10,6 +10,9 @@
 using namespace Model;
 
 namespace FileIO {
+	const string folder = "GameSaved//";
+	const string extension = ".dat";
+
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
 	GameInformation readGameInfoFromFile(char fileName[]);
 }	
