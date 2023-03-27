@@ -46,9 +46,8 @@ namespace View {
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void fixConsoleWindow();
 	void textColor(int color);
-	void textStyle();	
+	void textStyle(int fontSize);	
 	void clearRectangleArea(COORD start, int width, int height);
-	void drawOtherDetail();
 	void printCharactors(
 		std::wstring content, 
 		COORD spot, 
@@ -81,6 +80,9 @@ namespace View {
 	int GetRandom(int min, int max);
 	COORD getCenteredSpot(std::wstring content, SMALL_RECT box);
 	void printCenteredToast(std::wstring content, SMALL_RECT box, Color text_color, Color background_color);
+	void clock(short x, short y, int width, int height);
+	void drawBox(COORD spot, int width, int height, Color color);
+	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 }
 
 	

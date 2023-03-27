@@ -24,13 +24,37 @@ namespace Model {
 		int player;
 	};
 
+	struct Board {
+		int value[sz][sz];
+		COORD spot[sz][sz];
+
+		// initialize value for board 
+		Board() {
+			for (int i = 0; i < sz; i++) {
+				for (int j = 0; j < sz; j++) {
+					value[i][j] = 0;
+					spot[i][j] = { short(View::LEFT + 2 + 4 * j), short(View::TOP + 1 + 2 * i) };
+				}
+			}
+		}
+
+		// override operator [][]
+		int* operator [] (const int& i) {
+			return value[i];
+		}
+
+		COORD getSpot(int i, int j) {
+			return spot[i][j];
+		}
+	};
+	
 	struct GameInformation {
 		char name[50] = "";
 		Player player1;
 		Player player2;
 		bool isFirstPlayerTurn;
 		int timeRemained; // in seconds
-		int board[sz][sz];
+		Board board;
 		PlayerMove playerMoveHistory[250];
 		int moveHistorySize = 0;
 		int curX; 
@@ -76,8 +100,9 @@ namespace Model {
 		int player, 
 		int board[sz][sz]
 	);
+	void drawXO(Board board);
 	void previousMove(
-		Model::GameInformation& game_info
+		GameInformation& game_info
 	);
 }
 

@@ -21,7 +21,7 @@ Model::GameInformation Control::initNewGame() {
 	game_info.curX = 0;
 	game_info.curY = 0;
 	game_info.endGame = false;
-	memset(game_info.board, 0, sizeof(game_info.board));
+	game_info.board = Model::Board();
 	return game_info;
 }
 
@@ -29,7 +29,7 @@ void Control::startGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
-	View::textStyle();
+	View::textStyle(24);
 
 	// show splash screen
 	/*View::splashScreen();
@@ -49,7 +49,7 @@ void Control::startMenuScreen() {
 		//Control::continueGame();
 		break;
 	case MenuOption::NEW_GAME_VS_PLAYER:
-		Control::newGame(true, true);
+		Control::newGame(true, true, Control::initNewGame());
 		break;
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
 		//Control::newGame();
@@ -58,7 +58,7 @@ void Control::startMenuScreen() {
 		//Control::newGame();
 		break;
 	case MenuOption::LOAD_GAME:
-		//Control::loadGame();
+		Control::loadGame();
 		break;
 	case MenuOption::INSTRUCTION:
 		instructionMenu({ 60, 2 }, View::Color::BLACK, View::Color::WHITE);
@@ -81,16 +81,20 @@ void Control::startMenuScreen() {
 	}
 }
 
-void Control::newGame(bool vsHuman, bool isEasy) {
+void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
+	// draw game board and other details
 	Control::resetGame();
 	View::drawBoard();
-	View::drawOtherDetail(); 
-	Model::GameInformation game_info = Control::initNewGame();
+	// draw X and O on the board
+	Model::drawXO(game_info.board);
+	
+	//View::drawGamePlayInfoBox({ 70,10 }, 55, 20, View::Color::BLACK);
 	escPressed = false;
 
 	while (!game_info.endGame && !escPressed) {
+		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
-		Model::GameResult result = Model::checkResult(1, game_info.board);
+		Model::GameResult result = Model::checkResult(1, game_info.board.value);
 		// check if player 1 win
 		if (result.first != 0) {
 			// show winner here
@@ -109,8 +113,9 @@ void Control::newGame(bool vsHuman, bool isEasy) {
 
 		if (escPressed) break;
 
+		// player 2 turn
 		Model::playerTurn(game_info.player2, game_info);
-		result = Model::checkResult(2, game_info.board);
+		result = Model::checkResult(2, game_info.board.value);
 		// check if player 2 win
 		if (result.first != 0) {
 			// show winner here
@@ -127,6 +132,7 @@ void Control::newGame(bool vsHuman, bool isEasy) {
 			break;
 		}
 	}
+	
 	system("pause");
 	Control::returnMenu();
 }
@@ -146,71 +152,27 @@ void Control::returnMenu() {
 	system("cls");
 	Control::startMenuScreen();
 }
-
-bool Control::isValidFileName(std::string file) {
-	for (int i = 0; i < file.length(); i++) {
-		// check if file contain only alphabet and number
-		if (!isalpha(file[i]) && !isdigit(file[i])) return false;
- 	}
-
-	return true;
-}
-
-bool Control::fileNameExisted(std::string file) {
-	file += ".dat";
-	// check if file is already exist
-	std::ifstream ifs(file);
-	if (ifs.good()) return true;
-
-	return false;
-}
-
 // save game to file
 void Control::saveGame(Model::GameInformation& game_info) {
-	char* file;
-	std::string fileName = "";
+	char* file; std::string fileName;
+	
 	if (strlen(game_info.name) == 0) {
-		while (1) {
-			system("cls");
-			// input new file name
-			wstring wstr = L"Enter file name: ";
-			wstring note = L"(Note: File name must contain only alphabet and number)";
-			COORD spot = View::getCenteredSpot(note, View::WINDOW_SIZE);
-			View::gotoXY(spot.X, spot.Y + 1);
-			wcout << note;
-			View::gotoXY(spot.X, spot.Y);
-			wcout << wstr;
-			cin >> fileName;
-
-			// check if file name is valid
-			if (!Control::isValidFileName(fileName)) {
-				wstr = L"Invalid file name! Please try again.";
-				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-				Sleep(1000);
-			}
-			else if (Control::fileNameExisted(fileName)) {
-				wstr = L"File name already existed! Please try again.";
-				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-				Sleep(1000);
-			}
-			else break;
-		}
+		// input file name from keyboard
+		fileName = FileIO::getFileName(false);
 
 		// save input name to game_info
 		strcpy(game_info.name, fileName.c_str());
-		
-		// save file to GameSaved folder
-		fileName = FileIO::folder + fileName + FileIO::extension;
-		file = new char[fileName.length() + 1];
-		strcpy(file, fileName.c_str());
 	}
 	else {
 		// get filename from game_info
-		string fileName = game_info.name;
-		fileName = FileIO::folder + fileName + FileIO::extension;
-		file = new char[fileName.length() + 1];
-		strcpy(file, fileName.c_str());
+		fileName = game_info.name;
 	}
+
+	// format file name to path name
+	std::string filePath = FileIO::folder + fileName + FileIO::extension;
+	file = new char[filePath.length() + 1];
+	strcpy(file, filePath.c_str());
+
 	// write game information to file
 	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
 
@@ -225,10 +187,23 @@ void Control::saveGame(Model::GameInformation& game_info) {
 }
 
 // load game from file
-void Control::loadGame(char* name) {
+void Control::loadGame() {
+	// get file name from keyboard 
+	std::string filePath = FileIO::folder + FileIO::getFileName(true) + FileIO::extension;
+	char* file = new char[filePath.length() + 1];
+	strcpy(file, filePath.c_str());
+	
 	// read game information from file
-	Model::GameInformation game_info = FileIO::readGameInfoFromFile(name);
-	// load game
+	Model::GameInformation game_info = FileIO::readGameInfoFromFile(file);
+	if (game_info.name != "") {
+		// start game
+		Control::newGame(true, true, game_info);
+	}
+	else {
+		View::printCenteredToast(L"Load game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
+		system("pause");
+		system("cls");
+	}
 }
 
 

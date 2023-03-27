@@ -15,4 +15,7 @@ namespace FileIO {
 
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
 	GameInformation readGameInfoFromFile(char fileName[]);
+	bool isValidFileName(std::string file);
+	bool fileNameExisted(std::string file);
+	std::string getFileName(bool checkExisted);
 }	

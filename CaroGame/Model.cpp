@@ -280,3 +280,20 @@ bool Model::checkSubDiagonal(int i, int j, int player, int board[sz][sz]) {
 		board[i - 4][j + 4] == player
 		);
 }
+
+void Model::drawXO(Model::Board board) {
+	View::gotoXY(0, 0);
+	cout << "Draw XO";
+	for (int i = 0; i < View::BOARD_SIZE; i++) {
+		for (int j = 0; j < View::BOARD_SIZE; j++) {
+			if (board[i][j] == 0) continue;
+			COORD spot = board.getSpot(i, j);
+			View::printCharactors(
+				board[i][j] == 1 ? L"X" : L"O",
+				{ spot.X , spot.Y },
+				View::Color::BLACK,
+				View::Color::WHITE
+			);
+		}
+	}
+}
