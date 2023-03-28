@@ -130,6 +130,7 @@
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="CaroGame.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="InputHandle.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="AI.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="FileIO.h" />
     <ClInclude Include="InputHandle.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Model.h" />

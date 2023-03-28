@@ -1,8 +1,7 @@
 #include "Sound.h"
 
-
-
-void Sound::playSound(LPCWSTR s) {
-	// Play the sound track
-	PlaySound(s, NULL, SND_FILENAME | SND_ASYNC);
+// play sound
+void Sound::playSound(LPCWSTR path) {
+	PlaySound(path, NULL, SND_FILENAME | SND_ASYNC);
 }
+

@@ -5,6 +5,8 @@
 #include "Menu.h"
 #include "InputHandle.h"
 #include <functional>
+#include "FileIO.h"
+#include <string>
 using namespace std;
 
 int main() {
@@ -17,17 +19,6 @@ int main() {
 	system("color f0");
 	View::fixConsoleWindow();
 	
-	Control::newGame();
-
-	/*wstring key = InputHandle::Get();
-
-	while (key != L"ESC") {
-		key = InputHandle::Get();
-		wcout << key << endl;
-	}*/
-
-	/*View::fixConsoleWindow();
-	View::textStyle();*/
-	
+	Control::startGame();
 	return 0;
 }

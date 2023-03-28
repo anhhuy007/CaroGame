@@ -13,13 +13,14 @@
 #include <functional>
 
 namespace View {
-	const int _SIZE = 15;
+	const int BOARD_SIZE = 15;
 	const int LEFT = 1;
-	const int RIGHT = LEFT + 4 * _SIZE;
+	const int RIGHT = LEFT + 4 * BOARD_SIZE;
 	const int TOP = 1;
-	const int BOT = TOP + 2 * _SIZE;
+	const int BOT = TOP + 2 * BOARD_SIZE;
 	const int SCREEN_WIDTH = 135;
 	const int SCREEN_HEIGHT = 35;
+	const SMALL_RECT WINDOW_SIZE = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 	
 	enum class Color {
 		BLACK = 0,
@@ -40,17 +41,13 @@ namespace View {
 		WHITE = 15
 	};
 
-	void gotoXY(int x, int y);
+	void gotoXY(short x, short y);
 	void drawBoard();
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void fixConsoleWindow();
 	void textColor(int color);
-	void textStyle();	
+	void textStyle(int fontSize);	
 	void clearRectangleArea(COORD start, int width, int height);
-	void drawOtherDetail();
-	void xWinScreen();
-	void yWinScreen();
-	void drawScreen();
 	void printCharactors(
 		std::wstring content, 
 		COORD spot, 
@@ -75,8 +72,17 @@ namespace View {
 	
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 	std::ostream& bold_on(std::ostream& os);
-
 	std::ostream& bold_off(std::ostream& os);
+	void drawCaroGameText(int delayTime);
+	void splashScreenInfo();
+	void splashScreen();
+	void drawPacman();
+	int GetRandom(int min, int max);
+	COORD getCenteredSpot(std::wstring content, SMALL_RECT box);
+	void printCenteredToast(std::wstring content, SMALL_RECT box, Color text_color, Color background_color);
+	void clock(short x, short y, int width, int height);
+	void drawBox(COORD spot, int width, int height, Color color);
+	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 
 
 	void splashScreenInfo();
@@ -102,4 +108,3 @@ namespace View {
 
 }
 
-	
