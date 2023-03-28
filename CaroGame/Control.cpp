@@ -88,7 +88,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	//View::drawGamePlayInfoBox({ 70,10 }, 55, 20, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,12 }, 63, 18, View::Color::BLACK);
 	escPressed = false;
 
 	while (!game_info.endGame && !escPressed) {

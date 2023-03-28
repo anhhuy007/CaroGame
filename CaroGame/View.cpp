@@ -433,7 +433,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	short maxY = spot.Y + height;
 
 	drawBox(spot, width, height, color);
-	drawBox(spot, width, int(height / 2 - 2), color);
+	drawBox(spot, width, int(height - height / 2 - 2), color);
 	drawBox(spot, int((width - 4) / 3 + 1), int(height / 2 - 2), color);
 	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(height / 2 - 2), color);
 	drawBox(spot, int((width - 4) / 3 + 1), int((height / 2 - 2) / 2), color);
@@ -555,45 +555,10 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
-	wstring input = InputHandle::Get();
-	if (input == L"ENTER") {
-		count += 1;
-		count %= 2;
-		if (count == 0) {
-			x = spot.X;
-			y = spot.Y + (height / 2 - 2) / 2;
-			moveX++;
-			wstring xMoves = format(moveX);
-			View::printVerticalCenteredCharactors(
-				xMoves,
-				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-				short(((height / 2 - 2) / 2) / 2),
-				View::Color::BLACK,
-				View::Color::WHITE
-			);
-		}
-		else {
-			x = spot.X + (((width - 4) / 3) * 2 + 3);
-			y = spot.Y + (height / 2 - 2) / 2;
-			moveY++;
-			wstring yMoves = format(moveY);
-			View::printVerticalCenteredCharactors(
-				yMoves,
-				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-				short(((height / 2 - 2) / 2) / 2),
-				View::Color::BLACK,
-				View::Color::WHITE
-			);
-		}
-		/*x = spot.X + (width - 4) / 3 + 1;
-		y = spot.Y + (height / 2 - 2) / 2;
-		View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));*/
-	}
-
-	x = spot.X;
+	/*x = spot.X;
 	y = spot.Y + (height / 2 - 2) / 2;
 
-	/*int moveX = 0;
+	int moveX = 0;
 	wstring xMoves = format(moveX);
 	View::printVerticalCenteredCharactors(
 			xMoves,
@@ -622,3 +587,9 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	y = spot.Y + (height / 2 - 2) / 2;
 	View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));
 }
+
+//void View::updateInform(GameInformation ) {
+//	//Print History
+//	//Move getMoveHistory
+//	//Print Turn
+//}
