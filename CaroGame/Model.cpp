@@ -102,6 +102,7 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		wstring playerMark = playerNum == 1 ? L"X" : L"O";
 		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
 		// change player turn
+		//Mark print on the board
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 		endTurn = true;
 	}

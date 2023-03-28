@@ -14,17 +14,17 @@ bool escPressed = false;
 Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
 
-	// input user name
-	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
-	strcpy(game_info.player1.name, p1.c_str());
-	
-	string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
-	strcpy(game_info.player2.name, p2.c_str());
+	//// input user name
+	//string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+	//strcpy(game_info.player1.name, p1.c_str());
+	//
+	//string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
+	//strcpy(game_info.player2.name, p2.c_str());
 
-	system("cls");
-	cout << "Player 1: " << game_info.player1.name << endl;
-	cout << "Player 2: " << game_info.player2.name << endl;
-	system("pause");
+	//system("cls");
+	//cout << "Player 1: " << game_info.player1.name << endl;
+	//cout << "Player 2: " << game_info.player2.name << endl;
+	//system("pause");
 		
 	// init game information
 	game_info.isFirstPlayerTurn = true;
@@ -95,13 +95,19 @@ void Control::startMenuScreen() {
 void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
 	// draw game board and other details
 	Control::resetGame();
-	View::drawBoard2(16, 16);
+	View::drawBoard2(15, 15);
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	//View::drawGamePlayInfoBox({ 70,10 }, 55, 14, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,12 }, 63, 18, View::Color::BLACK);
 	escPressed = false;
 
+	View::drawVSText();
+	View::drawSpidermanAvatar();
+	View::drawThanosAvatar();
+	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
+	View::drawF1F2list(88,33);
+	View::drawGamePlayInfoBox({75,12}, 63, 18, View::Color::BLACK);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);

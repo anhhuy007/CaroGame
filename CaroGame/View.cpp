@@ -88,8 +88,28 @@ void View::drawBoard() {
 
 void View::drawBoard2(int space_row, int space_col) {
 	int x, y;
-	x = 1;
+	x = 4;
 	y = 1;
+
+	//draw coordinate border
+
+	View::printCharactors(L"a", { (short)(x + 2),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"b", { (short)(x + 6),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"c", { (short)(x + 10),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"d", { (short)(x + 14),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"e", { (short)(x + 18),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"f", { (short)(x + 22),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"g", { (short)(x + 26),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"h", { (short)(x + 30),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"i", { (short)(x + 34),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"j", { (short)(x + 38),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"k", { (short)(x + 42),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"l", { (short)(x + 46),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"m", { (short)(x + 50),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"n", { (short)(x + 54),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"o", { (short)(x + 58),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+	//View::printCharactors(L"p", { (short)(x + 62),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
+
 
 	//col = 4*space_col -1
 	//row = 2*space_row -1
@@ -582,37 +602,23 @@ void View::drawRectangleBorder(COORD spot, int width, int height, Color color) {
 }
 void View::drawBorder2(int left, int right, int top , int bot) {
 
-	for (int i = left; i <= right ; i++) {
-		View::printCharactors(L"\x2584", { (short)( 10 + i),(short)(2 + top) }, Color::CYAN, Color::WHITE);
-		View::printCharactors(L"\x2580", { (short)( 10 + i),(short)(2 + bot) }, Color::CYAN, Color::BLACK);
+	for (int i = left+1; i <= right-1; i++) {
+		View::printCharactors(L"═", { (short)( i),(short)(top) }, Color::BLACK, Color::WHITE);
+		View::printCharactors(L"═", { (short)( i),(short)(bot) }, Color::BLACK, Color::WHITE);
 	}
 	for (int i = top+1; i <= bot-1; i++) {
-		View::printCharactors(L"\x2588", { (short)(10 + left),(short)(2 + i) }, Color::CYAN, Color::WHITE);
-		View::printCharactors(L"\x2588", { (short)(10 + right),(short)(2 + i) }, Color::CYAN, Color::WHITE);
+		View::printCharactors(L"║", { (short)(left),(short)(i) }, Color::BLACK, Color::WHITE);
+		View::printCharactors(L"║", { (short)(right),(short)(i) }, Color::BLACK, Color::WHITE);
 	}
-
-	View::printCharactors(L"\x2580", { (short)(10 + left),(short)(2 + bot) }, Color::CYAN, Color::WHITE);
-
-	for (int i = top+1; i <= bot; i++) {
-		View::printCharactors(L"\x2588", { (short)(10 + right+1),(short)(2 + i) }, Color::BLACK, Color::WHITE);
-	}
-
-
+	View::printCharactors(L"╗", { (short)(right),(short)(top) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"╝", { (short)(right),(short)(bot) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"╔", { (short)(left),(short)(top) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"╚", { (short)(left),(short)(bot) }, Color::BLACK, Color::WHITE);
 }
-void View::drawOtherDetail() {
+
+void View::drawXOart() {
+
 	int x, y;
-	x = 80;
-	y = 23;
-
-	//info board
-
-	View::printCharactors(L"F1 : New game", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"F2 : Save game", { (short)(x + 25),(short)(y) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"F3 : Load game", { (short)(x),(short)(y + 2) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"F4 : Undo", { (short)(x + 25),(short)(y + 2 ) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"Esc: Return home", { (short)(x + 12 ),(short)(y + 5) }, Color::BLACK, Color::WHITE);
-
-
 	// default x +10, y +2
 	x = 104;
 	y = 0;
@@ -740,6 +746,18 @@ void View::drawOtherDetail() {
 	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 1) }, Color::LIGHT_CYAN, Color::WHITE);
 	View::printCharactors(L"\x2580", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::LIGHT_CYAN, Color::WHITE);
 }
+void View::drawF1F2list(int x, int y) {
+	//int x, y;
+	//x = 80;
+	//y = 23;
+
+	//info board
+
+	View::printCharactors(L"F1 : Return Hame", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"F2 : Save game", { (short)(x + 25),(short)(y) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"F3 : Load game", { (short)(x),(short)(y + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"F4 : Undo", { (short)(x + 25),(short)(y + 1 ) }, Color::BLACK, Color::WHITE);	
+}
 void View::drawTrophy() {
 	int x, y;
 	x = 82;
@@ -842,15 +860,15 @@ void View::drawBorder3( int left, int right,int top, int bot) {
 	int bot = top + 8;
 	int right = left + 20;
 	*/
-	for (int i = left ; i <= right ; i++) {
+	for (int i = left+1 ; i <= right -1 ; i++) {
 		View::printCharactors(L"\x2584", { (short)i,(short)top }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2580", { (short)i,(short)bot }, Color::BLACK, Color::WHITE);
 
-		View::printCharactors(L"\x2584", { (short)i,(short)(bot+2) }, Color::BLACK, Color::WHITE);
+		//View::printCharactors(L"\x2584", { (short)i,(short)(bot+2) }, Color::BLACK, Color::WHITE);
 
 	}
 
-	for (int i = top + 1; i <= bot - 1 +3 ; i++) {
+	for (int i = top + 1; i <= bot - 1 ; i++) {
 		View::printCharactors(L"\x2588", { (short)left,(short)i }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2588", { (short)right,(short)i }, Color::BLACK, Color::WHITE);
 	}
@@ -937,8 +955,8 @@ void View::drawBotAvatar() {
 }
 void View::drawSpidermanAvatar() {
 	int x, y;
-	x = 104;		//(104,0)
-	y = 0;
+	x = 112;		//(104,0)
+	y = -2;
 	View::drawBackGroundAvatar(2,x+7, x+7 + 18, y+2, y+2 + 10);	
 	//red
 	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
@@ -1028,8 +1046,8 @@ void View::drawSpidermanAvatar() {
 
 void View::drawThanosAvatar() {
 	int x, y;
-	x = 65;		// (65,0)
-	y = 0;
+	x = 69;		// (65,0)
+	y = -2;
 
 	View::drawBackGroundAvatar(3,x + 7, x+ 7 + 18, y+ 2, y+ 2 + 10);	
 	//blue
@@ -1273,8 +1291,8 @@ void View::drawBackGroundAvatar(int n,int left , int right, int top , int bot) {
 
 void View::drawVSText() {
 	int x, y;
-	x = 85;
-	y = 2;
+	x = 91;
+	y = 1;
 	//chu V
 	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
@@ -1282,8 +1300,8 @@ void View::drawVSText() {
 	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
 
-	x = 90;
-	y = 4;
+	x = 96;
+	y = 3;
 	//chu S
 	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
@@ -1713,7 +1731,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	short maxY = spot.Y + height;
 
 	drawBox(spot, width, height, color);
-	drawBox(spot, width, int(height / 2 - 2), color);
+	drawBox(spot, width, int(height - height / 2 - 2), color);
 	drawBox(spot, int((width - 4) / 3 + 1), int(height / 2 - 2), color);
 	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(height / 2 - 2), color);
 	drawBox(spot, int((width - 4) / 3 + 1), int((height / 2 - 2) / 2), color);
@@ -1835,45 +1853,10 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
-	wstring input = InputHandle::Get();
-	if (input == L"ENTER") {
-		count += 1;
-		count %= 2;
-		if (count == 0) {
-			x = spot.X;
-			y = spot.Y + (height / 2 - 2) / 2;
-			moveX++;
-			wstring xMoves = format(moveX);
-			View::printVerticalCenteredCharactors(
-				xMoves,
-				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-				short(((height / 2 - 2) / 2) / 2),
-				View::Color::BLACK,
-				View::Color::WHITE
-			);
-		}
-		else {
-			x = spot.X + (((width - 4) / 3) * 2 + 3);
-			y = spot.Y + (height / 2 - 2) / 2;
-			moveY++;
-			wstring yMoves = format(moveY);
-			View::printVerticalCenteredCharactors(
-				yMoves,
-				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-				short(((height / 2 - 2) / 2) / 2),
-				View::Color::BLACK,
-				View::Color::WHITE
-			);
-		}
-		/*x = spot.X + (width - 4) / 3 + 1;
-		y = spot.Y + (height / 2 - 2) / 2;
-		View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));*/
-	}
-
-	x = spot.X;
+	/*x = spot.X;
 	y = spot.Y + (height / 2 - 2) / 2;
 
-	/*int moveX = 0;
+	int moveX = 0;
 	wstring xMoves = format(moveX);
 	View::printVerticalCenteredCharactors(
 			xMoves,
@@ -1902,3 +1885,9 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	y = spot.Y + (height / 2 - 2) / 2;
 	View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));
 }
+
+//void View::updateInform(GameInformation ) {
+//	//Print History
+//	//Move getMoveHistory
+//	//Print Turn
+//}

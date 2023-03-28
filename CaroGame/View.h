@@ -44,7 +44,7 @@ namespace View {
 	void gotoXY(short x, short y);
 	void drawBoard();
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
-	void drawOtherDetail();
+	void drawF1F2list(int x, int y);
 	void fixConsoleWindow();
 	void textColor(int color);	
 	void textStyle(int fontSize);	
@@ -100,6 +100,7 @@ namespace View {
 	void drawThanosAvatar();
 	
 	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
+	void drawXOart();
 
 }
 
