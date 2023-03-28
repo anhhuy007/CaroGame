@@ -168,6 +168,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				{ 40, 10 },
 				[&]() -> void {
 					// if click YES then return menu
+					system("cls");
 					Control::saveGame(game_info);
 					// restore screen's information
 					View::writeScreenBuffer(buffer);

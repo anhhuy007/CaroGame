@@ -20,7 +20,6 @@ int main() {
 	View::fixConsoleWindow();
 	
 	Control::startGame();
-	/*Control::newGame(1, 1, Control::initNewGame());*/
-	/*View::drawXOart();*/
+	//Control::newGame(1, 1, Control::initNewGame());
 	return 0;
 }

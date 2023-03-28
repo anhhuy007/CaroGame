@@ -14,8 +14,8 @@ namespace Model {
 	typedef pair<int, vector<COORD>> GameResult;
 	
 	struct Setting {
-		bool backgroundSound;
-		bool soundEffect;
+		bool backgroundSound = false;
+		bool soundEffect = false;
 	};
 
 	struct Player {

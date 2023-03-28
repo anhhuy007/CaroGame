@@ -3,10 +3,17 @@
 #include <Windows.h>
 
 namespace Sound {
-	const LPCWSTR right = L"D:\\Caro\\Right.wav";
-	const LPCWSTR error = L"D:\\Caro\\Error.wav";
-	const LPCWSTR background = L"D:\\Caro\\Cipher2.wav";
+	const LPCWSTR VALID = L"D:\\Caro\\Right.wav";
+	const LPCWSTR INVALID = L"D:\\Caro\\Error.wav";
+	const LPCWSTR BACKGROUND = L"D:\\Caro\\Cipher2.wav";
 
-	void playSound(LPCWSTR path, bool onSound);
+	struct SoundManager {
+		bool onSoundBackGround;
+		bool onSoundEffect;
+	};
+
+	void playSoundBackGround(SoundManager soundManager);
+	void playSoundEffect(LPCWSTR path, SoundManager soundManager);
+	void playSound(LPCWSTR path);
 }
 
