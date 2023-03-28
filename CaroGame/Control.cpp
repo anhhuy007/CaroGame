@@ -102,7 +102,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	View::drawGamePlayInfoBox({ 70,10 }, 55, 20, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 70,10 }, 55, 14, View::Color::BLACK);
 	escPressed = false;
 	//View::drawBoard();
 	View::drawBoard2(16,16);
@@ -121,12 +121,6 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	View::drawSpidermanAvatar();
 	View::drawThanosAvatar();
 
-	// create board
-	board = new int* [View::_SIZE];
-	for (int i = 0; i < View::_SIZE; i++) {
-		board[i] = new int[View::_SIZE];
-	}
-
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
@@ -143,6 +137,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 
 			// show winner congratulation screen
 
+			
 			game_info.endGame = true;
 			break;
 		}

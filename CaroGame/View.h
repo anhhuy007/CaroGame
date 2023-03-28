@@ -44,6 +44,7 @@ namespace View {
 	void gotoXY(short x, short y);
 	void drawBoard();
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
+	void drawOtherDetail();
 	void fixConsoleWindow();
 	void textColor(int color);
 	void textStyle(int fontSize);	
@@ -84,13 +85,7 @@ namespace View {
 	void drawBox(COORD spot, int width, int height, Color color);
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 
-
-	void splashScreenInfo();
-	void splashScreen();
-	void drawPacman();
-	int GetRandom(int min, int max);
 	void drawBorder2(int left, int right, int top, int bot);
-
 	void drawCaroGameText();
 
 	void drawTurnBoard();
