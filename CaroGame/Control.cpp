@@ -178,6 +178,11 @@ void Control::saveGame(Model::GameInformation& game_info) {
 		// input file name from keyboard
 		fileName = InputHandle::getFileName(false);
 
+		// check if player want to return
+		if (fileName == "-1") {
+			return;
+		}
+
 		// save input name to game_info
 		strcpy(game_info.name, fileName.c_str());
 	}
@@ -207,7 +212,17 @@ void Control::saveGame(Model::GameInformation& game_info) {
 // load game from file
 void Control::loadGame() {
 	// get file name from keyboard 
-	std::string filePath = FileIO::folder + InputHandle::getFileName(true) + FileIO::extension;
+	system("cls");
+	std::string fileName = InputHandle::getFileName(true);
+
+	// check if player want to return menu
+	if (fileName == "-1") {
+		Control::returnMenu();
+		return;
+	}
+
+	std::string filePath = FileIO::folder + fileName + FileIO::extension;
+	
 	char* file = new char[filePath.length() + 1];
 	strcpy(file, filePath.c_str());
 	

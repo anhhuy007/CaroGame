@@ -1454,7 +1454,7 @@ void View::clearRectangleArea(
 	DWORD dwWritten;
 	int startY = start.Y;
 	
-	for (int i = startY; i < height; i++) {
+	for (int i = startY; i < startY + height; i++) {
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
 		start.Y++;
 	}
