@@ -4,8 +4,10 @@
 #include "Control.h"
 #include <vector>
 #include <string.h>
+#include "FileIO.h"
 using namespace std;
-//using namespace Menu;
+
+Setting setting = { true, true };
 
 // check if current menu index is valid index
 bool checkIndex(int* index, int num) {
@@ -74,19 +76,19 @@ void menuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error);
+				Sound::playSound(Sound::error, setting.soundEffect);
 			}
 			else {
-				Sound::playSound(Sound::right);
+				Sound::playSound(Sound::right, setting.soundEffect);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error);
+				Sound::playSound(Sound::error, setting.soundEffect);
 			}
 			else {
-				Sound::playSound(Sound::right);
+				Sound::playSound(Sound::right, setting.soundEffect);
 			}
 		}
 		/*else if (selected_item == L"ESC") {
@@ -107,7 +109,6 @@ MenuOption mainMenu(
 	int index = -1;
 	int menu_size = 7;
 	MenuItem main_menu_items[7] = {
-		{ 0, L"CONTINUE", MenuOption::CONTINUE },
 		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
 		{ 2, L"LOAD GAME", MenuOption::LOAD_GAME },
 		{ 3, L"SETTING", MenuOption::SETTING },
@@ -130,7 +131,7 @@ MenuOption newGameMenu(
 ) {	
 	int index = -1;
 	int menu_size = 4;
-	start = { 65, 15 };
+	start = { 70, 15 };
 	MenuItem newgame_menu_items[4] = {
 		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
 		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
@@ -146,12 +147,12 @@ MenuOption newGameMenu(
 }
 
 MenuOption MenuScreen() {
-	Sound::playSound(L"D:\\Caro\\Cipher2.wav");
-	MenuOption option = mainMenu({ 65, 15 }, View::Color::BLACK, View::Color::PURPLE);
+	Sound::playSound(L"D:\\Caro\\Cipher2.wav", setting.backgroundSound);
+	MenuOption option = mainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 	
 	switch (option) {
 	case MenuOption::NEW_GAME:
-		return newGameMenu({ 65, 15 }, View::Color::BLACK, View::Color::PURPLE);
+		return newGameMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 	}
 	return option;
 }
@@ -162,6 +163,7 @@ MenuOption aboutMenu(
 	View::Color text_color,
 	View::Color selected_textcolor
 ) {
+	system("cls");
 	wstring key;
 	wstring about_content[14] = {
 		L"ABOUT",
@@ -192,7 +194,7 @@ MenuOption aboutMenu(
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSound(Sound::error);
+		Sound::playSound(Sound::error, setting.soundEffect);
 	}
 
 	return MenuOption::ABOUT;
@@ -203,6 +205,7 @@ MenuOption instructionMenu(
 	View::Color text_color,
 	View::Color selected_textcolor
 ) {
+	system("cls");
 	wstring key;
 	wstring instruction_content[14] = {
 		L"INSTRUCTION",
@@ -221,7 +224,6 @@ MenuOption instructionMenu(
 		L"PRESS ESC TO BACK"
 	};
 	View::clearRectangleArea({ 50, 15 }, 50, 50);
-
 	for (int i = 0; i < 14; i++) {
 
 		short x = start.X - instruction_content[i].length() / 2;
@@ -232,7 +234,7 @@ MenuOption instructionMenu(
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSound(Sound::error);
+		Sound::playSound(Sound::error, setting.soundEffect);
 	}
 	return MenuOption::INSTRUCTION;
 }
@@ -282,19 +284,19 @@ void settingMenuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error);
+				Sound::playSound(Sound::error, setting.soundEffect);
 			}
 			else {
-				Sound::playSound(Sound::right);
+				Sound::playSound(Sound::right, setting.soundEffect);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error);
+				Sound::playSound(Sound::error, setting.soundEffect);
 			}
 			else {
-				Sound::playSound(Sound::right);
+				Sound::playSound(Sound::right, setting.soundEffect);
 			}
 		}
 		else if (selected_item == L"ENTER") {
@@ -303,7 +305,7 @@ void settingMenuOptionChanged(
 			}
 
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
-			Sound::playSound(Sound::right);
+			Sound::playSound(Sound::right, setting.soundEffect);
 		}
 		system("cls");
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
@@ -328,4 +330,10 @@ void settingMenu(
 
 	drawSettingMenu(setting_items, start, text_color, selected_textcolor, &index, menu_size);
 	settingMenuOptionChanged(setting_items, start, text_color, selected_textcolor, &index, menu_size);
+
+	Setting setting;
+	setting.backgroundSound = setting_items[0].status;
+	setting.soundEffect = setting_items[1].status;
+
+	FileIO::saveSetting("GameSetting.dat", setting);
 }

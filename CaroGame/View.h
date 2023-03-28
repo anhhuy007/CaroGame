@@ -46,7 +46,7 @@ namespace View {
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void drawOtherDetail();
 	void fixConsoleWindow();
-	void textColor(int color);
+	void textColor(int color);	
 	void textStyle(int fontSize);	
 	void clearRectangleArea(COORD start, int width, int height);
 	void printCharactors(

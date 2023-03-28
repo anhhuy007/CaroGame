@@ -59,9 +59,6 @@ void Control::startMenuScreen() {
 	MenuOption option = MenuScreen();
 
 	switch (option) {
-	case MenuOption::CONTINUE:
-		//Control::continueGame();
-		break;
 	case MenuOption::NEW_GAME_VS_PLAYER:
 		Control::newGame(true, true, Control::initNewGame());
 		break;
@@ -104,16 +101,6 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	
 	//View::drawGamePlayInfoBox({ 70,10 }, 55, 14, View::Color::BLACK);
 	escPressed = false;
-	
-	View::drawBorder3(71, 71 + 20, 2, 2 + 10);
-	//View::drawIronmanAvatar();
-
-	View::drawBorder3(110, 110 + 20, 2, 2 + 10);
-	//View::drawBotAvatar();
-
-	View::drawVSText();
-	View::drawSpidermanAvatar();
-	View::drawThanosAvatar();
 
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn

@@ -12,6 +12,11 @@ const int sz = View::BOARD_SIZE;
 
 namespace Model {
 	typedef pair<int, vector<COORD>> GameResult;
+	
+	struct Setting {
+		bool backgroundSound;
+		bool soundEffect;
+	};
 
 	struct Player {
 		char name[100] = "";

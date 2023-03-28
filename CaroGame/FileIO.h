@@ -17,4 +17,6 @@ namespace FileIO {
 	GameInformation readGameInfoFromFile(char fileName[]);
 	bool isValidFileName(std::string file);
 	bool fileNameExisted(std::string file);
+	bool saveSetting(std::string fileName, Setting setting);
+	Setting readSetting(std::string fileName);
 }	
