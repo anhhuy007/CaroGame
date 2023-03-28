@@ -107,7 +107,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
 	View::drawF1F2list(88,33);
-	View::drawGamePlayInfoBox({75,12}, 63, 18, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
