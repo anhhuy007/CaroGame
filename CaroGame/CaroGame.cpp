@@ -14,7 +14,7 @@ int main() {
 	however, this program only have play with human mode in new game 
 	Choose New Game -> VS Human to start new game*/
 	
-	Control::startGame();
+	/*Control::startGame();*/
 
 	/*wstring key = InputHandle::Get();
 
@@ -23,8 +23,8 @@ int main() {
 		wcout << key << endl;
 	}*/
 
-	/*View::fixConsoleWindow();
-	View::textStyle();*/
+	/*View::fixConsoleWindow();	View::textStyle();*/
+	View::drawGamePlayInfoBox({ 20,20 }, 55, 20, View::Color::BLACK);
 	
 	return 0;
 }

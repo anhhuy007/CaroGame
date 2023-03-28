@@ -78,6 +78,10 @@ namespace View {
 
 	std::ostream& bold_off(std::ostream& os);
 
+	void clock(short x, short y, int width, int height);
+
+	void drawBox(COORD spot, int width, int height, Color color);
+	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 }
 
 	
