@@ -59,9 +59,6 @@ void Control::startMenuScreen() {
 	MenuOption option = MenuScreen();
 
 	switch (option) {
-	case MenuOption::CONTINUE:
-		//Control::continueGame();
-		break;
 	case MenuOption::NEW_GAME_VS_PLAYER:
 		Control::newGame(true, true, Control::initNewGame());
 		break;
