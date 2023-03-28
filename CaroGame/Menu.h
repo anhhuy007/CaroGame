@@ -7,7 +7,6 @@
 
 	enum class MenuOption {
 		NONE = -1,
-		CONTINUE = 0,
 		NEW_GAME_VS_PLAYER = 1,
 		NEW_GAME_VS_COMPUTER_EASY = 2,
 		NEW_GAME_VS_COMPUTER_HARD = 3,

@@ -60,9 +60,6 @@ void Control::startMenuScreen() {
 	MenuOption option = MenuScreen();
 
 	switch (option) {
-	case MenuOption::CONTINUE:
-		//Control::continueGame();
-		break;
 	case MenuOption::NEW_GAME_VS_PLAYER:
 		Control::newGame(true, true, Control::initNewGame());
 		break;
@@ -102,6 +99,8 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	View::drawBoard2(15, 15);
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
+	
+	View::drawGamePlayInfoBox({ 75,12 }, 63, 18, View::Color::BLACK);
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
@@ -112,9 +111,10 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	View::drawThanosAvatar();*/
 	View::drawVSText();
 
+	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
-	View::drawF1F2list(88,33);
 	View::drawGamePlayInfoBox({75,12}, 64, 18, View::Color::BLACK);
+
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);

@@ -7,6 +7,6 @@ namespace Sound {
 	const LPCWSTR error = L"D:\\Caro\\Error.wav";
 	const LPCWSTR background = L"D:\\Caro\\Cipher2.wav";
 
-	void playSound(LPCWSTR path);
+	void playSound(LPCWSTR path, bool onSound);
 }
 

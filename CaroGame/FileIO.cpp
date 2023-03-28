@@ -47,3 +47,34 @@ bool FileIO::fileNameExisted(std::string file) {
 	return false;
 }
 
+bool FileIO::saveSetting(std::string fileName, Setting setting)
+{
+	fileName = folder + fileName + extension;
+	ofstream ofs(fileName, ios::binary);
+
+	if (!ofs) {
+		std::cerr << "Cannot open file " << fileName << std::endl;
+		return 0;
+	}
+
+	ofs.write((char*)&setting, sizeof(Setting));
+	ofs.close();
+	return 1;
+}
+
+Setting FileIO::readSetting(std::string fileName) {
+	fileName = folder + fileName + extension;
+	ifstream ifs(fileName, ios::binary);
+
+	if (!ifs) {
+		std::cerr << "Cannot open file " << fileName << std::endl;
+		return Setting();
+	}
+
+	Setting setting;
+	ifs.read((char*)&setting, sizeof(Setting));
+	ifs.close();
+
+	return setting;
+}
+
