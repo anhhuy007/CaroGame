@@ -104,5 +104,6 @@ namespace Model {
 	void previousMove(
 		GameInformation& game_info
 	);
+	PlayerMove getMoveHistory(GameInformation game_info, int num);
 }
 

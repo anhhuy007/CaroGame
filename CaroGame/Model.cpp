@@ -35,6 +35,16 @@ void Model::previousMove(Model::GameInformation& game_info) {
 	View::gotoXY(curX, curY);
 }
 
+Model::PlayerMove Model::getMoveHistory(GameInformation game_info, int num)
+{
+	PlayerMove move;
+	for (int i = game_info.moveHistorySize - 1; i >= max(0, game_info.moveHistorySize - num); i--) {
+		move = game_info.playerMoveHistory[i];
+	}
+
+	return move;
+}
+
 void Model::makePlayerMove(std::wstring key) {	
 	// move up
 	if (key == L"UP") {
