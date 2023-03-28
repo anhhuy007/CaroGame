@@ -101,6 +101,7 @@ namespace View {
 	
 	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
 	void drawXOart();
+	void LoadGameBorder(int left, int right, int top, int bot);
 
 }
 

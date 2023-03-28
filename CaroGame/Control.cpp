@@ -15,6 +15,7 @@ Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
 
 	//// input user name
+
 	//string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
 	//strcpy(game_info.player1.name, p1.c_str());
 	//
@@ -104,17 +105,16 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	//View::drawIronmanAvatar();
-
-	View::drawBorder3(118, 118 + 20, 0, 0 + 10);
-	//View::drawBotAvatar();
-
+	View::drawBorder3(119, 118 + 21, 0, 0 + 10);
+	View::drawIronmanAvatar();
+	View::drawBotAvatar();
+	/*View::drawSpidermanAvatar();
+	View::drawThanosAvatar();*/
 	View::drawVSText();
-	View::drawSpidermanAvatar();
-	View::drawThanosAvatar();
+
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
 	View::drawF1F2list(88,33);
-	View::drawGamePlayInfoBox({75,12}, 63, 18, View::Color::BLACK);
+	View::drawGamePlayInfoBox({75,12}, 64, 18, View::Color::BLACK);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
@@ -213,6 +213,8 @@ void Control::saveGame(Model::GameInformation& game_info) {
 
 // load game from file
 void Control::loadGame() {
+
+	//View::savedGameBorder(50, 50 + 50, 2, 2 + 10);
 	// get file name from keyboard 
 	std::string filePath = FileIO::folder + InputHandle::getFileName(true) + FileIO::extension;
 	char* file = new char[filePath.length() + 1];
