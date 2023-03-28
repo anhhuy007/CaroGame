@@ -76,7 +76,7 @@ void Control::startMenuScreen() {
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
-		settingMenu({ 60, 10 }, View::Color::BLACK, View::Color::PURPLE);
+		settingMenu({ 70, 10 }, View::Color::BLACK, View::Color::PURPLE);
 		Control::returnMenu();
 		break;
 	case MenuOption::ABOUT:

@@ -7,7 +7,8 @@
 #include "FileIO.h"
 using namespace std;
 
-Setting setting = { true, true };
+// global variable for managing sound effect
+Sound::SoundManager soundManager;
 
 // check if current menu index is valid index
 bool checkIndex(int* index, int num) {
@@ -40,11 +41,11 @@ void clearMenu(
 
 // draw menu 
 void drawMenu(
-	MenuItem menu_items[], 
-	COORD start, 
-	View::Color textcolor, 
-	View::Color selected_textcolor, 
-	int* cur_index, 
+	MenuItem menu_items[],
+	COORD start,
+	View::Color textcolor,
+	View::Color selected_textcolor,
+	int* cur_index,
 	int menu_size) {
 	//clearMenu(menu_items, start, menu_size);
 	for (int i = 0; i < menu_size; i++) {
@@ -52,7 +53,7 @@ void drawMenu(
 		if (i == *cur_index) {
 			wstring selected_content = L">> " + menu_items[i].content + L" <<";
 			short x = start.X - selected_content.length() / 2;
-			View::printCharactors(selected_content, {x, y}, selected_textcolor, View::Color::WHITE);
+			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
 		else {
 			short x = start.X - menu_items[i].content.length() / 2;
@@ -63,11 +64,11 @@ void drawMenu(
 
 // listen on keyboard input and return the index of selected menu item
 void menuOptionChanged(
-	MenuItem menu_items[], 
-	COORD start, 
-	View::Color text_color, 
-	View::Color selected_text_color, 
-	int* cur_index, 
+	MenuItem menu_items[],
+	COORD start,
+	View::Color text_color,
+	View::Color selected_text_color,
+	int* cur_index,
 	int menu_size
 ) {
 	wstring selected_item = InputHandle::Get();
@@ -76,19 +77,19 @@ void menuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error, setting.soundEffect);
+				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSound(Sound::right, setting.soundEffect);
+				Sound::playSoundEffect(Sound::VALID, soundManager);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error, setting.soundEffect);
+				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSound(Sound::right, setting.soundEffect);
+				Sound::playSoundEffect(Sound::VALID, soundManager);
 			}
 		}
 		/*else if (selected_item == L"ESC") {
@@ -102,10 +103,10 @@ void menuOptionChanged(
 
 // draw main menu screen
 MenuOption mainMenu(
-	COORD start, 
-	View::Color text_color, 
+	COORD start,
+	View::Color text_color,
 	View::Color selected_textcolor
-) {	
+) {
 	int index = -1;
 	int menu_size = 7;
 	MenuItem main_menu_items[7] = {
@@ -128,7 +129,7 @@ MenuOption newGameMenu(
 	COORD start,
 	View::Color text_color,
 	View::Color selected_textcolor
-) {	
+) {
 	int index = -1;
 	int menu_size = 4;
 	start = { 70, 15 };
@@ -147,9 +148,11 @@ MenuOption newGameMenu(
 }
 
 MenuOption MenuScreen() {
-	Sound::playSound(L"D:\\Caro\\Cipher2.wav", setting.backgroundSound);
+	Setting soundSetting = FileIO::readSetting("GameSetting.dat");
+	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect };
+	Sound::playSoundBackGround(soundManager);
 	MenuOption option = mainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
-	
+
 	switch (option) {
 	case MenuOption::NEW_GAME:
 		return newGameMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
@@ -182,23 +185,23 @@ MenuOption aboutMenu(
 		L"PRESS ESC TO BACK"
 	};
 	View::clearRectangleArea({ 50, 15 }, 50, 50);
-	
+
 	for (int i = 0; i < 14; i++) {
-		
+
 		short x = start.X - about_content[i].length() / 2;
 		short y = start.Y + i * 2;
 
 		View::printCharactors(about_content[i], { x,y }, text_color, selected_textcolor);
-		
+
 	}
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSound(Sound::error, setting.soundEffect);
+		Sound::playSoundEffect(Sound::INVALID, soundManager);
 	}
 
 	return MenuOption::ABOUT;
- }
+}
 
 MenuOption instructionMenu(
 	COORD start,
@@ -234,7 +237,7 @@ MenuOption instructionMenu(
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSound(Sound::error, setting.soundEffect);
+		Sound::playSoundEffect(Sound::INVALID, soundManager);
 	}
 	return MenuOption::INSTRUCTION;
 }
@@ -257,7 +260,7 @@ void drawSettingMenu(
 		else {
 			content += setting_items[i].status_false;
 		}
-		
+
 		if (i == *cur_index) {
 			wstring selected_content = L">> " + content + L" <<";
 			short x = start.X - selected_content.length() / 2;
@@ -284,19 +287,19 @@ void settingMenuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error, setting.soundEffect);
+				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSound(Sound::right, setting.soundEffect);
+				Sound::playSoundEffect(Sound::VALID, soundManager);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_size)) {
-				Sound::playSound(Sound::error, setting.soundEffect);
+				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSound(Sound::right, setting.soundEffect);
+				Sound::playSoundEffect(Sound::VALID, soundManager);
 			}
 		}
 		else if (selected_item == L"ENTER") {
@@ -305,7 +308,9 @@ void settingMenuOptionChanged(
 			}
 
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
-			Sound::playSound(Sound::right, setting.soundEffect);
+			soundManager = { setting_items[0].status, setting_items[1].status };
+			Sound::playSoundBackGround(soundManager);
+			Sound::playSoundEffect(Sound::VALID, soundManager);
 		}
 		system("cls");
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
@@ -320,14 +325,13 @@ void settingMenu(
 ) {
 	int index = -1;
 	int menu_size = 3;
-	bool background = 1;
-	bool effect = 1;
 	SettingItem setting_items[3] = {
-		{ 0, L"BACKGROUND SOUND: ", background, L"ON", L"OFF"},
-		{ 1, L"SOUND EFFECT: ", effect, L"ON", L"OFF"}, 
+		{ 0, L"BACKGROUND SOUND: ", soundManager.onSoundBackGround, L"ON", L"OFF"},
+		{ 1, L"SOUND EFFECT: ", soundManager.onSoundEffect, L"ON", L"OFF"},
 		{ 2, L"BACK", false, L"", L""}
 	};
 
+	system("cls");
 	drawSettingMenu(setting_items, start, text_color, selected_textcolor, &index, menu_size);
 	settingMenuOptionChanged(setting_items, start, text_color, selected_textcolor, &index, menu_size);
 

@@ -1885,9 +1885,3 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	y = spot.Y + (height / 2 - 2) / 2;
 	View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));
 }
-
-//void View::updateInform(GameInformation ) {
-//	//Print History
-//	//Move getMoveHistory
-//	//Print Turn
-//}
