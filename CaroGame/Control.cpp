@@ -43,7 +43,7 @@ void Control::startGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
-	View::textStyle(24);
+	View::textStyle(22);
 
 	// show splash screen
 	/*View::splashScreen();
@@ -98,18 +98,12 @@ void Control::startMenuScreen() {
 void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
 	// draw game board and other details
 	Control::resetGame();
-	View::drawBoard();
+	View::drawBoard2(16, 16);
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	View::drawGamePlayInfoBox({ 70,10 }, 55, 14, View::Color::BLACK);
+	//View::drawGamePlayInfoBox({ 70,10 }, 55, 14, View::Color::BLACK);
 	escPressed = false;
-	//View::drawBoard();
-	View::drawBoard2(16,16);
-	//View::drawBorder2(67, 67 + 45, 19, 19 + 10);
-	//View::drawOtherDetail();
-	//View::drawTurnBoard();
-	//View::drawTrophy();
 	
 	View::drawBorder3(71, 71 + 20, 2, 2 + 10);
 	//View::drawIronmanAvatar();
