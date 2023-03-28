@@ -7,21 +7,35 @@
 #include "Menu.h"
 #include "FileIO.h"
 #include <string>
+#include "InputHandle.h"
 
 bool escPressed = false;
 
 Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
-	
+
+	//// input user name
+	//string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+	//strcpy(game_info.player1.name, p1.c_str());
+	//
+	//string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
+	//strcpy(game_info.player2.name, p2.c_str());
+
+	//system("cls");
+	//cout << "Player 1: " << game_info.player1.name << endl;
+	//cout << "Player 2: " << game_info.player2.name << endl;
+	//system("pause");
+		
 	// init game information
-	game_info.player1 = { "Player 1", 0, 1 };
-	game_info.player2 = { "Player 2", 0, 0 };
 	game_info.isFirstPlayerTurn = true;
 	game_info.timeRemained = 1200;
+	game_info.board = Model::Board();
+	memset(game_info.playerMoveHistory, 0, sizeof(game_info.playerMoveHistory));
+	game_info.moveHistorySize = 0;
 	game_info.curX = 0;
 	game_info.curY = 0;
 	game_info.endGame = false;
-	game_info.board = Model::Board();
+	
 	return game_info;
 }
 
@@ -29,7 +43,7 @@ void Control::startGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
-	View::textStyle(24);
+	View::textStyle(22);
 
 	// show splash screen
 	/*View::splashScreen();
@@ -84,13 +98,19 @@ void Control::startMenuScreen() {
 void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
 	// draw game board and other details
 	Control::resetGame();
-	View::drawBoard();
+	View::drawBoard2(15, 15);
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
 	View::drawGamePlayInfoBox({ 75,12 }, 63, 18, View::Color::BLACK);
 	escPressed = false;
 
+	View::drawVSText();
+	View::drawSpidermanAvatar();
+	View::drawThanosAvatar();
+	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
+	View::drawF1F2list(88,33);
+	View::drawGamePlayInfoBox({75,12}, 63, 18, View::Color::BLACK);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
@@ -107,6 +127,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 
 			// show winner congratulation screen
 
+			
 			game_info.endGame = true;
 			break;
 		}
@@ -158,7 +179,7 @@ void Control::saveGame(Model::GameInformation& game_info) {
 	
 	if (strlen(game_info.name) == 0) {
 		// input file name from keyboard
-		fileName = FileIO::getFileName(false);
+		fileName = InputHandle::getFileName(false);
 
 		// save input name to game_info
 		strcpy(game_info.name, fileName.c_str());
@@ -189,7 +210,7 @@ void Control::saveGame(Model::GameInformation& game_info) {
 // load game from file
 void Control::loadGame() {
 	// get file name from keyboard 
-	std::string filePath = FileIO::folder + FileIO::getFileName(true) + FileIO::extension;
+	std::string filePath = FileIO::folder + InputHandle::getFileName(true) + FileIO::extension;
 	char* file = new char[filePath.length() + 1];
 	strcpy(file, filePath.c_str());
 	

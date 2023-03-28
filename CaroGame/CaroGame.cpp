@@ -15,7 +15,11 @@ int main() {
 	/*use this function to start Caro Game
 	however, this program only have play with human mode in new game 
 	Choose New Game -> VS Human to start new game*/
+	View::textStyle(22);
+	system("color f0");
+	View::fixConsoleWindow();
 	
-	Control::startGame();
+	//Control::startGame();
+	Control::newGame(1, 1, Control::initNewGame());
 	return 0;
 }

@@ -44,6 +44,7 @@ namespace View {
 	void gotoXY(short x, short y);
 	void drawBoard();
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
+	void drawF1F2list(int x, int y);
 	void fixConsoleWindow();
 	void textColor(int color);
 	void textStyle(int fontSize);	
@@ -83,5 +84,23 @@ namespace View {
 	void clock(short x, short y, int width, int height);
 	void drawBox(COORD spot, int width, int height, Color color);
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
+
+	void drawBorder2(int left, int right, int top, int bot);
+	void drawCaroGameText();
+
+	void drawTurnBoard();
+	void drawTrophy();
+	void drawBorder3(int left, int right, int top, int bot);
+
+	void drawIronmanAvatar();
+	void drawBotAvatar();
+	void drawBoard2(int space_row, int space_col);
+	void drawVSText();
+	void drawSpidermanAvatar();
+	void drawThanosAvatar();
+	
+	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
+	void drawXOart();
+
 }
 
