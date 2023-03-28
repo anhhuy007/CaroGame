@@ -84,4 +84,3 @@ namespace View {
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 }
 
-	
