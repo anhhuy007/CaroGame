@@ -102,7 +102,7 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		wstring playerMark = playerNum == 1 ? L"X" : L"O";
 		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
 		// change player turn
-		//Mark print on the board
+	
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 		endTurn = true;
 	}
@@ -122,6 +122,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		// if is a player move
 		if (key == L"ENTER") {
 			// mark the move on the board and update game's information
+			Model::updateInform(game_info, { 75,12 }, 64, 18, View::Color::BLACK);
 			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
 			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
 		} 
@@ -307,4 +308,46 @@ void Model::drawXO(Model::Board board) {
 			);
 		}
 	}
+}
+
+wstring formats(int t) {
+	wstring time = to_wstring(t);
+	if (t < 10) {
+		time = L"0" + to_wstring(t);
+	}
+	return time;
+}
+
+void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
+	View::clearRectangleArea({ short(spot.X + 9),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));
+	View::drawXOart({short(spot.X - 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
+	if (game_info.isFirstPlayerTurn == 1) {
+		game_info.player1.numberOfMoves ++;
+		short x = spot.X;
+		short y = spot.Y + (height / 2 - 2) / 2;
+		wstring xMoves = formats(game_info.player1.numberOfMoves);
+		View::printVerticalCenteredCharactors(
+			xMoves,
+			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+			short(((height / 2 - 2) / 2) / 2),
+			View::Color::BLACK,
+			View::Color::WHITE
+		);
+	}
+	else {
+		game_info.player2.numberOfMoves += 1;
+		short x = spot.X + (((width - 4) / 3) * 2 + 3);
+		short y = spot.Y + (height / 2 - 2) / 2;
+		wstring yMoves = formats(game_info.player2.numberOfMoves);
+		View::printVerticalCenteredCharactors(
+			yMoves,
+			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+			short(((height / 2 - 2) / 2) / 2),
+			View::Color::BLACK,
+			View::Color::WHITE
+		); 
+	}
+	//Print History
+	//Move getMoveHistory
+	//Print Turn
 }

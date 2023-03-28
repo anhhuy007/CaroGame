@@ -100,7 +100,6 @@ namespace View {
 	void drawThanosAvatar();
 	
 	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
-	void drawXOart();
-
+	void drawXOart(COORD spot,bool isFirstPlayerTurn);
+	
 }
-

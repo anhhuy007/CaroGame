@@ -19,7 +19,8 @@ int main() {
 	system("color f0");
 	View::fixConsoleWindow();
 	
-	//Control::startGame();
-	Control::newGame(1, 1, Control::initNewGame());
+	Control::startGame();
+	/*Control::newGame(1, 1, Control::initNewGame());*/
+	/*View::drawXOart();*/
 	return 0;
 }
