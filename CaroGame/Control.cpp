@@ -10,7 +10,7 @@ void Control::startGame() {
 	system("color f0");
 	View::fixConsoleWindow();
 	View::textStyle();
-
+	View::drawCaroGameText();
 	// start menu screen
 	MenuOption option = MenuScreen();
 
@@ -52,8 +52,22 @@ void Control::startGame() {
 
 void Control::newGame() {
 	Control::resetGame();
-	View::drawBoard();
-	View::drawOtherDetail();
+	//View::drawBoard();
+	View::drawBoard2(16,16);
+	//View::drawBorder2(67, 67 + 45, 19, 19 + 10);
+	//View::drawOtherDetail();
+	//View::drawTurnBoard();
+	//View::drawTrophy();
+	
+	View::drawBorder3(71, 71 + 20, 2, 2 + 10);
+	//View::drawIronmanAvatar();
+
+	View::drawBorder3(110, 110 + 20, 2, 2 + 10);
+	//View::drawBotAvatar();
+
+	View::drawVSText();
+	View::drawSpidermanAvatar();
+	View::drawThanosAvatar();
 
 	// create board
 	board = new int* [View::_SIZE];

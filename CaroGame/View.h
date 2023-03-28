@@ -78,6 +78,28 @@ namespace View {
 
 	std::ostream& bold_off(std::ostream& os);
 
+
+	void splashScreenInfo();
+	void splashScreen();
+	void drawPacman();
+	int GetRandom(int min, int max);
+	void drawBorder2(int left, int right, int top, int bot);
+
+	void drawCaroGameText();
+
+	void drawTurnBoard();
+	void drawTrophy();
+	void drawBorder3(int left, int right, int top, int bot);
+
+	void drawIronmanAvatar();
+	void drawBotAvatar();
+	void drawBoard2(int space_row, int space_col);
+	void drawVSText();
+	void drawSpidermanAvatar();
+	void drawThanosAvatar();
+	
+	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
+
 }
 
 	
