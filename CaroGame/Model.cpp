@@ -7,90 +7,113 @@ using namespace std;
 
 short curX = View::LEFT + 38;
 short curY = View::TOP + 19;
-stack <COORD> undoStack;
+bool endTurn = false;
 
-bool endGame = false;
+void Model::previousMove(Model::GameInformation& game_info) {
+	int n = game_info.moveHistorySize;
 
-void Model::previousMove(int& player, int**& board) {
-	if (undoStack.size() == 0) return;
+	if (n == 0) return;
 
-	int preX = undoStack.top().X;
-	int preY = undoStack.top().Y;
-	undoStack.pop();
+	int preX = game_info.playerMoveHistory[n - 1].move.X;
+	int preY = game_info.playerMoveHistory[n - 1].move.Y;
+	int player = game_info.playerMoveHistory[n - 1].player;
+	
+	// pop the last from the move history 
+	game_info.playerMoveHistory[n - 1] = { { 0, 0 }, 0 };
+	game_info.moveHistorySize--;
 
 	int i = (preY - View::TOP - 1) / 2;
 	int j = (preX - View::LEFT - 2) / 4;
 
-	board[i][j] = 0;
-	player = player == 1 ? 2 : 1;
-	curX = preX; curY = preY;
+	// change player turn
+	game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 
-	View::gotoXY(preX, preY);
-	cout << char(32);
+	// mark the previous move as empty
+	game_info.board[i][j] = 0;
+	curX = preX; curY = preY;
+	View::printCharactors(L" ", { curX, curY }, View::Color::WHITE, View::Color::WHITE);
+	View::gotoXY(curX, curY);
 }
 
-void Model::playGame(int& player, int**& board) {
-	wstring key; endGame = false;
+void Model::makePlayerMove(std::wstring key) {	
+	// move up
+	if (key == L"UP") {
+		if (curY > View::TOP + 1) {
+			curY -= 2;
+		}
+		else {
+			curY = View::BOT - 1;
+		}
+	}
 
-	while (!endGame) {
-		View::gotoXY(curX, curY);
+	// move down
+	else if (key == L"DOWN") {
+		if (curY < View::BOT - 1) {
+			curY += 2;
+		}
+		else {
+			curY = View::TOP + 1;
+		}
+	}
+
+	// move left
+	else if (key == L"LEFT") {
+		if (curX > View::LEFT + 2) {
+			curX -= 4;
+		}
+		else {
+			curX = View::RIGHT - 2;
+		}
+	}
+
+	// move right
+	else if (key == L"RIGHT") {
+		if (curX < View::RIGHT - 2) {
+			curX += 4;
+		}
+		else {
+			curX = View::LEFT + 2;
+		}
+	}
+}
+
+void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &game_info) {
+	int i = (spot.Y - View::TOP - 1) / 2;
+	int j = (spot.X - View::LEFT - 2) / 4;
+	
+	// if the board is empty
+	if (game_info.board[i][j] == 0) {
+		// mark move
+		game_info.board[i][j] = playerNum;
+		// add move to history
+		game_info.playerMoveHistory[game_info.moveHistorySize] = { spot, playerNum };
+		game_info.moveHistorySize++; 
+		// show move on the game board
+		wstring playerMark = playerNum == 1 ? L"X" : L"O";
+		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
+		// change player turn
+		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
+		endTurn = true;
+	}
+}
+
+void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {
+	View::gotoXY(0, 0);
+	cout << "Player: " << player.name << endl;
+	cout << "Turn: " << game_info.isFirstPlayerTurn << endl;
+
+	View::gotoXY(curX, curY);
+	wstring key;
+	endTurn = false;
+
+	while (!endTurn) {
 		key = InputHandle::Get();
-
-		// move up
-		if (key == L"UP") {
-			if (curY > View::TOP + 1) {
-				curY -= 2;
-			}
-			else {
-				curY = View::BOT - 1;
-			}
-		}
-
-		// move down
-		else if (key == L"DOWN") {
-			if (curY < View::BOT - 1) {
-				curY += 2; 
-			} 
-			else {
-				curY = View::TOP + 1;
-			}
-		}
-
-		// move left
-		else if (key == L"LEFT") {
-			if (curX > View::LEFT + 2) {
-				curX -= 4;
-			}
-			else {
-				curX = View::RIGHT - 2;
-			}
-		}
-
-		// move right
-		else if (key == L"RIGHT") {
-			if (curX < View::RIGHT - 2) {
-				curX += 4;
-			}
-			else {
-				curX = View::LEFT + 2;
-			}
-		}
-
-		// enter -> mark a player move
-		else if (key == L"ENTER") {
-			int i = (curY - View::TOP - 1) / 2;
-			int j = (curX - View::LEFT - 2) / 4;
-
-			if (board[i][j] == 0) {
-				undoStack.push({ curX, curY });
-				board[i][j] = player;
-				wstring ch = player == 1 ? L"X" : L"O";
-				View::printCharactors(ch, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
-				player = player == 1 ? 2 : 1;
-			}
-			
-			break;
-		}
+		// if is a player move
+		if (key == L"ENTER") {
+			// mark the move on the board and update game's information
+			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
+			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
+		} 
 		
 		// quit game
 		else if (key == L"ESC") {
@@ -100,11 +123,11 @@ void Model::playGame(int& player, int**& board) {
 			
 			system("cls");
 			View::confirmDialog(
-				L"Are you sure to exit?",
-				{ 40, 10 },
+				L"Your current game will not be saved. Are you sure you want to exit?",
+				{ 25, 10 },
 				[]() -> void {
 					// if click YES then return menu
-					endGame = true;
+					endTurn = true;
 					Control::quitGame();
 				},
 				[&]() -> void {
@@ -114,15 +137,40 @@ void Model::playGame(int& player, int**& board) {
 				}
 			);
 		}
+		
 		// undo move
 		else if (key == L"F4") {
-			View::gotoXY(0, 0);
-			previousMove(player, board);
+			previousMove(game_info);
+			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
 		}
 
 		// save game
 		else if (key == L"F2") {
-			
+			// save current screen buffers
+			PCHAR_INFO buffer = View::getScreenBuffer();
+			system("cls");
+
+			// show a dialog that ask user to confirm to save
+			View::confirmDialog(
+				L"Are you sure you want to save this game?",
+				{ 40, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					Control::saveGame(game_info);
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				},
+				[&]() -> void {
+					// continue game
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				}
+			);
+		}
+		// player's move
+		else {
+			Model::makePlayerMove(key);
+			View::gotoXY(curX, curY);
 		}
 	}
 }
@@ -132,11 +180,11 @@ void Model::playGame(int& player, int**& board) {
 // 2 : player 2 win
 // 3 : draw
 // if game ended, return a pair of result and a vector of coordinates of winning line
-Model::GameResult Model::checkResult(int player, int**& board) {
+pair<int, vector<COORD>> Model::checkResult(int player, int board[sz][sz]) {
 	vector<COORD> winPos;
 	int count = 0;
-	for (int i = 0; i < View::_SIZE; i++) {
-		for (int j = 0; j < View::_SIZE; j++) {
+	for (int i = 0; i < View::BOARD_SIZE; i++) {
+		for (int j = 0; j < View::BOARD_SIZE; j++) {
 			if (board[i][j] != 0) count++;
 
 			if (board[i][j] == player) {
@@ -176,12 +224,12 @@ Model::GameResult Model::checkResult(int player, int**& board) {
 		}
 	}
 
-	int result = count == View::_SIZE * View::_SIZE ? 3 : 0;
+	int result = count == View::BOARD_SIZE * View::BOARD_SIZE ? 3 : 0;
 	return { result, winPos };	
 }
 
-bool Model::checkRow(int i, int j, int player, int**& board) {
-	if (j + 4 > View::_SIZE) {
+bool Model::checkRow(int i, int j, int player, int board[sz][sz]) {
+	if (j + 4 > View::BOARD_SIZE) {
 		return false;
 	}
 
@@ -193,8 +241,8 @@ bool Model::checkRow(int i, int j, int player, int**& board) {
 		);
 }
 
-bool Model::checkCol(int i, int j, int player, int**& board) {
-	if (i + 4 > View::_SIZE) {
+bool Model::checkCol(int i, int j, int player, int board[sz][sz]) {
+	if (i + 4 > View::BOARD_SIZE) {
 		return false;
 	}
 
@@ -206,8 +254,8 @@ bool Model::checkCol(int i, int j, int player, int**& board) {
 		);
 }
 
-bool Model::checkMainDiagonal(int i, int j, int player, int**& board) {
-	if (i + 4 > View::_SIZE || j + 4 > View::_SIZE) {
+bool Model::checkMainDiagonal(int i, int j, int player, int board[sz][sz]) {
+	if (i + 4 > View::BOARD_SIZE || j + 4 > View::BOARD_SIZE) {
 		return false;
 	}
 
@@ -219,9 +267,9 @@ bool Model::checkMainDiagonal(int i, int j, int player, int**& board) {
 		);
 }
 
-bool Model::checkSubDiagonal(int i, int j, int player, int**& board) {
+bool Model::checkSubDiagonal(int i, int j, int player, int board[sz][sz]) {
 
-	if (i - 4 < 0 || j + 4 > View::_SIZE) {
+	if (i - 4 < 0 || j + 4 > View::BOARD_SIZE) {
 		return false;
 	}
 
@@ -231,4 +279,21 @@ bool Model::checkSubDiagonal(int i, int j, int player, int**& board) {
 		board[i - 3][j + 3] == player &&
 		board[i - 4][j + 4] == player
 		);
+}
+
+void Model::drawXO(Model::Board board) {
+	View::gotoXY(0, 0);
+	cout << "Draw XO";
+	for (int i = 0; i < View::BOARD_SIZE; i++) {
+		for (int j = 0; j < View::BOARD_SIZE; j++) {
+			if (board[i][j] == 0) continue;
+			COORD spot = board.getSpot(i, j);
+			View::printCharactors(
+				board[i][j] == 1 ? L"X" : L"O",
+				{ spot.X , spot.Y },
+				View::Color::BLACK,
+				View::Color::WHITE
+			);
+		}
+	}
 }

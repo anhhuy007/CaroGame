@@ -1,5 +1,7 @@
 ﻿#include "View.h"
 #include "Menu.h"
+#include "Control.h"
+#include "Sound.h"
 #include "InputHandle.h"
 
 using namespace std;
@@ -8,7 +10,7 @@ using namespace std;
 void View::drawBoard() {
 	// draw TOP
 	gotoXY(LEFT + 1, TOP);
-	for (int i = 0; i < (2 * _SIZE); i++) {
+	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
 		if (i % 2) {
 			cout << char(194);
 		}
@@ -19,7 +21,7 @@ void View::drawBoard() {
 
 	// draw BOTTOM
 	gotoXY(LEFT + 1, BOT);
-	for (int i = 0; i < (2 * _SIZE); i++) {
+	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
 		if (i % 2) {
 			cout << char(193);
 		}
@@ -28,7 +30,7 @@ void View::drawBoard() {
 		}
 	}
 
-	for (int i = 0; i < 2 * _SIZE; i++) {
+	for (int i = 0; i < 2 * BOARD_SIZE; i++) {
 		gotoXY(LEFT, TOP + i);
 		if (i % 2) {
 			cout << char(179);
@@ -47,7 +49,7 @@ void View::drawBoard() {
 	}
 
 	char s1[200], s2[200];
-	for (int j = 0; j < 4 * _SIZE - 1; j++) {
+	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
 		if (j % 4) {
 			s1[j] = ' ';
 		}
@@ -56,7 +58,7 @@ void View::drawBoard() {
 		}
 	}
 
-	for (int j = 0; j < 4 * _SIZE - 1; j++) {
+	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
 		if ((j + 1) % 4) {
 			s2[j] = 196;
 		}
@@ -65,11 +67,11 @@ void View::drawBoard() {
 		}
 	}
 
-	s1[4 * _SIZE - 1] = '\0';
-	s2[4 * _SIZE - 1] = '\0';
+	s1[4 * BOARD_SIZE - 1] = '\0';
+	s2[4 * BOARD_SIZE - 1] = '\0';
 
 	int i = 1;
-	while (i < 2 * _SIZE - 1) {
+	while (i < 2 * BOARD_SIZE - 1) {
 		gotoXY(LEFT, TOP + i++);
 		cout << s1;
 
@@ -103,69 +105,7 @@ void View::drawRectangleBorder(COORD spot, int width, int height, Color color) {
 	}
 }
 
-void View::drawOtherDetail() {
-	vector<string> a;
-
-	a.resize(0);
-	a.push_back(" 0=======================0 ");
-	a.push_back(" |                       | ");
-	a.push_back(" |      Y88b   d88P      | ");
-	a.push_back(" |       Y88b d88P       | ");
-	a.push_back(" |        Y88o88P        | ");
-	a.push_back(" |         Y888P         | ");
-	a.push_back(" |          888          | ");
-	a.push_back(" |          888          | ");
-	a.push_back(" |          888          | ");
-	a.push_back(" |          888          | ");
-	a.push_back(" |                       | ");
-	a.push_back(" 0=======================0 ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(100, 2 + i);
-		cout << a[i];
-
-	}
-
-	a.resize(0);
-	a.push_back(" 0======================0 ");
-	a.push_back(" |                      | ");
-	a.push_back(" |     Y88b   d88P      | ");
-	a.push_back(" |      Y88b d88P       | ");
-	a.push_back(" |       Y88o88P        | ");
-	a.push_back(" |        Y888P         | ");
-	a.push_back(" |        d888b         | ");
-	a.push_back(" |       d88888b        | ");
-	a.push_back(" |      d88P Y88b       | ");
-	a.push_back(" |     d88P   Y88b      | ");
-	a.push_back(" |                      | ");
-	a.push_back(" 0======================0 ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(70, 2 + i);
-		cout << a[i];
-
-	}
-	a.resize(0);
-
-	//info board
-	a.push_back("F1 : New game   ");
-	a.push_back("");
-	a.push_back("F2 : Save game  ");
-	a.push_back("");
-	a.push_back("F3 : Load game  ");
-	a.push_back("");
-	a.push_back("F4 : Undo       ");
-	a.push_back("");
-	a.push_back("Esc: Return home");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(90, 17 + i);
-		cout << a[i];
-	}
-
-}
-
-void View::gotoXY(int x, int y) {
+void View::gotoXY(short x, short y) {
 	static HANDLE h = NULL;
 	if (!h) h = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD coord = { x, y };
@@ -185,12 +125,12 @@ void View::textColor(int color) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void View::textStyle() {
+void View::textStyle(int fontSize) {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
 	cfi.dwFontSize.X = 0;                   // Width of each character in the font
-	cfi.dwFontSize.Y = 24;                  // Height
+	cfi.dwFontSize.Y = fontSize;                  // Height
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 	std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
@@ -206,7 +146,6 @@ std::ostream& View::bold_off(std::ostream& os)
 {
 	return os << "\e[0m";
 }
-
 
 void View::clearRectangleArea(
 	COORD start, 
@@ -279,11 +218,12 @@ void View::confirmDialog(
 	function<void()> positiveAction,
 	function<void()> negativeAction
 ) {
-	View::drawRectangleBorder(spot, 60, 10, View::Color::BLACK);
+	int width = content.size() + 20;
+	View::drawRectangleBorder(spot, width, 10, View::Color::BLACK);
 	// print dialog title
 	View::printVerticalCenteredCharactors(
 		L"Confirm Dialog",
-		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		{ spot.X, spot.Y, short(spot.X + width), short(spot.Y + 10) },
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
@@ -292,7 +232,7 @@ void View::confirmDialog(
 	// print dialog content
 	View::printVerticalCenteredCharactors(
 		content,
-		{ spot.X, spot.Y, short(spot.X + 60), short(spot.Y + 10) },
+		{ spot.X, spot.Y, short(spot.X + width), short(spot.Y + 10) },
 		4,
 		View::Color::BLACK,
 		View::Color::WHITE
@@ -305,7 +245,7 @@ void View::confirmDialog(
 		{ 1, L"NO", MenuOption::NO }
 	};
 
-	short center_x = spot.X + 60 / 2;
+	short center_x = spot.X + width / 2;
 	
 	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
 	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
@@ -324,6 +264,18 @@ void View::confirmDialog(
 	}
 }
 
+COORD View::getCenteredSpot(std::wstring content, SMALL_RECT box) {
+	short x = box.Left + (box.Right - box.Left) / 2 - content.length() / 2;
+	short y = box.Top + (box.Bottom - box.Top) / 2;
+	return { x, y };
+}
+
+void View::printCenteredToast(std::wstring content, SMALL_RECT box, View::Color text_color, View::Color background_color) {
+	system("cls");
+	COORD spot = View::getCenteredSpot(content, box);
+	View::printCharactors(content, spot, text_color, background_color);
+}
+
 void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {
 	wstring winner_ws = player == 1 ? L"X" : L"O";
 	for (int i = 0; i < winning_moves.size(); i++) {
@@ -331,116 +283,90 @@ void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {
 	}
 }
 
-void View::xWinScreen() {
-	fixConsoleWindow();
-	vector <string> a;
+void View::splashScreenInfo() {
+	int x, y;
+	x = 50;
+	y = 12;
 
-	a.resize(0);
+	View::printCharactors(L"        NHÓM 10", { (short)(x + 10),(short)(y + 2) }, Color::BLACK, Color::WHITE); Sleep(300);
+	View::printCharactors(L" GV: Trương Toàn Thịnh", { (short)(x + 10),(short)(y + 4) }, Color::BLACK, Color::WHITE); Sleep(400);
 
-	a.push_back("     ===========================================================   ");
-	a.push_back("     o      O       o          `O ooOoOOo o.     O      oO oO oO   ");
-	a.push_back("      O    o        O           o    O    Oo     o      OO OO OO   ");
-	a.push_back("       o  O         o           O    o    O O    O      oO oO oO   ");
-	a.push_back("        oO          O           O    O    O  o   o      Oo Oo Oo   ");
-	a.push_back("        Oo          o     o     o    o    O   o  O      oO oO oO   ");
-	a.push_back("       o  o         O     O     O    O    o    O O                 ");
-	a.push_back("      O    O        `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
-	a.push_back("     O      o        `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
-	a.push_back("     ===========================================================   ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
-	}
-
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+	View::printCharactors(L" Huỳnh Anh Huy			", { (short)(x + 10),(short)(y + 6) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Phan Nguyễn Hoàng Quân	", { (short)(x + 10),(short)(y + 7) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Nguyễn Lâm Anh Duy		", { (short)(x + 10),(short)(y + 8) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" Lê Hải Nam				", { (short)(x + 10),(short)(y + 9) }, Color::BLACK, Color::WHITE); Sleep(300);
 }
+void View::splashScreen() {
+	//system("cls");
+	View::fixConsoleWindow();
+	
+	Sound::playSound(Sound::background);
+	View::drawCaroGameText(200);
+	View::splashScreenInfo();
+	View::drawPacman();
 
-void View::yWinScreen() {
-	fixConsoleWindow();
-	vector <string> a;
-
-	a.resize(0);
-
-	a.push_back("         ===========================================================   ");
-	a.push_back("         o       O      o          `O ooOoOOo o.     O      oO oO oO   ");
-	a.push_back("         O       o      O           o    O    Oo     o      OO OO OO   ");
-	a.push_back("         `o     O'      o           O    o    O O    O      oO oO oO   ");
-	a.push_back("           O   o        O           O    O    O  o   o      Oo Oo Oo   ");
-	a.push_back("            `O'         o     o     o    o    O   o  O      oO oO oO   ");
-	a.push_back("             o          O     O     O    O    o    O O                 ");
-	a.push_back("             O          `o   O o   O'    O    o     Oo      Oo Oo Oo   ");
-	a.push_back("             O           `OoO' `OoO'  ooOOoOo O     `o      oO oO oO   ");
-	a.push_back("         ===========================================================   ");
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
-	}
-
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
+	system("pause");
+	gotoXY(10, 50);
 }
+void View::drawPacman() {
+	int x, y;
+	x = -5;
+	y = 25;
+	int color;
+	//srand((unsigned int)time(NULL));				//?
+	for (int i = 1; i <= 13; i++) {				//number of ghosts
 
-void View::drawScreen() {
-	fixConsoleWindow();
-	vector <string> a;
+		color = View::GetRandom(1, 13);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
 
-	a.resize(0);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
 
-	a.push_back("         ===========================================================   ");
-	a.push_back("        o.OOOo.   `OooOOo.     Oo    o          `O       oO oO oO      ");
-	a.push_back("         O    `o   o     `o   o  O   O           o       OO OO OO      ");
-	a.push_back("         o      O  O      O  O    o  o           O       oO oO oO      ");
-	a.push_back("         O      o  o     .O oOooOoOo O           O       Oo Oo Oo      ");
-	a.push_back("         o      O  OOooOO'  o      O o     o     o       oO oO oO      ");
-	a.push_back("         O      o  o    o   O      o O     O     O                     ");
-	a.push_back("         o    .O'  O     O  o      O `o   O o   O'       Oo Oo Oo      ");
-	a.push_back("         OooOO'    O      o O.     O  `OoO' `OoO'        oO oO oO      ");
-	a.push_back("         ===========================================================   ");
+		for (int i = 0; i <= 6; i++) {
+			View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color(color), Color::BLACK);
+		}
 
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(30, 10 + i);
-		cout << a[i];
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		Sleep(100);
+
+		x += 10;
 	}
 
-	a.resize(0);
-
-	a.push_back("Yes[Press 'Y']   : New Game");
-	a.push_back("");
-	a.push_back("No[N / press any key]   : Back to Menu");
-
-
-	for (int i = 0; i < a.size(); i++) {
-		gotoXY(50, 23 + i);
-		cout << a[i];
-	}
-	PlaySound(TEXT("D:\\Caro\\Win.wav"), NULL, SND_FILENAME);
 }
-
-
-wstring format(int t){
+void View::drawCaroGameText(int delayTime) {
+	int x, y;
+	x = 25;
+	y = 2;
+	Sleep(delayTime);
+	View::printCharactors(L"	░█████╗░░█████╗░██████╗░░█████╗░  ░██████╗░░█████╗░███╗░░░███╗███████╗		", { (short)(10 + x),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██╔══██╗██╔══██╗██╔══██╗██╔══██╗  ██╔════╝░██╔══██╗████╗░████║██╔════╝	    ", { (short)(10 + x),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██║░░╚═╝███████║██████╔╝██║░░██║  ██║░░██╗░███████║██╔████╔██║█████╗░░	    ", { (short)(10 + x),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	██║░░██╗██╔══██║██╔══██╗██║░░██║  ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░	    ", { (short)(10 + x),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	╚█████╔╝██║░░██║██║░░██║╚█████╔╝  ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗	    ", { (short)(10 + x),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+	View::printCharactors(L"	░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░  ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝		", { (short)(10 + x),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	Sleep(delayTime);
+}
+int View::GetRandom(int min, int max) {							//random function in range
+	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
+}
+wstring format(int t) {
 	wstring time = to_wstring(t);
 	if (t < 10) {
 		time = L"0" + to_wstring(t);
@@ -450,7 +376,7 @@ wstring format(int t){
 
 void View::clock(short x, short y, int width, int height) {
 	int min = 0, sc = 0;
-	wstring time = format(min)+ L":" + format(sc);
+	wstring time = format(min) + L":" + format(sc);
 	View::printVerticalCenteredCharactors(
 		time,
 		{ x,y,short(x + width),short(y + height) },
@@ -465,7 +391,7 @@ void View::clock(short x, short y, int width, int height) {
 			wstring time = format(min) + L":" + format(sc);
 			View::printVerticalCenteredCharactors(
 				time,
-				{ x,y,short(x + width),short(y+height) },
+				{ x,y,short(x + width),short(y + height) },
 				2,
 				View::Color::BLACK,
 				View::Color::WHITE
@@ -478,14 +404,15 @@ void View::clock(short x, short y, int width, int height) {
 			}
 		}
 	}
+
 }
 
 void View::drawBox(COORD spot, int width, int height, Color color) {
 	short x = spot.X + width;
 	short y = spot.Y + height;
 	for (short i = spot.X; i <= x; i++) {
-		View::printCharactors(L"═", {i,spot.Y}, color, Color::WHITE);
-		View::printCharactors(L"═", {i,y}, color, Color::WHITE);
+		View::printCharactors(L"═", { i,spot.Y }, color, Color::WHITE);
+		View::printCharactors(L"═", { i,y }, color, Color::WHITE);
 	}
 
 	for (short j = spot.Y; j <= y; j++) {
@@ -494,9 +421,9 @@ void View::drawBox(COORD spot, int width, int height, Color color) {
 	}
 	View::printCharactors(L"╔", spot, color, Color::WHITE);
 
-	View::printCharactors(L"╗", {x,spot.Y}, color, Color::WHITE); 
+	View::printCharactors(L"╗", { x,spot.Y }, color, Color::WHITE);
 
-	View::printCharactors(L"╚", {spot.X,y}, color, Color::WHITE);
+	View::printCharactors(L"╚", { spot.X,y }, color, Color::WHITE);
 
 	View::printCharactors(L"╝", { x,y }, color, Color::WHITE);
 }
@@ -607,7 +534,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	);
 
 	int moveX = 0, moveY = 0;
-	int count = -1;
+	int count = 0;
 	x = spot.X;
 	y = spot.Y + (height / 2 - 2) / 2;
 	wstring xMoves = format(moveX);
@@ -628,90 +555,43 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
-
-	x = spot.X + (width - 4) / 3 + 1;
-	y = spot.Y + (height / 2 - 2) / 2;
-	View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));
-
-	int min = 0; int sec = 1; int index = 0;
-	while (true) {
-		wstring input = InputHandle::Get();
-		if (index != 0) {
-			x = spot.X + (width - 4) / 3 + 1;
+	wstring input = InputHandle::Get();
+	if (input == L"ENTER") {
+		count += 1;
+		count %= 2;
+		if (count == 0) {
+			x = spot.X;
 			y = spot.Y + (height / 2 - 2) / 2;
-			wstring time = format(min) + L":" + format(sec);
+			moveX++;
+			wstring xMoves = format(moveX);
 			View::printVerticalCenteredCharactors(
-				time,
-				{ x,y,short(x + (width - 4) / 3 + 3),short(y + (height / 2 - 2) / 2) },
-				2,
+				xMoves,
+				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+				short(((height / 2 - 2) / 2) / 2),
 				View::Color::BLACK,
 				View::Color::WHITE
 			);
-			Sleep(1000);
-			sec++;
-			if (sec == 60) {
-				sec = 0;
-				min++;
-			}
 		}
-		if (input == L"ENTER") {
-			wstring input = InputHandle::Get();
-			count += 1;
-			count %= 2;
-			if (count == 0) {
-				x = spot.X;
-				y = spot.Y + (height / 2 - 2) / 2;
-				moveX++;
-				wstring xMoves = format(moveX);
-				View::printVerticalCenteredCharactors(
-					xMoves,
-					{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-					short(((height / 2 - 2) / 2) / 2),
-					View::Color::BLACK,
-					View::Color::WHITE
-				);
-				if (index != 0)continue;
-			}
-			else {
-				x = spot.X + (((width - 4) / 3) * 2 + 3);
-				y = spot.Y + (height / 2 - 2) / 2;
-				moveY++;
-				wstring yMoves = format(moveY);
-				View::printVerticalCenteredCharactors(
-					yMoves,
-					{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-					short(((height / 2 - 2) / 2) / 2),
-					View::Color::BLACK,
-					View::Color::WHITE
-				);
-				if (index != 0)continue;
-			}
+		else {
+			x = spot.X + (((width - 4) / 3) * 2 + 3);
+			y = spot.Y + (height / 2 - 2) / 2;
+			moveY++;
+			wstring yMoves = format(moveY);
+			View::printVerticalCenteredCharactors(
+				yMoves,
+				{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+				short(((height / 2 - 2) / 2) / 2),
+				View::Color::BLACK,
+				View::Color::WHITE
+			);
 		}
-		x = spot.X + (width - 4) / 3 + 1;
-		y = spot.Y + (height / 2 - 2) / 2;
-		wstring time = format(min) + L":" + format(sec);
-		View::printVerticalCenteredCharactors(
-			time,
-			{ x,y,short(x + (width - 4) / 3 + 3),short(y + (height / 2 - 2) / 2) },
-			2,
-			View::Color::BLACK,
-			View::Color::WHITE
-		);
-		Sleep(1000);
-		sec++;
-		if (sec == 60) {
-			sec = 0;
-			min++;
-		}
-		index++;
-	}
-}
-	/*x = spot.X + (width - 4) / 3 + 1;
+		/*x = spot.X + (width - 4) / 3 + 1;
 		y = spot.Y + (height / 2 - 2) / 2;
 		View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));*/
-	
-	/*x = spot.X;
-	y = spot.Y + (height / 2 - 2) / 2;*/
+	}
+
+	x = spot.X;
+	y = spot.Y + (height / 2 - 2) / 2;
 
 	/*int moveX = 0;
 	wstring xMoves = format(moveX);
@@ -725,7 +605,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
 	y = spot.Y + (height / 2 - 2) / 2;
-	
+
 
 	int moveY = 0;
 	wstring yMoves = format(moveY);
@@ -736,3 +616,9 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);*/
+
+
+	x = spot.X + (width - 4) / 3 + 1;
+	y = spot.Y + (height / 2 - 2) / 2;
+	View::clock(x, y, int((width - 4) / 3 + 3), int((height / 2 - 2) / 2));
+}

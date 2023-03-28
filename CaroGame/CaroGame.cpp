@@ -5,6 +5,8 @@
 #include "Menu.h"
 #include "InputHandle.h"
 #include <functional>
+#include "FileIO.h"
+#include <string>
 using namespace std;
 
 int main() {
@@ -14,17 +16,6 @@ int main() {
 	however, this program only have play with human mode in new game 
 	Choose New Game -> VS Human to start new game*/
 	
-	/*Control::startGame();*/
-
-	/*wstring key = InputHandle::Get();
-
-	while (key != L"ESC") {
-		key = InputHandle::Get();
-		wcout << key << endl;
-	}*/
-
-	/*View::fixConsoleWindow();	View::textStyle();*/
-	View::drawGamePlayInfoBox({ 20,20 }, 55, 20, View::Color::BLACK);
-	
+	Control::startGame();
 	return 0;
 }
