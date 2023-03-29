@@ -17,5 +17,7 @@ int main() {
 	Control::startGame();
 	
 	//Control::newGame(1, 1, Control::initNewGame());
+	//system("cls");
+	//View::LoadGameBorder(50, 50 + 50, 2, 2 + 20);
 	return 0;
 }

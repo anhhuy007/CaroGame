@@ -101,9 +101,15 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	
 	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
 	escPressed = false;
-
+	
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
+	View::drawBorder3(119, 118 + 21, 0, 0 + 10);
+	View::drawIronmanAvatar();
+	View::drawBotAvatar();
+	/*View::drawSpidermanAvatar();
+	View::drawThanosAvatar();*/
 	View::drawVSText();
-	View::drawSpidermanAvatar();
+
 	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
 	View::drawF1F2list(88,33);
