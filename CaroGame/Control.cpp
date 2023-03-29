@@ -77,7 +77,7 @@ void Control::startMenuScreen() {
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
-		settingMenu({ 60, 10 }, View::Color::BLACK, View::Color::PURPLE);
+		settingMenu({ 70, 10 }, View::Color::BLACK, View::Color::PURPLE);
 		Control::returnMenu();
 		break;
 	case MenuOption::ABOUT:
@@ -100,7 +100,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	View::drawGamePlayInfoBox({ 75,12 }, 63, 18, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
@@ -113,8 +113,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 
 	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
-	View::drawGamePlayInfoBox({75,12}, 64, 18, View::Color::BLACK);
-
+	View::drawF1F2list(88,33);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
@@ -185,6 +184,11 @@ void Control::saveGame(Model::GameInformation& game_info) {
 		// input file name from keyboard
 		fileName = InputHandle::getFileName(false);
 
+		// check if player want to return
+		if (fileName == "-1") {
+			return;
+		}
+
 		// save input name to game_info
 		strcpy(game_info.name, fileName.c_str());
 	}
@@ -216,7 +220,17 @@ void Control::loadGame() {
 
 	//View::savedGameBorder(50, 50 + 50, 2, 2 + 10);
 	// get file name from keyboard 
-	std::string filePath = FileIO::folder + InputHandle::getFileName(true) + FileIO::extension;
+	system("cls");
+	std::string fileName = InputHandle::getFileName(true);
+
+	// check if player want to return menu
+	if (fileName == "-1") {
+		Control::returnMenu();
+		return;
+	}
+
+	std::string filePath = FileIO::folder + fileName + FileIO::extension;
+	
 	char* file = new char[filePath.length() + 1];
 	strcpy(file, filePath.c_str());
 	

@@ -4,6 +4,7 @@
 #include <wchar.h>
 #include <Windows.h>
 #include "View.h"
+#include "Model.h"
 
 	enum class MenuOption {
 		NONE = -1,
@@ -34,6 +35,23 @@
 		std::wstring status_true;
 		std::wstring status_false;
 	};
+
+	void menuOptionChanged(
+		MenuItem menu_items[],
+		COORD start,
+		View::Color text_color,
+		View::Color selected_textcolor,
+		int* cur_index,
+		int menu_size
+	);
+	void drawMenu(
+		MenuItem menu_items[],
+		COORD start,
+		View::Color textcolor,
+		View::Color selected_textcolor,
+		int* cur_index,
+		int menu_size
+	);
 	
 	// input 3 parameters: menu's position, normal text color and selected text color
 	MenuOption mainMenu(
@@ -51,34 +69,11 @@
 		View::Color text_color,
 		View::Color selected_textcolor
 	);
-	void menuOptionChanged(
-		MenuItem menu_items[], 
-		COORD start, 
-		View::Color text_color, 
-		View::Color selected_textcolor, 
-		int* cur_index, 
-		int menu_size
-	);
-	void drawMenu(
-		MenuItem menu_items[], 
-		COORD start, 
-		View::Color textcolor, 
-		View::Color selected_textcolor, 
-		int* cur_index, 
-		int menu_size
-	);
 	MenuOption MenuScreen();
 	bool checkIndex(
 		int* index, 
 		int num
 	);
-
-	MenuOption aboutMenu(
-		COORD start,
-		View::Color text_color,
-		View::Color selected_textcolor
-	);
-
 	MenuOption instructionMenu(
 		COORD start,
 		View::Color text_color,

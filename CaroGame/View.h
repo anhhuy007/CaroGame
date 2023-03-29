@@ -18,8 +18,8 @@ namespace View {
 	const int RIGHT = LEFT + 4 * BOARD_SIZE;
 	const int TOP = 1;
 	const int BOT = TOP + 2 * BOARD_SIZE;
-	const int SCREEN_WIDTH = 135;
-	const int SCREEN_HEIGHT = 35;
+	const int SCREEN_WIDTH = 146;
+	const int SCREEN_HEIGHT = 37;
 	const SMALL_RECT WINDOW_SIZE = { 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 };
 	
 	enum class Color {
@@ -104,4 +104,3 @@ namespace View {
 	void LoadGameBorder(int left, int right, int top, int bot);
 
 }
-

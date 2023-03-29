@@ -67,16 +67,23 @@ bool InputHandle::isMoveKey(std::wstring key) {
 string InputHandle::getFileName(bool checkExisted) {
 	string fileName = "";
 	while (1) {
-		system("cls");
 		// input new file name
 		wstring wstr = L"Enter file name: ";
-		wstring note = L"(Note: File name must contain only alphabet and number)";
+		wstring note = L"Note: File name must contain only alphabet and number";
+		wstring exitNote = L"Type 'esc' to exit";
 		COORD spot = View::getCenteredSpot(note, View::WINDOW_SIZE);
 		View::gotoXY(spot.X, spot.Y + 1);
 		wcout << note;
+		View::gotoXY(spot.X, spot.Y + 2);
+		wcout << exitNote;
 		View::gotoXY(spot.X, spot.Y);
 		wcout << wstr;
 		cin >> fileName;
+
+		// check exit
+		if (fileName == "esc") {
+			return "-1";
+		}
 
 		// check if file name is valid
 		if (!FileIO::isValidFileName(fileName)) {
@@ -110,6 +117,9 @@ string InputHandle::getFileName(bool checkExisted) {
 				break;
 			}
 		}
+
+		COORD spot1 = View::getCenteredSpot(note, View::WINDOW_SIZE);
+		View::clearRectangleArea({ short(spot1.X - 20), short(spot1.Y - 1) }, 100, 2);
 	}
 
 	return fileName;
@@ -129,15 +139,22 @@ bool InputHandle::isValidUserName(string userName) {
 string InputHandle::getPlayerName(string message, string player1Name) {
 	std::string userName = ""; wstring wstr = L"";
 	while (1) {
-		system("cls");
 		// input new user name
-		wstring note = L"(Note: User name must contain only alphabet and number)";
+		wstring note = L"Note: User name must contain only alphabet and number";
+		wstring exitNote = L"Type 'esc' to exit";
 		COORD spot = View::getCenteredSpot(note, View::WINDOW_SIZE);
 		View::gotoXY(spot.X, spot.Y + 1);
 		wcout << note;
+		View::gotoXY(spot.X, spot.Y + 2);
+		wcout << exitNote;
 		View::gotoXY(spot.X, spot.Y);
 		cout << message;
 		cin >> userName;
+
+		// check if returning back 
+		if (userName == "esc") {
+			return "-1";
+		}
 
 		// check if user name is valid
 		if (!InputHandle::isValidUserName(userName)) {
@@ -156,6 +173,9 @@ string InputHandle::getPlayerName(string message, string player1Name) {
 		else {
 			break;
 		}
+
+		COORD spot1 = View::getCenteredSpot(note, View::WINDOW_SIZE);
+		View::clearRectangleArea({ short(spot1.X - 20), short(spot1.Y - 1) }, 100, 2);
 	}
 
 	return userName;

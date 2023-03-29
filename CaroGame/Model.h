@@ -14,8 +14,8 @@ namespace Model {
 	typedef pair<int, vector<COORD>> GameResult;
 	
 	struct Setting {
-		bool backgroundSound;
-		bool soundEffect;
+		bool backgroundSound = false;
+		bool soundEffect = false;
 	};
 
 	struct Player {
@@ -110,5 +110,6 @@ namespace Model {
 		GameInformation& game_info
 	);
 	PlayerMove getMoveHistory(GameInformation game_info, int num);
+	void updateInform(GameInformation& game_info, COORD spot, int width, int height, View::Color color);
 }
 
