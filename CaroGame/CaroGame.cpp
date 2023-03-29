@@ -19,9 +19,9 @@ int main() {
 	system("color f0");
 	View::fixConsoleWindow();
 	
-	//Control::startGame();
+	Control::startGame();
 	//Control::newGame(1, 1, Control::initNewGame());
-	system("cls");
-	View::LoadGameBorder(50, 50 + 50, 2, 2 + 20);
+	//system("cls");
+	//View::LoadGameBorder(50, 50 + 50, 2, 2 + 20);
 	return 0;
 }
