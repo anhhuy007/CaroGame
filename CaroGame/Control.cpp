@@ -14,17 +14,17 @@ bool escPressed = false;
 Model::GameInformation Control::initNewGame() {
 	Model::GameInformation game_info;
 
-	//// input user name
-	//string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
-	//strcpy(game_info.player1.name, p1.c_str());
-	//
-	//string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
-	//strcpy(game_info.player2.name, p2.c_str());
+	// input user name
+	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+	strcpy(game_info.player1.name, p1.c_str());
+	
+	string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
+	strcpy(game_info.player2.name, p2.c_str());
 
-	//system("cls");
-	//cout << "Player 1: " << game_info.player1.name << endl;
-	//cout << "Player 2: " << game_info.player2.name << endl;
-	//system("pause");
+	system("cls");
+	cout << "Player 1: " << game_info.player1.name << endl;
+	cout << "Player 2: " << game_info.player2.name << endl;
+	system("pause");
 		
 	// init game information
 	game_info.isFirstPlayerTurn = true;
@@ -175,7 +175,7 @@ void Control::saveGame(Model::GameInformation& game_info) {
 	
 	if (strlen(game_info.name) == 0) {
 		// input file name from keyboard
-		fileName = InputHandle::getFileName(false);
+		fileName = InputHandle::getFileName(false, View::WINDOW_SIZE);
 
 		// check if player want to return
 		if (fileName == "-1") {
@@ -199,10 +199,11 @@ void Control::saveGame(Model::GameInformation& game_info) {
 	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
 
 	if (isSuccess) {
-		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
+		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		FileIO::saveFileNameToFile(fileName);
 	}
 	else {
-		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
+		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 	}
 	system("pause");
 	system("cls");
@@ -210,9 +211,10 @@ void Control::saveGame(Model::GameInformation& game_info) {
 
 // load game from file
 void Control::loadGame() {
-	// get file name from keyboard 
-	system("cls");
-	std::string fileName = InputHandle::getFileName(true);
+	// show saved game list
+	
+	View::drawSavedGameTable(FileIO::getSavedGameList(), { 20, 15, 50, 30 });
+	std::string fileName = InputHandle::getFileName(true, { 70, 15, 100, 20 });
 
 	// check if player want to return menu
 	if (fileName == "-1") {
@@ -234,7 +236,6 @@ void Control::loadGame() {
 	else {
 		View::printCenteredToast(L"Load game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
 		system("pause");
-		system("cls");
 	}
 }
 

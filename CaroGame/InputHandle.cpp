@@ -64,14 +64,14 @@ bool InputHandle::isMoveKey(std::wstring key) {
 }
 
 // input file name from keyboard 
-string InputHandle::getFileName(bool checkExisted) {
+string InputHandle::getFileName(bool checkExisted, SMALL_RECT box) {
 	string fileName = "";
 	while (1) {
 		// input new file name
 		wstring wstr = L"Enter file name: ";
 		wstring note = L"Note: File name must contain only alphabet and number";
 		wstring exitNote = L"Type 'esc' to exit";
-		COORD spot = View::getCenteredSpot(note, View::WINDOW_SIZE);
+		COORD spot = View::getCenteredSpot(note, box);
 		View::gotoXY(spot.X, spot.Y + 1);
 		wcout << note;
 		View::gotoXY(spot.X, spot.Y + 2);
@@ -85,11 +85,12 @@ string InputHandle::getFileName(bool checkExisted) {
 			return "-1";
 		}
 
+		View::clearRectangleArea({ short(spot.X - 5), short(spot.Y) }, 100, 3);
+
 		// check if file name is valid
 		if (!FileIO::isValidFileName(fileName)) {
 			wstr = L"Invalid file name! Please try again.";
-			View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-			Sleep(1000);
+			View::printCenteredToast(wstr, box, View::Color::BLACK, View::Color::WHITE);
 			continue;
 		}
 
@@ -99,8 +100,7 @@ string InputHandle::getFileName(bool checkExisted) {
 			// check if file is already exist
 			if (isExisted) {
 				wstr = L"File is already existed! Please try again.";
-				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-				Sleep(1000);
+				View::printCenteredToast(wstr, box, View::Color::BLACK, View::Color::WHITE);
 			}
 			else {
 				break;
@@ -110,16 +110,14 @@ string InputHandle::getFileName(bool checkExisted) {
 			// check if file is not exist
 			if (!isExisted) {
 				wstr = L"File is not existed! Please try again.";
-				View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-				Sleep(1000);
+				View::printCenteredToast(wstr, box, View::Color::BLACK, View::Color::WHITE);
 			}
 			else {
 				break;
 			}
 		}
 
-		COORD spot1 = View::getCenteredSpot(note, View::WINDOW_SIZE);
-		View::clearRectangleArea({ short(spot1.X - 20), short(spot1.Y - 1) }, 100, 2);
+		View::clearRectangleArea({ short(spot.X - 5), short(spot.Y - 1) }, 100, 2);
 	}
 
 	return fileName;
@@ -156,11 +154,13 @@ string InputHandle::getPlayerName(string message, string player1Name) {
 			return "-1";
 		}
 
+		// clear the input area
+		View::clearRectangleArea({ short(spot.X - 20), short(spot.Y) }, 100, 3);
+
 		// check if user name is valid
 		if (!InputHandle::isValidUserName(userName)) {
 			wstr = L"Invalid user name! Please try again.";
 			View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-			Sleep(1000);
 			continue;
 		}
 
@@ -168,7 +168,6 @@ string InputHandle::getPlayerName(string message, string player1Name) {
 		if (userName == player1Name) {
 			wstr = L"User name is already existed! Please try again.";
 			View::printCenteredToast(wstr, View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
-			Sleep(1000);
 		}
 		else {
 			break;

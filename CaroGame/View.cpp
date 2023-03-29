@@ -741,6 +741,16 @@ void View::drawXOart(COORD spot,bool isFirstPlayerTurn) {
 		View::printCharactors(L"\x2580", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::LIGHT_CYAN, Color::WHITE);
 	}
 }
+void View::drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box) {
+	cout << box.Left << " " << box.Top << " " << box.Right << " " << box.Bottom << endl;
+	View::drawBorder2(box.Left, box.Right, box.Top, box.Top + gameList.size() + 4);
+	View::printVerticalCenteredCharactors(L"Saved Games", box, 1, Color::WHITE, Color::BLACK);
+	
+	for (int i = 0; i < gameList.size(); i++) {
+		View::gotoXY(box.Left + 5, box.Top + 3 + i);
+		cout << i + 1 << ". " << gameList[i];
+	}
+}
 void View::drawF1F2list(int x, int y) {
 	//int x, y;
 	//x = 80;
@@ -1448,7 +1458,7 @@ void View::clearRectangleArea(
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
 	int startY = start.Y;
-	
+
 	for (int i = startY; i < startY + height; i++) {
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
 		start.Y++;
@@ -1564,9 +1574,10 @@ COORD View::getCenteredSpot(std::wstring content, SMALL_RECT box) {
 }
 
 void View::printCenteredToast(std::wstring content, SMALL_RECT box, View::Color text_color, View::Color background_color) {
-	system("cls");
 	COORD spot = View::getCenteredSpot(content, box);
 	View::printCharactors(content, spot, text_color, background_color);
+	Sleep(1000);
+	View::clearRectangleArea(spot, content.length(), 1);
 }
 
 void View::showWinningMoves(int player, std::vector<COORD> winning_moves) {

@@ -11,6 +11,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <functional>
+#include <vector>
 
 namespace View {
 	const int BOARD_SIZE = 15;
@@ -101,5 +102,5 @@ namespace View {
 	
 	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
 	void drawXOart(COORD spot,bool isFirstPlayerTurn);
-	
+	void drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box);
 }

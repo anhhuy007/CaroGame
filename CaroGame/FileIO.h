@@ -6,7 +6,8 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-
+#include <vector>
+#include <direct.h>
 using namespace Model;
 
 namespace FileIO {
@@ -14,9 +15,13 @@ namespace FileIO {
 	const string extension = ".dat";
 
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
+	void saveFileNameToFile(std::string fileName);
 	GameInformation readGameInfoFromFile(char fileName[]);
 	bool isValidFileName(std::string file);
 	bool fileNameExisted(std::string file);
+	bool fileNameExistedInList(std::string file);
 	bool saveSetting(std::string fileName, Setting setting);
 	Setting readSetting(std::string fileName);
+	void saveGameList(std::vector<std::string> gameList);
+	std::vector<std::string> getSavedGameList();
 }	
