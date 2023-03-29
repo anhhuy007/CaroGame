@@ -93,12 +93,12 @@ namespace View {
 	void drawTrophy();
 	void drawBorder3(int left, int right, int top, int bot);
 
-	void drawIronmanAvatar();
-	void drawBotAvatar();
+	void drawIronmanAvatar(int x, int y);
+	void drawBotAvatar(int x, int y);
 	void drawBoard2(int space_row, int space_col);
 	void drawVSText();
-	void drawSpidermanAvatar();
-	void drawThanosAvatar();
+	void drawSpidermanAvatar(int x, int y);
+	void drawThanosAvatar(int x, int y);
 	
 	void drawBackGroundAvatar(int n,int left, int right, int top , int bot);
 	void drawXOart(COORD spot,bool isFirstPlayerTurn);
@@ -106,4 +106,6 @@ namespace View {
 	void drawXOart();
 	void LoadGameBorder(int left, int right, int top, int bot);
 
+
+	void drawWinner(int n);
 }

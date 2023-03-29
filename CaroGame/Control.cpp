@@ -103,14 +103,13 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	View::drawBorder3(119, 118 + 21, 0, 0 + 10);
-	View::drawIronmanAvatar();
-	View::drawBotAvatar();
-	/*View::drawSpidermanAvatar();
-	View::drawThanosAvatar();*/
+	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
+	//View::drawIronmanAvatar(69,-2);
+	//View::drawBotAvatar(113,0);
+	View::drawSpidermanAvatar(113,-2);
+	View::drawThanosAvatar(69, -2);
 	View::drawVSText();
 
-	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
 	View::drawF1F2list(88,33);
 	while (!game_info.endGame && !escPressed) {

@@ -14,10 +14,16 @@ int main() {
 	however, this program only have play with human mode in new game 
 	Choose New Game -> VS Human to start new game*/
 	
-	Control::startGame();
+	//Control::startGame();
 	
-	//Control::newGame(1, 1, Control::initNewGame());
-	//system("cls");
+	Control::startGame();
+
 	//View::LoadGameBorder(50, 50 + 50, 2, 2 + 20);
+	//View::fixConsoleWindow();
+	//View::textStyle(22);
+	//system("cls");
+	//system("color f0");
+	//View::drawWinner(1);
+
 	return 0;
 }
