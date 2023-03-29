@@ -108,7 +108,7 @@ MenuOption mainMenu(
 	View::Color selected_textcolor
 ) {
 	int index = -1;
-	int menu_size = 7;
+	int menu_size = 6;
 	MenuItem main_menu_items[7] = {
 		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
 		{ 2, L"LOAD GAME", MenuOption::LOAD_GAME },
