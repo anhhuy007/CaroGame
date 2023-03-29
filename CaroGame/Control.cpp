@@ -72,7 +72,7 @@ void Control::startMenuScreen() {
 		Control::loadGame();
 		break;
 	case MenuOption::INSTRUCTION:
-		instructionMenu({ 60, 2 }, View::Color::BLACK, View::Color::WHITE);
+		instructionMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
@@ -80,7 +80,7 @@ void Control::startMenuScreen() {
 		Control::returnMenu();
 		break;
 	case MenuOption::ABOUT:
-		aboutMenu({ 65, 2 }, View::Color::BLACK, View::Color::WHITE);
+		aboutMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::BACK:
@@ -127,7 +127,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-
+			View::drawWinner(1);
 			
 			game_info.endGame = true;
 			break;

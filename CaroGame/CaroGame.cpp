@@ -21,7 +21,7 @@ int main() {
 	//View::LoadGameBorder(50, 50 + 50, 2, 2 + 20);
 	//View::fixConsoleWindow();
 	//View::textStyle(22);
-	//system("cls");
+	//system("cls");sol
 	//system("color f0");
 	//View::drawWinner(1);
 

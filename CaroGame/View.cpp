@@ -6,94 +6,9 @@
 
 using namespace std;
 
-// draw board with Size x Size cells
-void View::drawBoard() {
-	// draw TOP
-	gotoXY(LEFT + 1, TOP);
-	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
-		if (i % 2) {
-			cout << char(194);
-		}
-		else {
-			cout << char(196) << char(196) << char(196);
-		}		
-	}
-
-	// draw BOTTOM
-	gotoXY(LEFT + 1, BOT);
-	for (int i = 0; i < (2 * BOARD_SIZE); i++) {
-		if (i % 2) {
-			cout << char(193);
-		}
-		else {
-			cout << char(196) << char(196) << char(196);
-		}
-	}
-
-	for (int i = 0; i < 2 * BOARD_SIZE; i++) {
-		gotoXY(LEFT, TOP + i);
-		if (i % 2) {
-			cout << char(179);
-		}
-		else {
-			cout << char(195);
-		}
-
-		gotoXY(RIGHT, TOP + i);
-		if (i % 2) {
-			cout << char(179);
-		}
-		else {
-			cout << char(180);
-		}
-	}
-
-	char s1[200], s2[200];
-	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
-		if (j % 4) {
-			s1[j] = ' ';
-		}
-		else {
-			s1[j] = 179;
-		}
-	}
-
-	for (int j = 0; j < 4 * BOARD_SIZE - 1; j++) {
-		if ((j + 1) % 4) {
-			s2[j] = 196;
-		}
-		else {
-			s2[j] = 197;
-		}
-	}
-
-	s1[4 * BOARD_SIZE - 1] = '\0';
-	s2[4 * BOARD_SIZE - 1] = '\0';
-
-	int i = 1;
-	while (i < 2 * BOARD_SIZE - 1) {
-		gotoXY(LEFT, TOP + i++);
-		cout << s1;
-
-		gotoXY(LEFT + 1, TOP + i++);
-		cout << s2;
-	}
-
-	gotoXY(LEFT, TOP + i); cout << s1;
-	gotoXY(LEFT, TOP); cout << char(218);
-	gotoXY(RIGHT, TOP); cout << char(191);
-	gotoXY(LEFT, BOT); cout << char(192);
-	gotoXY(RIGHT, BOT); cout << char(217);
-}
-
-
 void View::drawWinner(int k) {
 	int x, y;
-	
-
-
-
-	View::drawBoard2(15,15);
+	View::drawBoard(15,15);
 	View::drawBorder3(96, 96 + 20, 7, 7 + 10);
 	View::drawIronmanAvatar(90,5);
 
@@ -158,7 +73,7 @@ void View::LoadGameBorder(int left, int right, int top , int bot) {
 	View::printCharactors(L"╠", { (short)(left),(short)(top + 2) }, Color::BLACK, Color::WHITE);
 
 }
-void View::drawBoard2(int space_row, int space_col) {
+void View::drawBoard(int space_row, int space_col) {
 	int x, y;
 	x = 4;
 	y = 2;
@@ -1504,7 +1419,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 
 	View::printVerticalCenteredCharactors(
 		L"TURN",
-		{ x,y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2)) },
+		{ short(x + 2),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
