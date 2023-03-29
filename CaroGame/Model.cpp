@@ -328,13 +328,14 @@ wstring formats(int t) {
 }
 
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
-	//View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));
-	for (int i = int(spot.X + 3); i < 17; i++) {
-		for (int j = int(spot.Y + (height / 3) + 2); j < height - height / 3 - 2; j++) {
+	/*View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));*/
+	for (int i = int(spot.X + 6); i <int(spot.X + 25); i++) {
+		for (int j = int(spot.Y + (height / 3) + 3); j < int(spot.Y + height ); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}
-	View::drawXOart({short(spot.X - 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
+	View::drawXOart({short(spot.X + 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
+	
 	if (!game_info.isFirstPlayerTurn) {
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;

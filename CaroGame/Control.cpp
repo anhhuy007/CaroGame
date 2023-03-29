@@ -72,7 +72,7 @@ void Control::startMenuScreen() {
 		Control::loadGame();
 		break;
 	case MenuOption::INSTRUCTION:
-		instructionMenu({ 60, 2 }, View::Color::BLACK, View::Color::WHITE);
+		instructionMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::SETTING:
@@ -80,7 +80,7 @@ void Control::startMenuScreen() {
 		Control::returnMenu();
 		break;
 	case MenuOption::ABOUT:
-		aboutMenu({ 65, 2 }, View::Color::BLACK, View::Color::WHITE);
+		aboutMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
 		Control::returnMenu();
 		break;
 	case MenuOption::BACK:
@@ -103,14 +103,13 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	View::drawBorder3(119, 118 + 21, 0, 0 + 10);
-	View::drawIronmanAvatar();
-	View::drawBotAvatar();
-	/*View::drawSpidermanAvatar();
-	View::drawThanosAvatar();*/
+	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
+	//View::drawIronmanAvatar(69,-2);
+	//View::drawBotAvatar(113,0);
+	View::drawSpidermanAvatar(113,-2);
+	View::drawThanosAvatar(69, -2);
 	View::drawVSText();
 
-	View::drawThanosAvatar();
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
 	View::drawF1F2list(88,33);
 	while (!game_info.endGame && !escPressed) {
@@ -128,7 +127,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-
+			View::drawWinner(1);
 			
 			game_info.endGame = true;
 			break;

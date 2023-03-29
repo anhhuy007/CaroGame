@@ -17,7 +17,7 @@ namespace View {
 	const int BOARD_SIZE = 15;
 	const int LEFT = 4;
 	const int RIGHT = LEFT + 4 * BOARD_SIZE;
-	const int TOP = 1;
+	const int TOP = 2;
 	const int BOT = TOP + 2 * BOARD_SIZE;
 	const int SCREEN_WIDTH = 146;
 	const int SCREEN_HEIGHT = 37;
@@ -43,6 +43,8 @@ namespace View {
 	};
 
 	void gotoXY(short x, short y);
+	void drawWinner(int k);
+	void LoadGameBorder(int left, int right, int top, int bot);
 	void drawBoard(int space_row, int space_col);
 	
 	void drawF1F2list(int x, int y);
@@ -97,9 +99,9 @@ namespace View {
 	void drawBorder3(int left, int right, int top, int bot);
 
 	// draw avatar
-	void drawIronmanAvatar();
-	void drawBotAvatar();
-	void drawSpidermanAvatar();
-	void drawThanosAvatar();
+	void drawIronmanAvatar(int x, int y);
+	void drawBotAvatar(int x, int y);
+	void drawSpidermanAvatar(int x, int y);
+	void drawThanosAvatar(int x, int y);
 	void drawBackGroundAvatar(int n, int left, int right, int top, int bot);
 }
