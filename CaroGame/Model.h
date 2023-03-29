@@ -20,7 +20,7 @@ namespace Model {
 
 	struct Player {
 		char name[100] = "";
-		int numberOfMoves;
+		int numberOfMoves = 0;
 		bool isFirstPlayer;
 	};
 

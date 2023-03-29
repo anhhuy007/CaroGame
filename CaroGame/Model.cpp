@@ -21,6 +21,8 @@ void Model::previousMove(Model::GameInformation& game_info) {
 	// pop the last from the move history 
 	game_info.playerMoveHistory[n - 1] = { { 0, 0 }, 0 };
 	game_info.moveHistorySize--;
+	if (game_info.isFirstPlayerTurn) game_info.player1.numberOfMoves--;
+	else game_info.player2.numberOfMoves--;
 
 	int i = (preY - View::TOP - 1) / 2;
 	int j = (preX - View::LEFT - 2) / 4;
@@ -101,8 +103,13 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		// show move on the game board
 		wstring playerMark = playerNum == 1 ? L"X" : L"O";
 		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
+		if (game_info.isFirstPlayerTurn) {
+			game_info.player1.numberOfMoves++;
+		}
+		else {
+			game_info.player2.numberOfMoves++;
+		}
 		// change player turn
-	
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 		endTurn = true;
 	}
@@ -122,9 +129,10 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		// if is a player move
 		if (key == L"ENTER") {
 			// mark the move on the board and update game's information
-			Model::updateInform(game_info, { 75,12 }, 64, 18, View::Color::BLACK);
 			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
 			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
+			Model::updateInform(game_info, { 75, 12 }, 64, 18, View::Color::BLACK);
+
 		} 
 		
 		// quit game
@@ -320,10 +328,9 @@ wstring formats(int t) {
 }
 
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
-	View::clearRectangleArea({ short(spot.X + 9),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));
+	View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));
 	View::drawXOart({short(spot.X - 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
-	if (game_info.isFirstPlayerTurn == 1) {
-		game_info.player1.numberOfMoves ++;
+	if (!game_info.isFirstPlayerTurn) {
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;
 		wstring xMoves = formats(game_info.player1.numberOfMoves);
@@ -336,9 +343,10 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		);
 	}
 	else {
-		game_info.player2.numberOfMoves += 1;
 		short x = spot.X + (((width - 4) / 3) * 2 + 3);
 		short y = spot.Y + (height / 2 - 2) / 2;
+		View::gotoXY(10, 0);
+		cout << game_info.player1.numberOfMoves << " " << game_info.player2.numberOfMoves << endl;
 		wstring yMoves = formats(game_info.player2.numberOfMoves);
 		View::printVerticalCenteredCharactors(
 			yMoves,

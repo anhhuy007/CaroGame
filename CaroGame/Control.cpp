@@ -95,7 +95,7 @@ void Control::startMenuScreen() {
 void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
 	// draw game board and other details
 	Control::resetGame();
-	View::drawBoard2(15, 15);
+	View::drawBoard(15, 15);
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
