@@ -37,14 +37,14 @@ void Model::previousMove(Model::GameInformation& game_info) {
 	View::gotoXY(curX, curY);
 }
 
-Model::PlayerMove Model::getMoveHistory(GameInformation game_info, int num)
+std::vector<Model::PlayerMove> Model::getMoveHistory(GameInformation game_info, int num)
 {
-	PlayerMove move;
+	std::vector<Model::PlayerMove> moves;	
 	for (int i = game_info.moveHistorySize - 1; i >= max(0, game_info.moveHistorySize - num); i--) {
-		move = game_info.playerMoveHistory[i];
+		moves.push_back(game_info.playerMoveHistory[i]);
 	}
 
-	return move;
+	return moves;
 }
 
 void Model::makePlayerMove(std::wstring key) {	
@@ -362,7 +362,32 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::Color::WHITE
 		); 
 	}
-	//Print History
-	//Move getMoveHistory
-	//Print Turn
+	short x = 105 + 14;
+	short y = 20;	
+	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
+	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 5);
+
+	for (int i = 0; i < get_move.size() ; i++) {
+		wstring history; 
+		PlayerMove move = get_move[i];
+		if (move.player == 1) {
+			string player_name = game_info.player1.name;
+			wstring name(player_name.begin(), player_name.end());
+			history += name;
+		}
+		else {
+			string player_name = game_info.player2.name;
+			wstring name(player_name.begin(), player_name.end());
+			history += name;
+		}
+
+		char character = char((move.move.X - 6) / 4 + 97);
+		string tmp_string(1, character);
+		wstring moveX(tmp_string.begin(), tmp_string.end()); 
+		wstring moveY = to_wstring(int(16 - (move.move.Y - 1)/2));
+		history += L" - (" + moveX + L" , " + moveY + L")";
+		short x = 75 + 64/2 + 1 + 32/ 2 - history.length() / 2;
+		View::printCharactors(history, { x,short(y + i * 2) }, View::Color::BLACK, View::Color::WHITE);
+	}
+
 }

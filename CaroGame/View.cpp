@@ -237,7 +237,7 @@ void View::drawBorder2(int left, int right, int top , int bot) {
 void View::drawXOart(COORD spot,bool isFirstPlayerTurn) {
 	int x = int(spot.X);
 	int y = int(spot.Y);
-	if(isFirstPlayerTurn == 1){
+	if(!isFirstPlayerTurn){
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
@@ -376,7 +376,7 @@ void View::drawF1F2list(int x, int y) {
 
 	//info board
 
-	View::printCharactors(L"F1 : Return Hame", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"F1 : Return game", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F2 : Save game", { (short)(x + 25),(short)(y) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F3 : Load game", { (short)(x),(short)(y + 1) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F4 : Undo", { (short)(x + 25),(short)(y + 1 ) }, Color::BLACK, Color::WHITE);	
@@ -1419,7 +1419,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 
 	View::printVerticalCenteredCharactors(
 		L"TURN",
-		{ short(x + 2),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
+		{ short(x + 3),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
