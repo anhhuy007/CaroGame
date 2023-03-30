@@ -335,7 +335,6 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		}
 	}
 	View::drawXOart({short(spot.X + 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
-	
 	if (!game_info.isFirstPlayerTurn) {
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;
@@ -363,31 +362,35 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		); 
 	}
 	short x = 105 + 14;
-	short y = 20;	
+	short y = 21;	
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 5);
-
+	int idx = game_info.moveHistorySize;
 	for (int i = 0; i < get_move.size() ; i++) {
-		wstring history; 
+		/*wstring history = L"Move ";*/
+		wstring history = to_wstring(idx);
+		idx--;
+		history += L". ";
 		PlayerMove move = get_move[i];
 		if (move.player == 1) {
 			string player_name = game_info.player1.name;
 			wstring name(player_name.begin(), player_name.end());
 			history += name;
+			history += L"(X)";
 		}
 		else {
 			string player_name = game_info.player2.name;
 			wstring name(player_name.begin(), player_name.end());
 			history += name;
+			history += L"(O)";
 		}
 
 		char character = char((move.move.X - 6) / 4 + 97);
 		string tmp_string(1, character);
 		wstring moveX(tmp_string.begin(), tmp_string.end()); 
 		wstring moveY = to_wstring(int(16 - (move.move.Y - 1)/2));
-		history += L" - (" + moveX + L" , " + moveY + L")";
+		history += L" - (" + moveX + L"," + moveY + L")";
 		short x = 75 + 64/2 + 1 + 32/ 2 - history.length() / 2;
 		View::printCharactors(history, { x,short(y + i * 2) }, View::Color::BLACK, View::Color::WHITE);
 	}
-
 }
