@@ -334,7 +334,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}
-	View::drawXOart({ short(spot.X + 1),short(spot.Y + 6) }, game_info.isFirstPlayerTurn);
+	View::drawXOart({short(spot.X + 1),short(spot.Y + 6) }, game_info.isFirstPlayerTurn);
 	if (!game_info.isFirstPlayerTurn) {
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;
