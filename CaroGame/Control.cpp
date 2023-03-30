@@ -104,10 +104,10 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
 	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
-	//View::drawIronmanAvatar(69,-2);
-	//View::drawBotAvatar(113,0);
-	View::drawSpidermanAvatar(113,-2);
-	View::drawThanosAvatar(69, -2);
+	View::drawIronmanAvatar(69,-2);
+	//View::drawBotAvatar(113,-2);
+	//View::drawSpidermanAvatar(113,-2);
+	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
 
 	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
@@ -127,7 +127,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-			View::drawWinner(1);
+			//View::drawWinner(1);
 			
 			game_info.endGame = true;
 			break;

@@ -43,7 +43,7 @@ namespace View {
 	};
 
 	void gotoXY(short x, short y);
-	void drawWinner(int k);
+
 	void LoadGameBorder(int left, int right, int top, int bot);
 	void drawBoard(int space_row, int space_col);
 	
@@ -104,4 +104,8 @@ namespace View {
 	void drawSpidermanAvatar(int x, int y);
 	void drawThanosAvatar(int x, int y);
 	void drawBackGroundAvatar(int n, int left, int right, int top, int bot);
+
+	//win screen
+	void drawWinner(int winplayer,bool playervsplayer);
+	void drawWinDrawBanner(bool win ,int x, int y);
 }
