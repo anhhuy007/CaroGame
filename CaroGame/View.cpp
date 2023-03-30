@@ -304,7 +304,7 @@ void View::drawBorder2(int left, int right, int top , int bot) {
 void View::drawXOart(COORD spot,bool isFirstPlayerTurn) {
 	int x = int(spot.X);
 	int y = int(spot.Y);
-	if(isFirstPlayerTurn == 0){
+	if(isFirstPlayerTurn == 1){
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::BLACK);
