@@ -16,4 +16,3 @@ namespace Sound {
 	void playSoundEffect(LPCWSTR path, SoundManager soundManager);
 	void playSound(LPCWSTR path);
 }
-
