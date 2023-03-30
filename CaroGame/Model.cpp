@@ -365,12 +365,8 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	short y = 21;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 5);
-
-	wstring history;
-	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++, idx--) {
-		wstring history = L" ";
-		wstring total_move = to_wstring(idx);
-		history += total_move;
+	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
+		wstring history = L" " + to_wstring(idx);
 		history += L". ";
 		PlayerMove move = get_move[i];
 		if (move.player == 1) {
@@ -385,7 +381,6 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			history += name;
 			history += L"(O)";
 		}
-
 		char character = char((move.move.X - 6) / 4 + 97);
 		string tmp_string(1, character);
 		wstring moveX(tmp_string.begin(), tmp_string.end());
