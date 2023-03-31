@@ -99,7 +99,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,14 }, 64, 15, View::Color::BLACK);
 	escPressed = false;
 	
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
