@@ -42,16 +42,13 @@ namespace View {
 		WHITE = 15
 	};
 
+	// init console window function
 	void gotoXY(short x, short y);
-
-	void LoadGameBorder(int left, int right, int top, int bot);
-	void drawBoard(int space_row, int space_col);
-	
-	void drawF1F2list(int x, int y);
 	void fixConsoleWindow();
 	void textColor(int color);	
-	void textStyle(int fontSize);	
-	void clearRectangleArea(COORD start, int width, int height);
+	void textStyle(int fontSize);
+	
+	// print text 
 	void printCharactors(
 		std::wstring content, 
 		COORD spot, 
@@ -65,8 +62,13 @@ namespace View {
 		Color text_color, 
 		Color background_color
 	);
-	PCHAR_INFO getScreenBuffer();
-	void writeScreenBuffer(PCHAR_INFO buffer);
+	void printCenteredToast(
+		std::wstring content, 
+		SMALL_RECT box, 
+		Color text_color, 
+		Color background_color
+	);
+	
 	void confirmDialog(
 		std::wstring content,
 		COORD spot,
@@ -74,38 +76,46 @@ namespace View {
 		std::function<void()> negativeAction
 	);
 	
-	void showWinningMoves(int player, std::vector<COORD> winning_moves);
-	std::ostream& bold_on(std::ostream& os);
-	std::ostream& bold_off(std::ostream& os);
-	void drawCaroGameText(int delayTime);
-	void splashScreenInfo();
-	void splashScreen();
-	void drawPacman();
+	// funcional functions
+	void clearRectangleArea(COORD start, int width, int height);
+	void writeScreenBuffer(PCHAR_INFO buffer);
+	PCHAR_INFO getScreenBuffer();
 	int GetRandom(int min, int max);
 	COORD getCenteredSpot(std::wstring content, SMALL_RECT box);
-	void printCenteredToast(std::wstring content, SMALL_RECT box, Color text_color, Color background_color);
-	void clock(short x, short y, int width, int height);
-	void drawBox(COORD spot, int width, int height, Color color);
+
+	// display game information
+	void displayTimer();
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
-	void drawTurnBoard();
-	void drawTrophy();
-	void drawVSText();
-	void drawXOart(COORD spot,bool isFirstPlayerTurn);
+
+	// draw game board and game pieces
+	void drawGameBoard();
+	void drawF1F2list(int x, int y);
+	void drawCaroGameText(int delayTime);
 	void drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box);
+	void splashScreenInfo();
+	void splashScreen();
 
 	// draw border
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void drawBorder2(int left, int right, int top, int bot);
-	void drawBorder3( int left, int right, int top, int bot,std::wstring winnerName);
-
-	// draw avatar
+	void drawBorder3(int left, int right, int top, int bot);
+	void LoadGameBorder(int left, int right, int top, int bot);
+	void drawBox(COORD spot, int width, int height, Color color);
+	
+	// draw animated image 
 	void drawIronmanAvatar(int x, int y);
 	void drawBotAvatar(int x, int y);
 	void drawSpidermanAvatar(int x, int y);
 	void drawThanosAvatar(int x, int y);
 	void drawBackGroundAvatar(int n, int left, int right, int top, int bot);
-
+	void drawPacman();
+	void drawXOart(COORD spot, bool isFirstPlayerTurn);
+	void drawTurnBoard();
+	void drawTrophy();
+	void drawVSText();
+	
 	//win screen
 	void drawWinner(int winplayer,bool playervsplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
+	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 }

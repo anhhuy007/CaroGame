@@ -328,7 +328,6 @@ wstring formats(int t) {
 }
 
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
-	/*View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));*/
 	for (int i = int(spot.X + 6); i <int(spot.X + 25); i++) {
 		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
