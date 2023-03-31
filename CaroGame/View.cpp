@@ -42,7 +42,7 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else if (winplayer == 2) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"ROBOT"); //bot name
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"Cute Robot"); //bot name
 			View::drawBotAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
@@ -50,7 +50,7 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88 - 15, 5);
 
-			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"ROBOT");
+			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"Cute Robot");
 			View::drawBotAvatar(88 + 15, 5);
 			View::drawWinDrawBanner(0, 75, 20);
 		}
