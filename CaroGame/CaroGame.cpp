@@ -24,7 +24,6 @@ int main() {
 	system("cls");
 	system("color f0");
 	//Control::newGame(1, 1, GameInformation());
-	//View::drawWinner(1, 1, L"quanphan",L"duyhiz");
-
+	View::drawWinner(0, 0 ,L"quanphan",L"duyhiz");
 	return 0;
 }

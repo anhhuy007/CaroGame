@@ -8,36 +8,10 @@
 #include "FileIO.h"
 #include <string>
 #include "InputHandle.h"
+#include <thread>
 
 bool escPressed = false;
-
-Model::GameInformation Control::initNewGame() {
-	Model::GameInformation game_info;
-
-	// input user name
-	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
-	strcpy(game_info.player1.name, p1.c_str());
-	
-	string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
-	strcpy(game_info.player2.name, p2.c_str());
-
-	system("cls");
-	cout << "Player 1: " << game_info.player1.name << endl;
-	cout << "Player 2: " << game_info.player2.name << endl;
-	system("pause");
-		
-	// init game information
-	game_info.isFirstPlayerTurn = true;
-	game_info.timeRemained = 1200;
-	game_info.board = Model::Board();
-	memset(game_info.playerMoveHistory, 0, sizeof(game_info.playerMoveHistory));
-	game_info.moveHistorySize = 0;
-	game_info.curX = 0;
-	game_info.curY = 0;
-	game_info.endGame = false;
-	
-	return game_info;
-}
+bool isPauseGame = true;
 
 void Control::startGame() {
 	// initialize default configuration
@@ -50,53 +24,89 @@ void Control::startGame() {
 	system("cls");*/
 
 	// show menu screen
-	Control::startMenuScreen();
+	Control::NavigationController();
 }
 
-void Control::startMenuScreen() {
+void Control::NavigationController() {
 	// start menu screen
 	View::drawCaroGameText(0);
 	MenuOption option = MenuScreen();
-
+	
 	switch (option) {
+		
 	case MenuOption::NEW_GAME_VS_PLAYER:
-		Control::newGame(true, true, Control::initNewGame());
+		Control::newGame(1, 1, initNewGame());
 		break;
+		
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
 		//Control::newGame();
 		break;
+		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
 		//Control::newGame();
 		break;
+		
 	case MenuOption::LOAD_GAME:
 		Control::loadGame();
 		break;
+		
 	case MenuOption::INSTRUCTION:
-		instructionMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
+		instructionMenu();
 		Control::returnMenu();
 		break;
+		
 	case MenuOption::SETTING:
-		settingMenu({ 70, 10 }, View::Color::BLACK, View::Color::PURPLE);
+		settingMenu();
 		Control::returnMenu();
 		break;
+		
 	case MenuOption::ABOUT:
-		aboutMenu({ 70, 2 }, View::Color::BLACK, View::Color::WHITE);
+		aboutMenu();
 		Control::returnMenu();
 		break;
+		
 	case MenuOption::BACK:
 		Control::returnMenu();
 		break;
+		
 	case MenuOption::QUIT:
 		Control::quitGame();
 		break;
 	}
 }
 
+Model::GameInformation Control::initNewGame() {
+	Model::GameInformation game_info;
+
+	// input user name
+	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+	strcpy(game_info.player1.name, p1.c_str());
+
+	string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
+	strcpy(game_info.player2.name, p2.c_str());
+
+	system("cls");
+	cout << "Player 1: " << game_info.player1.name << endl;
+	cout << "Player 2: " << game_info.player2.name << endl;
+	system("pause");
+
+	// init game information
+	game_info.isFirstPlayerTurn = true;
+	game_info.timeRemained = 1200;
+	game_info.board = Model::Board();
+	memset(game_info.playerMoveHistory, 0, sizeof(game_info.playerMoveHistory));
+	game_info.moveHistorySize = 0;
+	game_info.curX = 0;
+	game_info.curY = 0;
+	game_info.endGame = false;
+
+	return game_info;
+}
+
 void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info) {
-	// draw game board and other details
 	Control::resetGame();
-	View::drawBoard(15, 15);
-	// draw X and O on the board
+	// draw game board and game information
+	View::drawGameBoard();
 	Model::drawXO(game_info.board);
 	
 	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
@@ -112,6 +122,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	//View::drawSpidermanAvatar(113,-2);
 	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
+	escPressed = false;
 
 	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
 	View::drawF1F2list(88,32);
@@ -157,7 +168,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 			break;
 		}
 	}
-	
+
 	system("pause");
 	Control::returnMenu();
 }
@@ -175,7 +186,7 @@ void Control::quitGame() {
 void Control::returnMenu() {
 	// return to menu screen
 	system("cls");
-	Control::startMenuScreen();
+	Control::NavigationController();
 }
 // save game to file
 void Control::saveGame(Model::GameInformation& game_info) {
