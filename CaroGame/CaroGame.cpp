@@ -14,7 +14,7 @@ int main() {
 	however, this program only have play with human mode in new game
 	Choose New Game -> VS Human to start new game*/
 
-	//Control::startGame();
+
 
 
 
@@ -23,8 +23,8 @@ int main() {
 	View::textStyle(22);
 	system("cls");
 	system("color f0");
+	Control::startGame();
 	//Control::newGame(1, 1, GameInformation());
-	View::drawWinner(2, 1);
 
 	return 0;
 }

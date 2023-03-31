@@ -8,7 +8,7 @@ using namespace std;
 
 
 //who win, 1 :player1, 2:player2 , 0 draw
-void View::drawWinner(int winplayer, bool playervsplayer) {
+void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, wstring player2_name) {
 	//system("cls");
 	int x, y;
 	//avatar coordinate: x = 88, y = 5
@@ -16,20 +16,20 @@ void View::drawWinner(int winplayer, bool playervsplayer) {
 	View::drawBoard(15, 15);
 	if (playervsplayer == 1) {
 		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player1_name);
 			View::drawIronmanAvatar(88, 5);
 			View::drawWinDrawBanner(1,75,20);
 		}
 		else if (winplayer == 2){
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player2_name);
 			View::drawThanosAvatar(88, 5);
 			View::drawWinDrawBanner(1,75, 20);
 		}
 		else {
-			View::drawBorder3(94-15, 94-15 + 20, 7, 7 + 10);
+			View::drawBorder3(94-15, 94-15 + 20, 7, 7 + 10,player1_name);
 			View::drawIronmanAvatar(88-15, 5);
 
-			View::drawBorder3(94+15, 94+15 + 20, 7, 7 + 10);
+			View::drawBorder3(94+15, 94+15 + 20, 7, 7 + 10, player2_name);
 			View::drawThanosAvatar(88+15, 5);
 			View::drawWinDrawBanner(0,75, 20);
 		}
@@ -37,20 +37,20 @@ void View::drawWinner(int winplayer, bool playervsplayer) {
 	}
 	else {
 		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else if (winplayer == 2) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"ROBOT"); //bot name
 			View::drawBotAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else {
-			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10);
+			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88 - 15, 5);
 
-			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10);
+			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"ROBOT");
 			View::drawBotAvatar(88 + 15, 5);
 			View::drawWinDrawBanner(0, 75, 20);
 		}
@@ -543,7 +543,7 @@ void View::drawTrophy() {
 
 
 }
-void View::drawBorder3( int left, int right,int top, int bot) {
+void View::drawBorder3( int left, int right,int top, int bot, wstring winnerName) {
 	/*
 	int top = 2;
 	int left = 77;
@@ -558,12 +558,14 @@ void View::drawBorder3( int left, int right,int top, int bot) {
 
 	}
 
-	for (int i = top + 1; i <= bot - 1 ; i++) {
+	for (int i = top + 1; i <= bot - 1; i++) {
 		View::printCharactors(L"\x2588", { (short)left,(short)i }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2588", { (short)right,(short)i }, Color::BLACK, Color::WHITE);
 	}
-
-	View::printCharactors(L"Quân Phan", { (short)(left + 5),(short)(bot+1)}, Color::BLACK, Color::WHITE);
+	//View::printCharactors(L"quan phan", {(short)(left + 5),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
+	short x = (short)left+((right - left) / 2 - winnerName.length() / 2);
+		
+	View::printCharactors(winnerName, {(short)(x),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
 	
 }
 
