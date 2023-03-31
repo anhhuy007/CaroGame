@@ -131,7 +131,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			// mark the move on the board and update game's information
 			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
 			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
-			Model::updateInform(game_info, { 75, 12 }, 64, 18, View::Color::BLACK);
+			Model::updateInform(game_info, { 75, 14 }, 64, 15, View::Color::BLACK);
 
 		} 
 		
@@ -330,15 +330,16 @@ wstring formats(int t) {
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
 	/*View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));*/
 	for (int i = int(spot.X + 6); i <int(spot.X + 25); i++) {
-		for (int j = int(spot.Y + (height / 3) + 3); j < int(spot.Y + height); j++) {
+		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}
-	View::drawXOart({short(spot.X + 1),short(spot.Y + 6) }, game_info.isFirstPlayerTurn);
+	View::drawXOart({short(spot.X + 1),short(spot.Y + 4) }, game_info.isFirstPlayerTurn);
 	if (!game_info.isFirstPlayerTurn) {
+		int moveX = game_info.player1.numberOfMoves;
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;
-		wstring xMoves = formats(game_info.player1.numberOfMoves);
+		wstring xMoves = formats(moveX);
 		View::printVerticalCenteredCharactors(
 			xMoves,
 			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
@@ -350,9 +351,8 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	else {
 		short x = spot.X + (((width - 4) / 3) * 2 + 3);
 		short y = spot.Y + (height / 2 - 2) / 2;
-		View::gotoXY(10, 0);
-		cout << game_info.player1.numberOfMoves << " " << game_info.player2.numberOfMoves << endl;
-		wstring yMoves = formats(game_info.player2.numberOfMoves);
+		int moveY = game_info.player2.numberOfMoves;
+		wstring yMoves = formats(moveY);
 		View::printVerticalCenteredCharactors(
 			yMoves,
 			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
@@ -361,10 +361,12 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::Color::WHITE
 		);
 	}
-	short x = 105 + 14;
-	short y = 21;
+	View::gotoXY(10, 0);
+	cout << game_info.player1.numberOfMoves << " " << game_info.player2.numberOfMoves << endl;
+	short x = spot.X + 44;
+	short y = spot.Y + 7;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
-	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 5);
+	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 4);
 	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
 		wstring history = L" " + to_wstring(idx);
 		history += L". ";
@@ -386,7 +388,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		wstring moveX(tmp_string.begin(), tmp_string.end());
 		wstring moveY = to_wstring(int(16 - (move.move.Y - 1) / 2));
 		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
-		short x = short(75 + 64 / 2 + 32 / 2 + 1 - (history.length() / 2));
+		x = short(spot.X + width / 2 + (width / 2) / 2 + 1 - (history.length() / 2));
 		View::printCharactors(history, { x,short(y + i * 2) }, View::Color::BLACK, View::Color::WHITE);
 	}
 }

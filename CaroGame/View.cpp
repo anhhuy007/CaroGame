@@ -1405,53 +1405,50 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	short maxY = spot.Y + height;
 
 	drawBox(spot, width, height, color);
-	drawBox(spot, width, int(height / 3), color);
-	drawBox(spot, int((width - 4) / 3 + 1), int(height / 3), color);
-	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(height / 3), color);
-	drawBox(spot, int((width - 4) / 3 + 1), int((height / 3) / 2), color);
+	drawBox(spot, width, int(4	), color);
+	drawBox(spot, int((width - 4) / 3 + 1), int(4), color);
+	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(4), color);
+	drawBox(spot, int((width - 4) / 3 + 1), int((4) / 2), color);
 
 	short x = spot.X + (width - 4) / 3 + 1;
-	short y = spot.Y + (height / 3);
+	short y = spot.Y + (4);
 
-	drawBox({ x ,spot.Y }, int((width - 4) / 3 + 2), int((height / 3) / 2), color);
+	drawBox({ x ,spot.Y }, int((width - 4) / 3 + 2), int((4) / 2), color);
 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	drawBox({ x ,spot.Y }, int(width - 4) / 3 + 1, int((height / 3) / 2), color);
+	drawBox({ x ,spot.Y }, int(width - 4) / 3 + 1, int((4) / 2), color);
 
-	y = spot.Y + (height / 3);
-	drawBox({ spot.X,y }, int((width - 4) / 2 + 3), int(height - (height / 3)), color);
-
-
-	/*╩╦╠╣╬*/
+	y = spot.Y + (4);
+	drawBox({ spot.X,y }, int((width - 4) / 2 + 3), int(height - (4)), color);
 	x = spot.X;
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 
 	View::printCharactors(L"╠", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╣", { maxX,y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3) / 2;
+	y = spot.Y + (4) / 2;
 	View::printCharactors(L"╠", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╣", { maxX,y }, color, Color::WHITE);
 
 	x = spot.X + (width - 4) / 3 + 1;
-	y = spot.Y + ((height / 3) / 2);
+	y = spot.Y + ((4) / 2);
 
 	View::printCharactors(L"╬", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╦", { x,spot.Y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╩", { x,y }, color, Color::WHITE);
 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╦", { x,spot.Y }, color, Color::WHITE);
 	View::printCharactors(L"╩", { x,y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3) / 2;
+	y = spot.Y + (4) / 2;
 	View::printCharactors(L"╬", { x,y }, color, Color::WHITE);
 
 	x = spot.X + (width - 4) / 2 + 3;
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╦", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╩", { x,maxY }, color, Color::WHITE);
 
@@ -1484,18 +1481,18 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	);
 
 	x = spot.X;
-	y = spot.Y + (height / 3) - 1;
+	y = spot.Y + (4) - 1;
 
 	View::printVerticalCenteredCharactors(
 		L"TURN",
-		{ short(x + 3),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
+		{ short(x + 2),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
 
 	x = spot.X + (width - 4) / 2 + 3;
-	y = spot.Y + (height / 3) - 1;
+	y = spot.Y + (4) - 1;
 
 	View::printVerticalCenteredCharactors(
 		L"HISTORY",
