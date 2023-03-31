@@ -75,6 +75,8 @@ namespace View {
 		std::function<void()> positiveAction,
 		std::function<void()> negativeAction
 	);
+
+	void pressAnyKey(SMALL_RECT box);
 	
 	// funcional functions
 	void clearRectangleArea(COORD start, int width, int height);

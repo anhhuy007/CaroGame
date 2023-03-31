@@ -1127,9 +1127,11 @@ void View::clearRectangleArea(
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
 	int startY = start.Y;
+	int color = (int)View::Color::WHITE + (int)View::Color::WHITE * 16;
 
 	for (int i = startY; i < startY + height; i++) {
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
+		FillConsoleOutputAttribute(hOut, color, 1, start, &dwWritten);
 		start.Y++;
 	}
 }
@@ -1427,6 +1429,13 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
+}
+
+void View::pressAnyKey(SMALL_RECT box) {
+	wstring message = L"Press any key to continue...";
+	COORD spot = View::getCenteredSpot(message, box);
+	View::printCharactors(message, spot, Color::BLACK, Color::WHITE);
+	InputHandle::Get();
 }
 
 void View::displayTimer() {

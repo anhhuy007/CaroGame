@@ -20,8 +20,8 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	View::splashScreen();
-	system("cls");
+	/*View::splashScreen();
+	system("cls");*/
 
 	// show menu screen
 	Control::NavigationController();
@@ -81,11 +81,23 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	// input user name
 	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
 	strcpy(game_info.player1.name, p1.c_str());
+	 
+	// if exit game
+	if (p1 == "-1") {
+		Control::returnMenu();
+		return GameInformation();
+	}
 
 	// if user 2 is human then input player name
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
 		strcpy(game_info.player2.name, p2.c_str());
+
+		// if exit game
+		if (p2 == "-1") {
+			Control::returnMenu();
+			return GameInformation();
+		}
 	}
 	// if user 2 is computer
 	else {
@@ -136,7 +148,7 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 		
 		// player turn
 		Model::playerTurn(player, game_info);
-		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 1 : 2, game_info.board.value);
+		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		// check if player 1 win
 		if (result.first != 0) {
 			// show winner here
@@ -206,13 +218,13 @@ void Control::saveGame(Model::GameInformation& game_info) {
 	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
 
 	if (isSuccess) {
-		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
 		FileIO::saveFileNameToFile(fileName);
 	}
 	else {
-		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
 	}
-	system("pause");
+	View::pressAnyKey(View::WINDOW_SIZE);
 	system("cls");
 }
 
