@@ -367,6 +367,11 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	short y = spot.Y + 7;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 4);
+	for (int i = int(spot.X +2 + width/2); i <int(spot.X + width); i++) {
+		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
+			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
+		}
+	}
 	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
 		wstring history = L" " + to_wstring(idx);
 		history += L". ";
