@@ -7,7 +7,7 @@
 using namespace std;
 
 //who win, 1 :player1, 2:player2 , 0 draw
-void View::drawWinner(int winplayer, bool playervsplayer) {
+void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, wstring player2_name) {
 	//system("cls");
 	int x, y;
 	//avatar coordinate: x = 88, y = 5
@@ -15,20 +15,20 @@ void View::drawWinner(int winplayer, bool playervsplayer) {
 	View::drawGameBoard();
 	if (playervsplayer == 1) {
 		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player1_name);
 			View::drawIronmanAvatar(88, 5);
 			View::drawWinDrawBanner(1,75,20);
 		}
 		else if (winplayer == 2){
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player2_name);
 			View::drawThanosAvatar(88, 5);
 			View::drawWinDrawBanner(1,75, 20);
 		}
 		else {
-			View::drawBorder3(94-15, 94-15 + 20, 7, 7 + 10);
+			View::drawBorder3(94-15, 94-15 + 20, 7, 7 + 10,player1_name);
 			View::drawIronmanAvatar(88-15, 5);
 
-			View::drawBorder3(94+15, 94+15 + 20, 7, 7 + 10);
+			View::drawBorder3(94+15, 94+15 + 20, 7, 7 + 10, player2_name);
 			View::drawThanosAvatar(88+15, 5);
 			View::drawWinDrawBanner(0,75, 20);
 		}
@@ -36,20 +36,20 @@ void View::drawWinner(int winplayer, bool playervsplayer) {
 	}
 	else {
 		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else if (winplayer == 2) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10);
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"ROBOT"); //bot name
 			View::drawBotAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else {
-			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10);
+			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88 - 15, 5);
 
-			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10);
+			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"ROBOT");
 			View::drawBotAvatar(88 + 15, 5);
 			View::drawWinDrawBanner(0, 75, 20);
 		}
@@ -540,8 +540,7 @@ void View::drawTrophy() {
 
 
 }
-
-void View::drawBorder3( int left, int right,int top, int bot) {
+void View::drawBorder3( int left, int right,int top, int bot, wstring winnerName) {
 	/*
 	int top = 2;
 	int left = 77;
@@ -556,12 +555,14 @@ void View::drawBorder3( int left, int right,int top, int bot) {
 
 	}
 
-	for (int i = top + 1; i <= bot - 1 ; i++) {
+	for (int i = top + 1; i <= bot - 1; i++) {
 		View::printCharactors(L"\x2588", { (short)left,(short)i }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2588", { (short)right,(short)i }, Color::BLACK, Color::WHITE);
 	}
-
-	View::printCharactors(L"Quân Phan", { (short)(left + 5),(short)(bot+1)}, Color::BLACK, Color::WHITE);
+	//View::printCharactors(L"quan phan", {(short)(left + 5),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
+	short x = (short)left+((right - left) / 2 - winnerName.length() / 2);
+		
+	View::printCharactors(winnerName, {(short)(x),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
 	
 }
 
@@ -1312,53 +1313,50 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	short maxY = spot.Y + height;
 
 	drawBox(spot, width, height, color);
-	drawBox(spot, width, int(height / 3), color);
-	drawBox(spot, int((width - 4) / 3 + 1), int(height / 3), color);
-	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(height / 3), color);
-	drawBox(spot, int((width - 4) / 3 + 1), int((height / 3) / 2), color);
+	drawBox(spot, width, int(4	), color);
+	drawBox(spot, int((width - 4) / 3 + 1), int(4), color);
+	drawBox(spot, int(((width - 4) / 3) * 2 + 3), int(4), color);
+	drawBox(spot, int((width - 4) / 3 + 1), int((4) / 2), color);
 
 	short x = spot.X + (width - 4) / 3 + 1;
-	short y = spot.Y + (height / 3);
+	short y = spot.Y + (4);
 
-	drawBox({ x ,spot.Y }, int((width - 4) / 3 + 2), int((height / 3) / 2), color);
+	drawBox({ x ,spot.Y }, int((width - 4) / 3 + 2), int((4) / 2), color);
 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	drawBox({ x ,spot.Y }, int(width - 4) / 3 + 1, int((height / 3) / 2), color);
+	drawBox({ x ,spot.Y }, int(width - 4) / 3 + 1, int((4) / 2), color);
 
-	y = spot.Y + (height / 3);
-	drawBox({ spot.X,y }, int((width - 4) / 2 + 3), int(height - (height / 3)), color);
-
-
-	/*╩╦╠╣╬*/
+	y = spot.Y + (4);
+	drawBox({ spot.X,y }, int((width - 4) / 2 + 3), int(height - (4)), color);
 	x = spot.X;
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 
 	View::printCharactors(L"╠", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╣", { maxX,y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3) / 2;
+	y = spot.Y + (4) / 2;
 	View::printCharactors(L"╠", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╣", { maxX,y }, color, Color::WHITE);
 
 	x = spot.X + (width - 4) / 3 + 1;
-	y = spot.Y + ((height / 3) / 2);
+	y = spot.Y + ((4) / 2);
 
 	View::printCharactors(L"╬", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╦", { x,spot.Y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╩", { x,y }, color, Color::WHITE);
 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╦", { x,spot.Y }, color, Color::WHITE);
 	View::printCharactors(L"╩", { x,y }, color, Color::WHITE);
 
-	y = spot.Y + (height / 3) / 2;
+	y = spot.Y + (4) / 2;
 	View::printCharactors(L"╬", { x,y }, color, Color::WHITE);
 
 	x = spot.X + (width - 4) / 2 + 3;
-	y = spot.Y + (height / 3);
+	y = spot.Y + (4);
 	View::printCharactors(L"╦", { x,y }, color, Color::WHITE);
 	View::printCharactors(L"╩", { x,maxY }, color, Color::WHITE);
 
@@ -1391,18 +1389,18 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	);
 
 	x = spot.X;
-	y = spot.Y + (height / 3) - 1;
+	y = spot.Y + (4) - 1;
 
 	View::printVerticalCenteredCharactors(
 		L"TURN",
-		{ short(x + 3),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
+		{ short(x + 2),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
 
 	x = spot.X + (width - 4) / 2 + 3;
-	y = spot.Y + (height / 3) - 1;
+	y = spot.Y + (4) - 1;
 
 	View::printVerticalCenteredCharactors(
 		L"HISTORY",

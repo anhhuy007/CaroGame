@@ -108,75 +108,18 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw game board and game information
 	View::drawGameBoard();
 	Model::drawXO(game_info.board);
-	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
-	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
-	View::drawIronmanAvatar(69, -2);
-	View::drawThanosAvatar(113, -2);
-	View::drawVSText();
+	
+	View::drawGamePlayInfoBox({ 75,14 }, 64, 15, View::Color::BLACK);
 	escPressed = false;
-
-	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
-	View::drawF1F2list(88,33);
-	while (!game_info.endGame && !escPressed) {
-		// player 1 turn
-		Model::playerTurn(game_info.player1, game_info);
-		Model::GameResult result = Model::checkResult(1, game_info.board.value);
-		// check if player 1 win
-		if (result.first != 0) {
-			// show winner here
-			// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-			//View::drawWinner(1);
-			
-			game_info.endGame = true;
-			break;
-		}
-
-		if (escPressed) break;
-
-		// player 2 turn
-		Model::playerTurn(game_info.player2, game_info);
-		result = Model::checkResult(2, game_info.board.value);
-		// check if player 2 win
-		if (result.first != 0) {
-			// show winner here
-			// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-
-			game_info.endGame = true;
-			break;
-		}
-	}
-	
-	system("pause");
-	Control::returnMenu();
-}
-
-void Control::playWithHuman() {
-	Control::resetGame();
-
-	GameInformation game_info = initNewGame();
-	
-	// draw game board and game information
-	View::drawGameBoard();
-	Model::drawXO(game_info.board);
-	View::drawGamePlayInfoBox({ 75,12 }, 64, 18, View::Color::BLACK);
-	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
-	View::drawIronmanAvatar(69, -2);
+	string player1_name = game_info.player1.name;
+	wstring name1(player1_name.begin(), player1_name.end());
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
+	string player2_name = game_info.player2.name;
+	wstring name2(player2_name.begin(), player2_name.end());
+	View::drawBorder3( 119, 119 + 20, 0, 0 + 10,name2);
+	View::drawIronmanAvatar(69,-2);
+	//View::drawBotAvatar(113,-2);
+	//View::drawSpidermanAvatar(113,-2);
 	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
 	escPressed = false;
@@ -198,8 +141,8 @@ void Control::playWithHuman() {
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-			//View::drawWinner(1);
-
+			View::drawWinner(1, 1, name1, name2);
+			
 			game_info.endGame = true;
 			break;
 		}
