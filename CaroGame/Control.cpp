@@ -99,7 +99,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	// draw X and O on the board
 	Model::drawXO(game_info.board);
 	
-	View::drawGamePlayInfoBox({ 75,14 }, 64, 15, View::Color::BLACK);
+	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
 	escPressed = false;
 	string player1_name = game_info.player1.name;
 	wstring name1(player1_name.begin(), player1_name.end());
@@ -113,8 +113,8 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
 
-	View::drawBorder2(80, 80 + 55, 32, 30 + 5);
-	View::drawF1F2list(88,33);
+	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
+	View::drawF1F2list(88,32);
 	while (!game_info.endGame && !escPressed) {
 		// player 1 turn
 		Model::playerTurn(game_info.player1, game_info);
