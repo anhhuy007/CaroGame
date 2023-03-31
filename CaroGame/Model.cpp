@@ -136,7 +136,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		} 
 		
 		// quit game
-		else if (key == L"ESC") {
+		else if (key == L"F1") {
 			// show a dialog that ask user to confirm to exit
 			// get current screen's information before display confirm dialog
 			PCHAR_INFO buffer = View::getScreenBuffer();
@@ -156,12 +156,6 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					View::writeScreenBuffer(buffer);
 				}
 			);
-		}
-		
-		// undo move
-		else if (key == L"F4") {
-			previousMove(game_info);
-			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
 		}
 
 		// save game
@@ -188,6 +182,37 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				}
 			);
 		}
+
+		else if (key == L"F3") {
+			// show a dialog that ask user to confirm to exit
+			// get current screen's information before display confirm dialog
+			PCHAR_INFO buffer = View::getScreenBuffer();
+
+			system("cls");
+			View::confirmDialog(
+				L"Do you want to save this game before loading another game?",
+				{ 40, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					endTurn = true;
+					Control::saveGame(game_info);
+					// restore screen's information
+					Control::loadGame();
+				},
+				[&]() -> void {
+					// continue game
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				}
+				);
+		}
+
+		// undo move
+		else if (key == L"F4") {
+			previousMove(game_info);
+			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
+		}
+		
 		// player's move
 		else {
 			Model::makePlayerMove(key);

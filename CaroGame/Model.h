@@ -12,6 +12,11 @@ const int sz = View::BOARD_SIZE;
 
 namespace Model {
 	typedef pair<int, vector<COORD>> GameResult;
+
+	const bool PLAY_WITH_COMPUTER = 0;
+	const bool PLAY_WITH_HUMAN = 1;
+	const bool EASY = 0;
+	const bool HARD = 1;
 	
 	struct Setting {
 		bool backgroundSound = false;
@@ -19,7 +24,7 @@ namespace Model {
 	};
 
 	struct Player {
-		char name[100] = "";
+		char name[20] = "";
 		int numberOfMoves = 0;
 		bool isFirstPlayer;
 	};
@@ -27,6 +32,11 @@ namespace Model {
 	struct PlayerMove {
 		COORD move;
 		int player;
+	};
+
+	struct GameMode {
+		bool isPlayWithHuman;
+		bool level;
 	};
 
 	struct Board {
@@ -54,11 +64,12 @@ namespace Model {
 	};
 	
 	struct GameInformation {
-		char name[50] = "";
+		char name[20] = "";
 		Player player1;
 		Player player2;
+		GameMode gameMode;
 		bool isFirstPlayerTurn;
-		int timeRemained; // in seconds
+		int timer; // in seconds
 		Board board;
 		PlayerMove playerMoveHistory[250];
 		int moveHistorySize = 0;

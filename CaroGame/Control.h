@@ -3,15 +3,15 @@
 #include "Model.h"
 
 namespace Control {
-	void newGame(bool vsHuman, bool isEasy, Model::GameInformation game_info);
-	void playWithHuman();
+	void playWithHuman(Model::GameInformation game_info);	
+	void playWithComputer(bool level);
 	void quitGame();
 	void startGame();
 	void returnMenu();
 	void resetGame();
 	void saveGame(Model::GameInformation& game_info);
 	void loadGame();
-	Model::GameInformation initNewGame();
+	Model::GameInformation initNewGame(Model::GameMode mode);
 	void NavigationController();
 }
 

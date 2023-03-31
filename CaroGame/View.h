@@ -98,7 +98,7 @@ namespace View {
 	// draw border
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void drawBorder2(int left, int right, int top, int bot);
-	void drawBorder3(int left, int right, int top, int bot);
+	void drawBorder3(int left, int right, int top, int bot, std::wstring winnerName);
 	void LoadGameBorder(int left, int right, int top, int bot);
 	void drawBox(COORD spot, int width, int height, Color color);
 	
