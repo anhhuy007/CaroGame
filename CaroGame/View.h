@@ -96,7 +96,7 @@ namespace View {
 	// draw border
 	void drawRectangleBorder(COORD spot, int width, int height, Color color);
 	void drawBorder2(int left, int right, int top, int bot);
-	void drawBorder3(int left, int right, int top, int bot);
+	void drawBorder3( int left, int right, int top, int bot,std::wstring winnerName);
 
 	// draw avatar
 	void drawIronmanAvatar(int x, int y);
@@ -106,6 +106,6 @@ namespace View {
 	void drawBackGroundAvatar(int n, int left, int right, int top, int bot);
 
 	//win screen
-	void drawWinner(int winplayer,bool playervsplayer);
+	void drawWinner(int winplayer,bool playervsplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
 }

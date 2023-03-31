@@ -101,9 +101,12 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 	
 	View::drawGamePlayInfoBox({ 75,14 }, 64, 15, View::Color::BLACK);
 	escPressed = false;
-	
-	View::drawBorder3(75, 75 + 20, 0, 0 + 10);
-	View::drawBorder3(119, 119 + 20, 0, 0 + 10);
+	string player1_name = game_info.player1.name;
+	wstring name1(player1_name.begin(), player1_name.end());
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
+	string player2_name = game_info.player2.name;
+	wstring name2(player2_name.begin(), player2_name.end());
+	View::drawBorder3( 119, 119 + 20, 0, 0 + 10,name2);
 	View::drawIronmanAvatar(69,-2);
 	//View::drawBotAvatar(113,-2);
 	//View::drawSpidermanAvatar(113,-2);
@@ -127,7 +130,7 @@ void Control::newGame(bool vsHuman, bool isEasy, Model::GameInformation game_inf
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-			//View::drawWinner(1);
+			View::drawWinner(1, 1, name1, name2);
 			
 			game_info.endGame = true;
 			break;
