@@ -64,21 +64,13 @@
 		View::Color text_color,
 		View::Color selected_textcolor
 	);
-	MenuOption aboutMenu(
-		COORD start,
-		View::Color text_color,
-		View::Color selected_textcolor
-	);
+	MenuOption aboutMenu();
 	MenuOption MenuScreen();
 	bool checkIndex(
 		int* index, 
 		int num
 	);
-	MenuOption instructionMenu(
-		COORD start,
-		View::Color text_color,
-		View::Color selected_textcolor
-	);
+	MenuOption instructionMenu();
 
 	void clearMenu(
 		MenuItem menu_items[],
@@ -86,11 +78,7 @@
 		int menu_size
 	);
 
-	void settingMenu(
-		COORD start,
-		View::Color text_color,
-		View::Color selected_textcolor
-	);
+	void settingMenu();
 	void settingMenuOptionChanged(
 		SettingItem setting_items[],
 		COORD start,

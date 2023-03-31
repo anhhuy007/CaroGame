@@ -109,7 +109,7 @@ namespace Model {
 	void previousMove(
 		GameInformation& game_info
 	);
-	PlayerMove getMoveHistory(GameInformation game_info, int num);
+	std::vector<PlayerMove> getMoveHistory(GameInformation game_info, int num);
 	void updateInform(GameInformation& game_info, COORD spot, int width, int height, View::Color color);
 }
 

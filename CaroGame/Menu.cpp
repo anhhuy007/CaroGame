@@ -161,11 +161,8 @@ MenuOption MenuScreen() {
 }
 
 
-MenuOption aboutMenu(
-	COORD start,
-	View::Color text_color,
-	View::Color selected_textcolor
-) {
+MenuOption aboutMenu() {
+	COORD start = { 70, 2 };
 	system("cls");
 	wstring key;
 	wstring about_content[14] = {
@@ -191,7 +188,7 @@ MenuOption aboutMenu(
 		short x = start.X - about_content[i].length() / 2;
 		short y = start.Y + i * 2;
 
-		View::printCharactors(about_content[i], { x,y }, text_color, selected_textcolor);
+		View::printCharactors(about_content[i], { x,y }, View::Color::BLACK, View::Color::WHITE);
 
 	}
 
@@ -203,11 +200,9 @@ MenuOption aboutMenu(
 	return MenuOption::ABOUT;
 }
 
-MenuOption instructionMenu(
-	COORD start,
-	View::Color text_color,
-	View::Color selected_textcolor
-) {
+MenuOption instructionMenu() {
+	COORD start = { 70, 2 };
+
 	system("cls");
 	wstring key;
 	wstring instruction_content[14] = {
@@ -232,7 +227,7 @@ MenuOption instructionMenu(
 		short x = start.X - instruction_content[i].length() / 2;
 		short y = start.Y + i * 2;
 
-		View::printCharactors(instruction_content[i], { x,y }, text_color, selected_textcolor);
+		View::printCharactors(instruction_content[i], { x,y }, View::Color::BLACK, View::Color::BLACK);
 	}
 
 	while (key != L"ESC") {
@@ -318,11 +313,8 @@ void settingMenuOptionChanged(
 	}
 }
 
-void settingMenu(
-	COORD start,
-	View::Color text_color,
-	View::Color selected_textcolor
-) {
+void settingMenu() {
+	COORD start = { 70, 10 };
 	int index = -1;
 	int menu_size = 3;
 	SettingItem setting_items[3] = {
@@ -332,8 +324,8 @@ void settingMenu(
 	};
 
 	system("cls");
-	drawSettingMenu(setting_items, start, text_color, selected_textcolor, &index, menu_size);
-	settingMenuOptionChanged(setting_items, start, text_color, selected_textcolor, &index, menu_size);
+	drawSettingMenu(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
+	settingMenuOptionChanged(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
 
 	Setting setting;
 	setting.backgroundSound = setting_items[0].status;
