@@ -347,7 +347,6 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::Color::BLACK,
 			View::Color::WHITE
 		);
-		
 	}
 	else {
 		short x = spot.X + (((width - 4) / 3) * 2 + 3);
