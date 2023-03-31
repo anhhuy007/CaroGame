@@ -136,7 +136,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		} 
 		
 		// quit game
-		else if (key == L"ESC") {
+		else if (key == L"F1") {
 			// show a dialog that ask user to confirm to exit
 			// get current screen's information before display confirm dialog
 			PCHAR_INFO buffer = View::getScreenBuffer();
@@ -156,12 +156,6 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					View::writeScreenBuffer(buffer);
 				}
 			);
-		}
-		
-		// undo move
-		else if (key == L"F4") {
-			previousMove(game_info);
-			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
 		}
 
 		// save game
@@ -188,6 +182,37 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				}
 			);
 		}
+
+		else if (key == L"F3") {
+			// show a dialog that ask user to confirm to exit
+			// get current screen's information before display confirm dialog
+			PCHAR_INFO buffer = View::getScreenBuffer();
+
+			system("cls");
+			View::confirmDialog(
+				L"Do you want to save this game before loading another game?",
+				{ 40, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					endTurn = true;
+					Control::saveGame(game_info);
+					// restore screen's information
+					Control::loadGame();
+				},
+				[&]() -> void {
+					// continue game
+					// restore screen's information
+					View::writeScreenBuffer(buffer);
+				}
+				);
+		}
+
+		// undo move
+		else if (key == L"F4") {
+			previousMove(game_info);
+			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
+		}
+		
 		// player's move
 		else {
 			Model::makePlayerMove(key);
@@ -366,6 +391,11 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	short y = spot.Y + 7;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 4);
+	for (int i = int(spot.X +2 + width/2); i <int(spot.X + width); i++) {
+		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
+			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
+		}
+	}
 	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
 		wstring history = L" " + to_wstring(idx);
 		history += L". ";

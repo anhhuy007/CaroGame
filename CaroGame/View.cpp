@@ -480,7 +480,7 @@ void View::drawF1F2list(int x, int y) {
 
 	//info board
 
-	View::printCharactors(L"F1 : Return game", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"F1 : Return home", { (short)(x),(short)(y) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F2 : Save game", { (short)(x + 25),(short)(y) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F3 : Load game", { (short)(x),(short)(y + 1) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F4 : Undo", { (short)(x + 25),(short)(y + 1 ) }, Color::BLACK, Color::WHITE);	
@@ -1047,7 +1047,6 @@ void View::drawVSText() {
 
 }
 
-
 //-------------------------------------------splash screen------------------------------
 void View::splashScreenInfo() {
 	int x, y;
@@ -1055,39 +1054,36 @@ void View::splashScreenInfo() {
 	y = 12;
 
 	View::printCharactors(L"        NHÓM 10", { (short)(x + 10),(short)(y + 2) }, Color::BLACK, Color::WHITE); Sleep(300);
-	View::printCharactors(L" GV: Trương Toàn Thịnh", { (short)(x + 10),(short)(y + 4) }, Color::BLACK, Color::WHITE); Sleep(400);
+	View::printCharactors(L" GV: Trương Toàn Thịnh", { (short)(x + 10),(short)(y + 4) }, Color::BLACK, Color::WHITE); Sleep(100);
 
-	View::printCharactors(L" Huỳnh Anh Huy			", { (short)(x + 10),(short)(y + 6) }, Color::BLACK, Color::WHITE); Sleep(400);
-	View::printCharactors(L" Phan Nguyễn Hoàng Quân	", { (short)(x + 10),(short)(y + 7) }, Color::BLACK, Color::WHITE); Sleep(400);
-	View::printCharactors(L" Nguyễn Lâm Anh Duy		", { (short)(x + 10),(short)(y + 8) }, Color::BLACK, Color::WHITE); Sleep(400);
-	View::printCharactors(L" Lê Hải Nam				", { (short)(x + 10),(short)(y + 9) }, Color::BLACK, Color::WHITE); Sleep(300);
+	View::printCharactors(L" Huỳnh Anh Huy          ", { (short)(x + 10),(short)(y + 6) }, Color::BLACK, Color::WHITE); Sleep(100);
+	View::printCharactors(L" Phan Nguyễn Hoàng Quân ", { (short)(x + 10),(short)(y + 7) }, Color::BLACK, Color::WHITE); Sleep(100);
+	View::printCharactors(L" Nguyễn Lâm Anh Duy     ", { (short)(x + 10),(short)(y + 8) }, Color::BLACK, Color::WHITE); Sleep(100);
+	View::printCharactors(L" Lê Hải Nam             ", { (short)(x + 10),(short)(y + 9) }, Color::BLACK, Color::WHITE); Sleep(300);
 }
 void View::splashScreen() {
-	//system("cls");
-	View::fixConsoleWindow();
 	int x, y;
 	x = 25;
 	y = 2;
 
 	Sleep(300);
 	View::printCharactors(L"	░█████╗░░█████╗░██████╗░░█████╗░  ░██████╗░░█████╗░███╗░░░███╗███████╗		", { (short)(10 + x),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 	View::printCharactors(L"	██╔══██╗██╔══██╗██╔══██╗██╔══██╗  ██╔════╝░██╔══██╗████╗░████║██╔════╝	    ", { (short)(10 + x),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 	View::printCharactors(L"	██║░░╚═╝███████║██████╔╝██║░░██║  ██║░░██╗░███████║██╔████╔██║█████╗░░	    ", { (short)(10 + x),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 	View::printCharactors(L"	██║░░██╗██╔══██║██╔══██╗██║░░██║  ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░	    ", { (short)(10 + x),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 	View::printCharactors(L"	╚█████╔╝██║░░██║██║░░██║╚█████╔╝  ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗	    ", { (short)(10 + x),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 	View::printCharactors(L"	░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░  ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝		", { (short)(10 + x),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	Sleep(400);
+	Sleep(100);
 
 	View::splashScreenInfo();
 	View::drawPacman();
 
-	system("pause");
-	gotoXY(10, 50);
+	InputHandle::Get();
 }
 void View::drawPacman() {
 	int x, y;
@@ -1095,7 +1091,7 @@ void View::drawPacman() {
 	y = 25;
 	int color;
 	//srand((unsigned int)time(NULL));				//?
-	for (int i = 1; i <= 13; i++) {				//number of ghosts
+	for (int i = 1; i <= 14; i++) {				//number of ghosts
 
 		color = View::GetRandom(1, 13);
 		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
@@ -1120,7 +1116,7 @@ void View::drawPacman() {
 
 		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-		Sleep(300);
+		Sleep(100);
 
 		x += 10;
 	}
