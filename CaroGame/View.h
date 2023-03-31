@@ -120,4 +120,6 @@ namespace View {
 	void drawWinner(int winplayer,bool playervsplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
+	void drawFireWork(int left, int right, int top, int bot);
+
 }

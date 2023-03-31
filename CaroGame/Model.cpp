@@ -131,7 +131,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			// mark the move on the board and update game's information
 			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
 			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
-			Model::updateInform(game_info, { 75, 14 }, 64, 15, View::Color::BLACK);
+			Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 
 		} 
 		

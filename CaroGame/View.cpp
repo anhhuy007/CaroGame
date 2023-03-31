@@ -41,7 +41,7 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 			View::drawWinDrawBanner(1, 75, 20);
 		}
 		else if (winplayer == 2) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"ROBOT"); //bot name
+			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"Cute Robot"); //bot name
 			View::drawBotAvatar(88, 5);
 			View::drawWinDrawBanner(1, 75, 20);
 		}
@@ -49,7 +49,7 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
 			View::drawSpidermanAvatar(88 - 15, 5);
 
-			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"ROBOT");
+			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"Cute Robot");
 			View::drawBotAvatar(88 + 15, 5);
 			View::drawWinDrawBanner(0, 75, 20);
 		}
@@ -57,10 +57,43 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 
 }
 
+void View::drawFireWork(int left, int right, int top, int bot) {
+	left = 80;
+	top = 1;
+	right = left + 30;
+	bot = top + 10;
+
+	int x;
+	int y;
+
+
+	for (int i = 0; i <= 500; i++) {
+		x = right + rand() % (right - left + 1);
+		y = top + rand() % (bot - top + 1);
+		View::printCharactors(L"■", { char(x), char(y) }, Color::BLACK, Color::WHITE);
+		x = right + rand() % (right - left + 1);
+		y = top + rand() % (bot - top + 1);
+		View::printCharactors(L"█", { char(x), char(y) }, Color::WHITE, Color::WHITE);
+		x = right + rand() % (right - left + 1);
+		y = top + rand() % (bot - top + 1);
+		View::printCharactors(L"■", { char(x), char(y) }, Color::BLACK, Color::WHITE);
+
+		Sleep(10);
+	}
+
+
+
+
+
+
+}
 void View::drawWinDrawBanner(bool win,int x, int y) {
 	//x = 75;
 	//y = 20;
+	int color;
+	vector<int >a = { 2,3,4,5,9,11,14 };
 	if (win == 1) {
+		/*
 		View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y) }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"█░░░░░░██████████░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 1) }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█", { char(x), char(y + 2) }, Color::BLACK, Color::WHITE);
@@ -75,45 +108,52 @@ void View::drawWinDrawBanner(bool win,int x, int y) {
 		View::printCharactors(L"█░░░░░░██░░░░░░██░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 11) }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y + 12) }, Color::BLACK, Color::WHITE);
 
-		Sleep(300);
+		Sleep(10);
+		*/
 
-		int color = 11;
-		View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y) }, Color::BLACK, Color::WHITE); ; Sleep(300);
-		View::printCharactors(L"█░░░░░░██████████░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 1) }, Color::BLACK, Color(color)); Sleep(300);
-		View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█", { char(x), char(y + 2) }, Color::BLACK, Color(color)); Sleep(300);	color = 2;
+		for (int i = 0; i <= 50; i++) {
+			View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y) }, Color::BLACK, Color::WHITE); color=rand()%7;
+			View::printCharactors(L"█░░░░░░██████████░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 1) }, Color::BLACK, Color(a[color])); color=rand()%7;
+			View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█", { char(x), char(y + 2) }, Color::BLACK, Color(a[color])); color=rand()%7;
 
-		View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░█░░░░▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█", { char(x), char(y + 3) }, Color::BLACK, Color(color));; Sleep(300);
-		View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░███░░▄▀░░███░░▄▀░░░░░░▄▀░░██░░▄▀░░█", { char(x), char(y + 4) }, Color::BLACK, Color(color)); Sleep(300); color = 13;
-		View::printCharactors(L"█░░▄▀░░██░░░░░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 5) }, Color::BLACK, Color(color)); Sleep(300);
+			View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░█░░░░▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█", { char(x), char(y + 3) }, Color::BLACK, Color(a[color]));; color=rand()%7;
+			View::printCharactors(L"█░░▄▀░░██████████░░▄▀░░███░░▄▀░░███░░▄▀░░░░░░▄▀░░██░░▄▀░░█", { char(x), char(y + 4) }, Color::BLACK, Color(a[color])); color=rand()%7; 
+			View::printCharactors(L"█░░▄▀░░██░░░░░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 5) }, Color::BLACK, Color(a[color])); color=rand()%7;
 
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 6) }, Color::BLACK, Color(color));; Sleep(300); color = 14;
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 7) }, Color::BLACK, Color(color)); Sleep(300);
-		View::printCharactors(L"█░░▄▀░░░░░░▄▀░░░░░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░░░░░▄▀░░█", { char(x), char(y + 8) }, Color::BLACK, Color(color)); Sleep(300); color = 3;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 6) }, Color::BLACK, Color(a[color]));; color=rand()%7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░██░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x), char(y + 7) }, Color::BLACK, Color(a[color])); color=rand()%7;
+			View::printCharactors(L"█░░▄▀░░░░░░▄▀░░░░░░▄▀░░███░░▄▀░░███░░▄▀░░██░░▄▀░░░░░░▄▀░░█", { char(x), char(y + 8) }, Color::BLACK, Color(a[color])); color=rand()%7; 
 
-		View::printCharactors(L"█░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█░░░░▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█", { char(x), char(y + 9) }, Color::BLACK, Color(color)); Sleep(300);
-		View::printCharactors(L"█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█", { char(x), char(y + 10) }, Color::BLACK, Color(color)); Sleep(300);	color = 12;
-		View::printCharactors(L"█░░░░░░██░░░░░░██░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 11) }, Color::BLACK, Color(color)); Sleep(300);
+			View::printCharactors(L"█░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█░░░░▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█", { char(x), char(y + 9) }, Color::BLACK, Color(a[color])); color=rand()%7;
+			View::printCharactors(L"█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█", { char(x), char(y + 10) }, Color::BLACK, Color(a[color])); color=rand()%7;	
+			View::printCharactors(L"█░░░░░░██░░░░░░██░░░░░░█░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x), char(y + 11) }, Color::BLACK, Color(a[color])); color=rand()%7;
 
-		View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y + 12) }, Color::BLACK, Color::WHITE);
+			View::printCharactors(L"██████████████████████████████████████████████████████████", { char(x), char(y + 12) }, Color::BLACK, Color::WHITE);
+			Sleep(10);
+		}
 
 	}
 	else {
 
 		x -= 6;
 		
-		View::printCharactors(L"█████████████████████████████████████████████████████████████████████████",{char(x),char(y+ 0)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░░░░░░░░░░░███░░░░░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█",{char(x),char(y+ 1)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██████████░░▄▀░░█",{char(x),char(y+ 2)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░▄▀░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██████████░░▄▀░░█",{char(x),char(y+ 3)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░████░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░██████████░░▄▀░░█",{char(x),char(y+ 4)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░▄▀░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░░░░░██░░▄▀░░█",{char(x),char(y+ 5)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█",{char(x),char(y+ 6)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█",{char(x),char(y+ 7)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█",{char(x),char(y+ 8)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░██░░▄▀░░░░░░█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█",{char(x),char(y+ 9)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█",{char(x),char(y+ 10)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█░░░░░░░░░░░░███░░░░░░██░░░░░░░░░░█░░░░░░██░░░░░░█░░░░░░██░░░░░░██░░░░░░█",{char(x),char(y+ 11)},Color::BLACK, Color::WHITE);
-		View::printCharactors(L"█████████████████████████████████████████████████████████████████████████",{char(x),char(y+ 12)},Color::BLACK, Color::WHITE);
+		for (int i = 0; i <= 50; i++) {
+			View::printCharactors(L"█████████████████████████████████████████████████████████████████████████", { char(x),char(y + 0) }, Color::BLACK, Color::WHITE); color = rand() % 7;
+			View::printCharactors(L"█░░░░░░░░░░░░███░░░░░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█", { char(x),char(y + 1) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██████████░░▄▀░░█", { char(x),char(y + 2) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░▄▀░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██████████░░▄▀░░█", { char(x),char(y + 3) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░████░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░██████████░░▄▀░░█", { char(x),char(y + 4) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░▄▀░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░░░░░██░░▄▀░░█", { char(x),char(y + 5) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x),char(y + 6) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█", { char(x),char(y + 7) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█", { char(x),char(y + 8) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░██░░▄▀░░░░░░█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█", { char(x),char(y + 9) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░░░▄▀░░█", { char(x),char(y + 10) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█░░░░░░░░░░░░███░░░░░░██░░░░░░░░░░█░░░░░░██░░░░░░█░░░░░░██░░░░░░██░░░░░░█", { char(x),char(y + 11) }, Color::BLACK, Color(a[color]));	 color = rand() % 7;
+			View::printCharactors(L"█████████████████████████████████████████████████████████████████████████", { char(x),char(y + 12) }, Color::BLACK, Color::WHITE);	 color = rand() % 7;
+			Sleep(10);
+		}
+
 	}	
 }
 void View::LoadGameBorder(int left, int right, int top , int bot) {
