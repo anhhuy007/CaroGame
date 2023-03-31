@@ -330,12 +330,11 @@ wstring formats(int t) {
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
 	/*View::clearRectangleArea({ short(spot.X + 2),short(spot.Y + (height / 3) + 2) }, int(15), int(height - height/3 - 2));*/
 	for (int i = int(spot.X + 6); i <int(spot.X + 25); i++) {
-		for (int j = int(spot.Y + (height / 3) + 3); j < int(spot.Y + height ); j++) {
+		for (int j = int(spot.Y + (height / 3) + 3); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}
-	View::drawXOart({short(spot.X + 1),short(spot.Y + 6)}, game_info.isFirstPlayerTurn);
-	
+	View::drawXOart({short(spot.X + 1),short(spot.Y + 6) }, game_info.isFirstPlayerTurn);
 	if (!game_info.isFirstPlayerTurn) {
 		short x = spot.X;
 		short y = spot.Y + (height / 2 - 2) / 2;
@@ -360,34 +359,34 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			short(((height / 2 - 2) / 2) / 2),
 			View::Color::BLACK,
 			View::Color::WHITE
-		); 
+		);
 	}
 	short x = 105 + 14;
-	short y = 20;	
+	short y = 21;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 5);
-
-	for (int i = 0; i < get_move.size() ; i++) {
-		wstring history; 
+	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
+		wstring history = L" " + to_wstring(idx);
+		history += L". ";
 		PlayerMove move = get_move[i];
 		if (move.player == 1) {
 			string player_name = game_info.player1.name;
 			wstring name(player_name.begin(), player_name.end());
 			history += name;
+			history += L"(X)";
 		}
 		else {
 			string player_name = game_info.player2.name;
 			wstring name(player_name.begin(), player_name.end());
 			history += name;
+			history += L"(O)";
 		}
-
 		char character = char((move.move.X - 6) / 4 + 97);
 		string tmp_string(1, character);
-		wstring moveX(tmp_string.begin(), tmp_string.end()); 
-		wstring moveY = to_wstring(int(16 - (move.move.Y - 1)/2));
-		history += L" - (" + moveX + L" , " + moveY + L")";
-		short x = 75 + 64/2 + 1 + 32/ 2 - history.length() / 2;
+		wstring moveX(tmp_string.begin(), tmp_string.end());
+		wstring moveY = to_wstring(int(16 - (move.move.Y - 1) / 2));
+		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
+		short x = short(75 + 64 / 2 + 32 / 2 + 1 - (history.length() / 2));
 		View::printCharactors(history, { x,short(y + i * 2) }, View::Color::BLACK, View::Color::WHITE);
 	}
-
 }
