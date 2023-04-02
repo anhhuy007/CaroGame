@@ -20,8 +20,8 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	/*View::splashScreen();
-	system("cls");*/
+	View::splashScreen();
+	system("cls");
 
 	// show menu screen
 	Control::NavigationController();
@@ -134,20 +134,15 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	// draw game board and game information
 	View::drawGameBoard();
 	Model::drawXO(game_info.board);
-	
 	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
-	escPressed = false;
-	string player1_name = game_info.player1.name;
-	wstring name1(player1_name.begin(), player1_name.end());
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
 	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
 	View::drawIronmanAvatar(69, -2);
 	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
-	escPressed = false;
-
 	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
-	View::drawF1F2list(88,32);
+	View::drawF1F2list(88, 32);
+	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
 		

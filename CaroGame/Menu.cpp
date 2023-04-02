@@ -227,7 +227,7 @@ MenuOption instructionMenu() {
 		short x = start.X - instruction_content[i].length() / 2;
 		short y = start.Y + i * 2;
 
-		View::printCharactors(instruction_content[i], { x,y }, View::Color::BLACK, View::Color::BLACK);
+		View::printCharactors(instruction_content[i], { x,y }, View::Color::BLACK, View::Color::WHITE);
 	}
 
 	while (key != L"ESC") {
