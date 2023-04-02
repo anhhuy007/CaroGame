@@ -43,7 +43,7 @@ namespace Model {
 		int value[sz][sz];
 		COORD spot[sz][sz];
 
-		// initialize value for board 
+		// constructor for board
 		Board() {
 			for (int i = 0; i < sz; i++) {
 				for (int j = 0; j < sz; j++) {

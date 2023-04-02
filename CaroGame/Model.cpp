@@ -2,7 +2,7 @@
 #include "InputHandle.h"
 #include "View.h"
 #include "Control.h"
-#include <stack>
+#include "AI.h"
 using namespace std;
 
 short curX = View::LEFT + 38;

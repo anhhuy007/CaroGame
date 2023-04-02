@@ -39,7 +39,7 @@ void Control::NavigationController() {
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
-		//Control::newGame();
+		Control::playWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
@@ -145,8 +145,6 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
-		
-		// player turn
 		Model::playerTurn(player, game_info);
 		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		// check if player 1 win
@@ -170,6 +168,56 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	}
 
 	system("pause");
+	Control::returnMenu();
+}
+
+void Control::playWithComputer(Model::GameInformation game_info) {
+	Control::resetGame();
+	string player1_name = game_info.player1.name;
+	wstring name1(player1_name.begin(), player1_name.end());
+	string player2_name = game_info.player2.name;
+	wstring name2(player2_name.begin(), player2_name.end());
+	escPressed = false;
+
+	// draw game board and game information
+	View::drawGameBoard();
+	Model::drawXO(game_info.board);
+	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
+	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
+	View::drawIronmanAvatar(69, -2);
+	View::drawThanosAvatar(113, -2);
+	View::drawVSText();
+	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
+	View::drawF1F2list(88, 32);
+
+	while (!game_info.endGame && !escPressed) {
+		// player 1 turn
+		Model::playerTurn(game_info.player1, game_info);
+		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		// check if player 1 win
+		if (result.first != 0) {
+			// show winner here
+			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+			View::drawWinner(1, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+		}
+
+		if (escPressed) break;
+
+		// Computer turn 
+		//Model::computerTurn();
+	}
+	
 	Control::returnMenu();
 }
 

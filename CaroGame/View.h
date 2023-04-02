@@ -88,6 +88,7 @@ namespace View {
 	// display game information
 	void displayTimer();
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
+	void drawMove(short x, short y, int player);
 
 	// draw game board and game pieces
 	void drawGameBoard();

@@ -1471,6 +1471,16 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	);
 }
 
+void View::drawMove(short x, short y, int player) {
+	printCharactors(
+		player == 1 ? L"X" : L"O",
+		{ short(x * 2 + 1), short(y * 2 + 1) },
+		Color::BLACK,
+		Color::WHITE
+	);
+}
+
+
 void View::pressAnyKey(SMALL_RECT box) {
 	wstring message = L"Press any key to continue...";
 	COORD spot = View::getCenteredSpot(message, box);

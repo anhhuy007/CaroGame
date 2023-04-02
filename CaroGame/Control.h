@@ -4,7 +4,7 @@
 
 namespace Control {
 	void playWithHuman(Model::GameInformation game_info);	
-	void playWithComputer(bool level);
+	void playWithComputer(Model::GameInformation game_info);
 	void quitGame();
 	void startGame();
 	void returnMenu();
