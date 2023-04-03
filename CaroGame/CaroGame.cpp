@@ -11,12 +11,19 @@ int main() {
 	however, this program only have play with human mode in new game
 	Choose New Game -> VS Human to start new game*/
 
-	AI::Board board = AI::Board();
+	View::fixConsoleWindow();
+	View::textStyle(22);
+	Control::playWithComputer(Control::initNewGame({ false, true }));
 
-	board[3][3] = 2;
-	board[3][4] = 2;
-	board[3][5] = 2;
-	board[3][6] = 2;
+	/*Model::Board board = Model::Board();
+
+	board[0][4] = 2;
+	board[0][5] = 2;
+	board[1][6] = 2;
+	
+	board[1][2] = 1;
+	board[1][3] = 1;
+	board[1][4] = 1;
 
 	for (int i = 0; i < AI::BOARD_SZ; i++) {
 		for (int j = 0; j < AI::BOARD_SZ; j++)
@@ -27,7 +34,9 @@ int main() {
 	}
 	
 	COORD move = AI::calculateNextMove(2, board);
-	cout << move.X << " " << move.Y << endl;
+	cout << move.X << " " << move.Y << endl;*/
+
+	//AI::evaluateHorizontal(board, true, true);
 
 	system("pause");
 	return 0;

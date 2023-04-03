@@ -9,7 +9,7 @@ int AI::getWinScore() {
 	return AI::WIN_SCORE;
 }
 
-double AI::evaluateBoardForWhite(Board board, bool blacksTurn) {	
+double AI::evaluateBoardForWhite(Model::Board board, bool blacksTurn) {	
 	evaluationCount++;
 	double blackScore = getScore(board, true, blacksTurn);
 	double whiteScore = getScore(board, false, blacksTurn);
@@ -19,13 +19,13 @@ double AI::evaluateBoardForWhite(Board board, bool blacksTurn) {
 	return whiteScore / blackScore;
 }
 
-int AI::getScore(Board board, bool forBlack, bool blacksTurn) {
-	return evaluateHorizontal(board, forBlack, blacksTurn) +
-		evaluateVertical(board, forBlack, blacksTurn) +
-		evaluateDiagonal(board, forBlack, blacksTurn);
+int AI::getScore(Model::Board board, bool forBlack, bool blacksTurn) {
+	return AI::evaluateHorizontal(board, forBlack, blacksTurn) +
+		AI::evaluateVertical(board, forBlack, blacksTurn) +
+		AI::evaluateDiagonal(board, forBlack, blacksTurn);
 }
 
-COORD AI::calculateNextMove(int depth, AI::Board board) {
+COORD AI::calculateNextMove(int depth, Model::Board board) {
 	COORD move = { -1, -1 };
 	AI::EvaluatedMove bestMove = AI::searchWinningMove(board);
 
@@ -33,18 +33,19 @@ COORD AI::calculateNextMove(int depth, AI::Board board) {
 		move = bestMove.move;
 	}
 	else {
-		bestMove = minimaxSearchAB(depth, Board(board), true, -1.0, AI::getWinScore());
+		bestMove = minimaxSearchAB(depth, Model::Board(board), true, -1.0, AI::getWinScore());
 		if (bestMove.move.X != -1) {
 			move = bestMove.move;
-			std::cout << "Evaluation count: " << evaluationCount << std::endl;
-			std::cout << "Best move score: " << bestMove.score << std::endl;
 		}
 	}
 
 	return move;
 }
 
-AI::EvaluatedMove AI::minimaxSearchAB(int depth, Board dummyBoard, boolean max, double alpha, double beta) {
+AI::EvaluatedMove AI::minimaxSearchAB(int depth, Model::Board dummyBoard, boolean max, double alpha, double beta) {
+	View::clearRectangleArea({ 0, 0 }, 50, 1);
+	View::gotoXY(0, 0);
+	cout << "Evaluation count: " << evaluationCount << endl;
 	if (depth == 0) {
 		return AI::EvaluatedMove(evaluateBoardForWhite(dummyBoard, !max), { -1, -1 });
 	}
@@ -108,15 +109,15 @@ AI::EvaluatedMove AI::minimaxSearchAB(int depth, Board dummyBoard, boolean max, 
 	return bestMove;
 }
 
-AI::EvaluatedMove AI::searchWinningMove(Board board) {
+AI::EvaluatedMove AI::searchWinningMove(Model::Board board) {
 	std::vector<COORD> allPossibleMoves = board.generateMoves();
 	AI::EvaluatedMove winningMove;
 
 	for (COORD move : allPossibleMoves) {
 		evaluationCount++;
-		AI::Board dummyBoard = AI::Board(board);
+		Model::Board dummyBoard = Model::Board(board);
 		dummyBoard.addStoneNoGUI(move.X, move.Y, false);
-
+		
 		if (AI::getScore(dummyBoard, false, false) >= AI::WIN_SCORE) {
 			winningMove.move = move;
 			winningMove.score = AI::WIN_SCORE;
@@ -127,20 +128,21 @@ AI::EvaluatedMove AI::searchWinningMove(Board board) {
 	return AI::EvaluatedMove(-1.0, { -1, -1 });
 }
 
-int AI::evaluateHorizontal(Board board, bool forBlack, bool playersTurn) {
+int AI::evaluateHorizontal(Model::Board board, bool forBlack, bool playersTurn) {
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
 	for (int i = 0; i < BOARD_SZ; i++) {
 		for (int j = 0; j < BOARD_SZ; j++) {
 			evaluateDirections(board, i, j, forBlack, playersTurn, evaluation);
+			//std::cout << "Evaluation: " << i << " " << j << ": " << evaluation.third << std::endl;
 		}
 
 		evaluateDirectionAfterOnePass(evaluation, forBlack, playersTurn);
 	}
 	
-	return evaluation.second;
+	return evaluation.third;
 }
 
-int AI::evaluateVertical(Board board, bool forBlack, bool playersTurn) {
+int AI::evaluateVertical(Model::Board board, bool forBlack, bool playersTurn) {
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
 	
 	for (int j = 0; j < BOARD_SZ; j++) {
@@ -150,10 +152,10 @@ int AI::evaluateVertical(Board board, bool forBlack, bool playersTurn) {
 		evaluateDirectionAfterOnePass(evaluation, forBlack, playersTurn); 
 	}
 
-	return evaluation.second;
+	return evaluation.third;
 }
 
-int AI::evaluateDiagonal(Board board, bool forBlack, bool playersTurn) {
+int AI::evaluateDiagonal(Model::Board board, bool forBlack, bool playersTurn) {
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
 	// from bottom-left to top-right
 	for (int k = 0; k <= 2 * (BOARD_SZ - 1); k++) {
@@ -175,10 +177,11 @@ int AI::evaluateDiagonal(Board board, bool forBlack, bool playersTurn) {
 		evaluateDirectionAfterOnePass(evaluation, forBlack, playersTurn);
 	}
 
-	return evaluation.second;
+	return evaluation.third;
 }
 
-void AI::evaluateDirections(Board board, int i, int j, bool isBot, bool botsTurn, AI::Evaluation& evaluation) {
+void AI::evaluateDirections(Model::Board board, int i, int j, bool isBot, bool botsTurn, AI::Evaluation& evaluation) {
+	int playerMark = board[i][j];
 	if (board[i][j] == (isBot ? 2 : 1)) {
 		evaluation.first++;
 	}

@@ -116,10 +116,6 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 }
 
 void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {
-	View::gotoXY(0, 0);
-	cout << "Player: " << player.name << endl;
-	cout << "Turn: " << game_info.isFirstPlayerTurn << endl;
-
 	View::gotoXY(curX, curY);
 	wstring key;
 	endTurn = false;
@@ -219,6 +215,16 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			View::gotoXY(curX, curY);
 		}
 	}
+}
+
+void Model::computerTurn(Model::Player player, Model::GameInformation& game_info) {
+	COORD move = AI::calculateNextMove(3, game_info.board);
+
+	COORD spot = game_info.board.getSpot(move.X, move.Y);
+	curX = spot.X;
+	curY = spot.Y;
+	markPlayerMove({curX, curY}, 2, game_info);
+	updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 }
 
 // 0: game not ended
@@ -328,8 +334,6 @@ bool Model::checkSubDiagonal(int i, int j, int player, int board[sz][sz]) {
 }
 
 void Model::drawXO(Model::Board board) {
-	View::gotoXY(0, 0);
-	cout << "Draw XO";
 	for (int i = 0; i < View::BOARD_SIZE; i++) {
 		for (int j = 0; j < View::BOARD_SIZE; j++) {
 			if (board[i][j] == 0) continue;
@@ -385,8 +389,6 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::Color::WHITE
 		);
 	}
-	View::gotoXY(10, 0);
-	cout << game_info.player1.numberOfMoves << " " << game_info.player2.numberOfMoves << endl;
 	short x = spot.X + 44;
 	short y = spot.Y + 7;
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;

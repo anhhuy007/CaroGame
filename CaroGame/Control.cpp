@@ -215,7 +215,24 @@ void Control::playWithComputer(Model::GameInformation game_info) {
 		if (escPressed) break;
 
 		// Computer turn 
-		//Model::computerTurn();
+		Model::computerTurn(game_info.player2, game_info);
+		result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		// check if player 1 win
+		if (result.first != 0) {
+			// show winner here
+			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+			View::drawWinner(1, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+		}
 	}
 	
 	Control::returnMenu();
