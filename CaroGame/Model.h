@@ -62,23 +62,23 @@ namespace Model {
 		}
 
 		// override operator [][]
-		int* operator [] (const int& i) {
+		inline int* operator [] (const int& i) {
 			return value[i];
 		}
 
-		COORD getSpot(int i, int j) {
+		inline COORD getSpot(int i, int j) {
 			return gui[i][j];
 		}
 
-		void removeStoneNoGUI(int x, int y) {
+		inline void removeStoneNoGUI(int x, int y) {
 			value[x][y] = 0;
 		}
 
-		void addStoneNoGUI(int x, int y, bool black) {
+		inline void addStoneNoGUI(int x, int y, bool black) {
 			value[x][y] = black ? 2 : 1;
 		}
 
-		bool addStone(int x, int y, bool black) {
+		inline bool addStone(int x, int y, bool black) {
 			if (value[x][y] != 0) return false;
 
 			value[x][y] = black ? 2 : 1;
@@ -87,7 +87,7 @@ namespace Model {
 		}
 
 		// return data array 
-		int** getDataArray() {
+		inline int** getDataArray() {
 			return (int**)value;
 		}
 

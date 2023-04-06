@@ -15,7 +15,7 @@ bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
 
 void FileIO::saveFileNameToFile(std::string fileName) {
 	if (FileIO::fileNameExistedInList(fileName)) return;
-	std::ofstream ofs("SavedGame//savedGameList.txt", std::ios::app);
+	std::ofstream ofs(folder + savedGame, std::ios::app);
 	ofs << fileName << std::endl;
 	ofs.close();
 }
@@ -55,7 +55,7 @@ bool FileIO::fileNameExisted(std::string file) {
 }
 
 bool FileIO::fileNameExistedInList(std::string file) {
-	std::ifstream ifs("SavedGame//savedGameList.txt");
+	std::ifstream ifs(folder + savedGame);
 	std::string line;
 	while (std::getline(ifs, line)) {
 		if (line == file) return true;
@@ -96,10 +96,10 @@ Setting FileIO::readSetting(std::string fileName) {
 
 std::vector<std::string> FileIO::getSavedGameList()	{
 	std::vector<std::string> savedGameList;
-	ifstream ifs(folder + "savedGameList.txt");
+	ifstream ifs(folder + savedGame);
 	
 	if (!ifs) {
-		std::cerr << "Cannot open file " << folder + "savedGameList.txt" << std::endl;
+		std::cerr << "Cannot open file " << folder + savedGame << std::endl;
 		return savedGameList;
 	}
 

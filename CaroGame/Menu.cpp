@@ -107,7 +107,7 @@ MenuOption mainMenu(
 	View::Color text_color,
 	View::Color selected_textcolor
 ) {
-	int index = -1;
+	int index = 0;
 	int menu_size = 6;
 	MenuItem main_menu_items[7] = {
 		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
@@ -130,7 +130,7 @@ MenuOption newGameMenu(
 	View::Color text_color,
 	View::Color selected_textcolor
 ) {
-	int index = -1;
+	int index = 0;
 	int menu_size = 4;
 	start = { 70, 15 };
 	MenuItem newgame_menu_items[4] = {
@@ -315,7 +315,7 @@ void settingMenuOptionChanged(
 
 void settingMenu() {
 	COORD start = { 70, 10 };
-	int index = -1;
+	int index = 0;
 	int menu_size = 3;
 	SettingItem setting_items[3] = {
 		{ 0, L"BACKGROUND SOUND: ", soundManager.onSoundBackGround, L"ON", L"OFF"},

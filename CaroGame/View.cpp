@@ -1431,7 +1431,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 
 	View::printVerticalCenteredCharactors(
 		L"TURN",
-		{ short(x + 2),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
+		{ short(x + 3),y,short(x + (width - 4) / 2 + 3),short(y + ((height / 2 - 2) / 2))},
 		2,
 		View::Color::BLACK,
 		View::Color::WHITE
