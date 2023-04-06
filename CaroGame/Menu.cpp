@@ -176,12 +176,10 @@ MenuOption MenuScreen() {
 }
 
 MenuOption aboutMenu() {
-	COORD start = { 70, 2 };
+	COORD start = { 70, 10 };
 	system("cls");
 	wstring key;
-	wstring about_content[14] = {
-		L"ABOUT",
-		L"",
+	wstring about_content[12] = {
 		L"DESIGNED BY TEAM 10 - HCMUS",
 		L"22127086 - Nguyễn Lâm Anh Duy",
 		L"22127149 - Huỳnh Anh Huy",
@@ -197,7 +195,7 @@ MenuOption aboutMenu() {
 	};
 	View::clearRectangleArea({ 50, 15 }, 50, 50);
 
-	for (int i = 0; i < 14; i++) {
+	for (int i = 0; i < 12; i++) {
 
 		short x = start.X - about_content[i].length() / 2;
 		short y = start.Y + i * 2;
@@ -205,6 +203,8 @@ MenuOption aboutMenu() {
 		View::printCharactors(about_content[i], { x,y }, View::Color::BLACK, View::Color::WHITE);
 
 	}
+
+	View::drawAboutText();
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
@@ -215,13 +215,11 @@ MenuOption aboutMenu() {
 }
 
 MenuOption instructionMenu() {
-	COORD start = { 70, 2 };
+	COORD start = { 70, 10 };
 
 	system("cls");
 	wstring key;
-	wstring instruction_content[14] = {
-		L"INSTRUCTION",
-		L"",
+	wstring instruction_content[12] = {
 		L"Controls",
 		L"Press 'W' or '↑' to move UP",
 		L"Press 'S' or '↓' to move DOWN",
@@ -235,14 +233,20 @@ MenuOption instructionMenu() {
 		L"",
 		L"PRESS ESC TO BACK"
 	};
+
+
 	View::clearRectangleArea({ 50, 15 }, 50, 50);
-	for (int i = 0; i < 14; i++) {
+
+	View::drawInstructionText();
+
+	for (int i = 0; i < 12; i++) {
 
 		short x = start.X - instruction_content[i].length() / 2;
 		short y = start.Y + i * 2;
 
 		View::printCharactors(instruction_content[i], { x,y }, View::Color::BLACK, View::Color::WHITE);
 	}
+
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
@@ -259,7 +263,9 @@ void drawSettingMenu(
 	int* cur_index,
 	int menu_size
 ) {
+	View::drawSettingText();
 	//clearMenu(menu_items, start, menu_size);
+
 	for (int i = 0; i < menu_size; i++) {
 		short y = start.Y + (i * 2);
 		wstring content = setting_items[i].content;
@@ -280,6 +286,7 @@ void drawSettingMenu(
 			View::printCharactors(content, { x, y }, textcolor, View::Color::WHITE);
 		}
 	}
+
 }
 
 void settingMenuOptionChanged(
@@ -320,8 +327,8 @@ void settingMenuOptionChanged(
 			Sound::playSoundBackGround(soundManager);
 			Sound::playSoundEffect(Sound::VALID, soundManager);
 		}
-		system("cls");
-		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
+		View::clearRectangleArea({ 40,10 }, 50, 10);
+		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
 		selected_item = InputHandle::Get();
 	}
 }

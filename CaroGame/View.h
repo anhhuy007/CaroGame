@@ -94,6 +94,10 @@ namespace View {
 	void drawGameBoard();
 	void drawF1F2list(int x, int y);
 	void drawCaroGameText(int delayTime);
+	void drawInstructionText();
+	void drawLoadGameText();
+	void drawSettingText();
+	void drawAboutText();
 	void drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box);
 	void splashScreenInfo();
 	void splashScreen();
@@ -121,6 +125,9 @@ namespace View {
 	void drawWinner(int winplayer,bool playervsplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
-	void drawFireWork(int left, int right, int top, int bot);
+	void drawFireWork(int x, int y, int k);
+	void drawFireWorkList(int k);
 
+	void drawFireWork2(int k,int color, int x, int y);
+	void drawFireWorkList2(int k);
 }
