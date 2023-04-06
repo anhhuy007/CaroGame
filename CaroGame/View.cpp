@@ -468,10 +468,18 @@ void View::drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box)
 	View::drawBorder2(box.Left, box.Right, box.Top, box.Top + gameList.size() + 4);
 	View::printVerticalCenteredCharactors(L"Saved Games", box, 1, Color::WHITE, Color::BLACK);
 			
+	std::vector<MenuItem> titles;
+	
 	for (int i = 0; i < gameList.size(); i++) {
 		View::gotoXY(box.Left + 5, box.Top + 3 + i);
 		cout << i + 1 << ". " << gameList[i];
+		std::wstring title(gameList[i].begin(), gameList[i].end());
+		titles.push_back({ i, title, MenuOption::NONE });
 	}
+
+	int index = 0;
+	drawMenu(titles, { box.Left, box.Top }, Color::WHITE, Color::BLACK, &index, titles.size());
+	menuOptionChanged(titles, { box.Left, box.Top }, Color::WHITE, Color::BLACK, &index, titles.size());
 }
 void View::drawF1F2list(int x, int y) {
 	//int x, y;
