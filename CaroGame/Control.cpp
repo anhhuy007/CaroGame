@@ -20,7 +20,7 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	View::splashScreen();
+	//View::splashScreen();
 	system("cls");
 
 	// show menu screen
@@ -125,8 +125,6 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	
 	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
 	escPressed = false;
-	string player1_name = game_info.player1.name;
-	wstring name1(player1_name.begin(), player1_name.end());
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
 	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
 	View::drawIronmanAvatar(69, -2);
@@ -141,11 +139,29 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 		
 		// player turn
 		Model::playerTurn(player, game_info);
-		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 1 : 2, game_info.board.value);
+		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		// check if player 1 win
-		if (result.first != 0) {
+
+		if (result.first == 1) {
 			// show winner here
-			// ....
+// ....
+			//cout << 1;
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			//show winner congratulation screen
+			View::drawWinner(1, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+
+		}
+		else if (result.first == 2) {
+			// show winner here
+// ....
 			View::gotoXY(0, 0);
 			cout << "Player " << result.first << " win!" << endl;
 
@@ -153,11 +169,27 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 			View::showWinningMoves(result.first, result.second);
 
 			// show winner congratulation screen
-			View::drawWinner(1, 1, name1, name2);
+			View::drawWinner(2, 1, name1, name2);
 
 			game_info.endGame = true;
 			break;
 		}
+		else if (result.first == 3) {
+			// show winner here
+// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+			View::drawWinner(0, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+		}
+		
 
 		if (escPressed) break;
 	}
@@ -223,8 +255,10 @@ void Control::saveGame(Model::GameInformation& game_info) {
 
 // load game from file
 void Control::loadGame() {
+	system("cls");
+	View::drawLoadGameText();
+
 	// show saved game list
-	
 	View::drawSavedGameTable(FileIO::getSavedGameList(), { 20, 15, 50, 30 });
 	std::string fileName = InputHandle::getFileName(true, { 70, 15, 100, 20 });
 

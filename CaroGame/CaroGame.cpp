@@ -5,6 +5,7 @@
 #include "InputHandle.h"
 #include "FileIO.h"
 
+
 using namespace std;
 
 int main() {
@@ -15,6 +16,11 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 
 	Control::startGame();
+	//system("color f0");
+	//View::textStyle(22);
+	//View::fixConsoleWindow();
+
+
 
 	return 0;
 }
