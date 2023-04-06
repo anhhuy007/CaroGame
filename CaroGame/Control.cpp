@@ -20,7 +20,7 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	//View::splashScreen();
+	View::splashScreen();
 	system("cls");
 
 	// show menu screen
@@ -39,7 +39,7 @@ void Control::NavigationController() {
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
-		//Control::newGame();
+		Control::playWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
@@ -81,11 +81,23 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	// input user name
 	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
 	strcpy(game_info.player1.name, p1.c_str());
+	 
+	// if exit game
+	if (p1 == "-1") {
+		Control::returnMenu();
+		return GameInformation();
+	}
 
 	// if user 2 is human then input player name
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
 		strcpy(game_info.player2.name, p2.c_str());
+
+		// if exit game
+		if (p2 == "-1") {
+			Control::returnMenu();
+			return GameInformation();
+		}
 	}
 	// if user 2 is computer
 	else {
@@ -122,22 +134,17 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	// draw game board and game information
 	View::drawGameBoard();
 	Model::drawXO(game_info.board);
-	
 	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
-	escPressed = false;
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
 	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
 	View::drawIronmanAvatar(69, -2);
 	View::drawThanosAvatar(113, -2);
 	View::drawVSText();
-	escPressed = false;
-
 	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
-	View::drawF1F2list(88,32);
+	View::drawF1F2list(88, 32);
+	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
-		
-		// player turn
 		Model::playerTurn(player, game_info);
 		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		// check if player 1 win
@@ -198,6 +205,73 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 	Control::returnMenu();
 }
 
+void Control::playWithComputer(Model::GameInformation game_info) {
+	Control::resetGame();
+	string player1_name = game_info.player1.name;
+	wstring name1(player1_name.begin(), player1_name.end());
+	string player2_name = game_info.player2.name;
+	wstring name2(player2_name.begin(), player2_name.end());
+	escPressed = false;
+
+	// draw game board and game information
+	View::drawGameBoard();
+	Model::drawXO(game_info.board);
+	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
+	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
+	View::drawIronmanAvatar(69, -2);
+	View::drawThanosAvatar(113, -2);
+	View::drawVSText();
+	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
+	View::drawF1F2list(88, 32);
+
+	while (!game_info.endGame && !escPressed) {
+		// player 1 turn
+		Model::playerTurn(game_info.player1, game_info);
+		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		// check if player 1 win
+		if (result.first != 0) {
+			// show winner here
+			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+			View::drawWinner(1, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+		}
+
+		if (escPressed) break;
+
+		// Computer turn 
+		Model::computerTurn(game_info.player2, game_info);
+		result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		// check if player 1 win
+		if (result.first != 0) {
+			// show winner here
+			// ....
+			View::gotoXY(0, 0);
+			cout << "Player " << result.first << " win!" << endl;
+
+			// show winning moves
+			View::showWinningMoves(result.first, result.second);
+
+			// show winner congratulation screen
+			View::drawWinner(1, 1, name1, name2);
+
+			game_info.endGame = true;
+			break;
+		}
+	}
+	
+	Control::returnMenu();
+}
+
 void Control::resetGame() {
 	PlaySound(NULL, NULL, 0);
 	system("cls");
@@ -243,13 +317,13 @@ void Control::saveGame(Model::GameInformation& game_info) {
 	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
 
 	if (isSuccess) {
-		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
 		FileIO::saveFileNameToFile(fileName);
 	}
 	else {
-		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
 	}
-	system("pause");
+	View::pressAnyKey(View::WINDOW_SIZE);
 	system("cls");
 }
 

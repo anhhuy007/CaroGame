@@ -75,6 +75,8 @@ namespace View {
 		std::function<void()> positiveAction,
 		std::function<void()> negativeAction
 	);
+
+	void pressAnyKey(SMALL_RECT box);
 	
 	// funcional functions
 	void clearRectangleArea(COORD start, int width, int height);
@@ -86,6 +88,7 @@ namespace View {
 	// display game information
 	void displayTimer();
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
+	void drawMove(short x, short y, int player);
 
 	// draw game board and game pieces
 	void drawGameBoard();

@@ -37,20 +37,20 @@
 	};
 
 	void menuOptionChanged(
-		MenuItem menu_items[],
+		std::vector<MenuItem> menu_items,
 		COORD start,
 		View::Color text_color,
 		View::Color selected_textcolor,
 		int* cur_index,
-		int menu_size
+		int menudisplay_size
 	);
 	void drawMenu(
-		MenuItem menu_items[],
+		std::vector<MenuItem> menu_items,
 		COORD start,
 		View::Color textcolor,
 		View::Color selected_textcolor,
 		int* cur_index,
-		int menu_size
+		int menudisplay_size
 	);
 	
 	// input 3 parameters: menu's position, normal text color and selected text color
@@ -73,17 +73,15 @@
 	MenuOption instructionMenu();
 
 	void clearMenu(
-		MenuItem menu_items[],
-		COORD start,
-		int menu_size
+		std::vector<MenuItem> menu_items,
+		COORD start
 	);
 
 	void settingMenu();
 	void settingMenuOptionChanged(
-		SettingItem setting_items[],
+		std::vector<SettingItem>& setting_items,
 		COORD start,
 		View::Color text_color,
 		View::Color selected_textcolor,
-		int* cur_index,
-		int menu_size
+		int* cur_index
 	);

@@ -125,6 +125,7 @@ string InputHandle::getFileName(bool checkExisted, SMALL_RECT box) {
 
 bool InputHandle::isValidUserName(string userName) {
 	for (int i = 0; i < userName.length(); i++) {
+		userName[i] = tolower(userName[i]);
 		if (!isalpha(userName[i]) && !isdigit(userName[i])) return false;
 	}
 

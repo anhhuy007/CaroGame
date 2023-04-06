@@ -643,7 +643,7 @@ void View::drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box)
 	cout << box.Left << " " << box.Top << " " << box.Right << " " << box.Bottom << endl;
 	View::drawBorder2(box.Left, box.Right, box.Top, box.Top + gameList.size() + 4);
 	View::printVerticalCenteredCharactors(L"Saved Games", box, 1, Color::WHITE, Color::BLACK);
-	
+			
 	for (int i = 0; i < gameList.size(); i++) {
 		View::gotoXY(box.Left + 5, box.Top + 3 + i);
 		cout << i + 1 << ". " << gameList[i];
@@ -1343,9 +1343,11 @@ void View::clearRectangleArea(
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD dwWritten;
 	int startY = start.Y;
+	int color = (int)View::Color::WHITE + (int)View::Color::WHITE * 16;
 
 	for (int i = startY; i < startY + height; i++) {
 		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
+		FillConsoleOutputAttribute(hOut, color, 1, start, &dwWritten);
 		start.Y++;
 	}
 }
@@ -1428,15 +1430,15 @@ void View::confirmDialog(
 
 	// print dialog buttons
 	int indx = 0;
-	MenuItem items[] = {
+	std::vector<MenuItem> items = {
 		{ 0, L"YES", MenuOption::YES },
 		{ 1, L"NO", MenuOption::NO }
 	};
 
 	short center_x = spot.X + width / 2;
 	
-	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
-	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
+	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
+	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
 
 	switch (items[indx].menu_option) {
 	case MenuOption::YES:
@@ -1643,6 +1645,23 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
+}
+
+void View::drawMove(short x, short y, int player) {
+	printCharactors(
+		player == 1 ? L"X" : L"O",
+		{ short(x * 2 + 1), short(y * 2 + 1) },
+		Color::BLACK,
+		Color::WHITE
+	);
+}
+
+
+void View::pressAnyKey(SMALL_RECT box) {
+	wstring message = L"Press any key to continue...";
+	COORD spot = View::getCenteredSpot(message, box);
+	View::printCharactors(message, spot, Color::BLACK, Color::WHITE);
+	InputHandle::Get();
 }
 
 void View::displayTimer() {

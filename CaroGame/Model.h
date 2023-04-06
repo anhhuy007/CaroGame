@@ -3,7 +3,6 @@
 #include <conio.h>
 #include <Windows.h>
 #include <vector>
-#include <stack>
 #include "View.h"
 
 using namespace std;
@@ -41,25 +40,114 @@ namespace Model {
 
 	struct Board {
 		int value[sz][sz];
-		COORD spot[sz][sz];
+		COORD gui[sz][sz];
 
-		// initialize value for board 
+		// constructor for board
 		Board() {
 			for (int i = 0; i < sz; i++) {
 				for (int j = 0; j < sz; j++) {
 					value[i][j] = 0;
-					spot[i][j] = { short(View::LEFT + 2 + 4 * j), short(View::TOP + 1 + 2 * i) };
+					gui[i][j] = { short(View::LEFT + 2 + 4 * j), short(View::TOP + 1 + 2 * i) };
+				}
+			}
+		}
+
+		Board(const Board& other) {
+			for (int i = 0; i < sz; i++) {
+				for (int j = 0; j < sz; j++) {
+					value[i][j] = other.value[i][j];
+					gui[i][j] = other.gui[i][j];
 				}
 			}
 		}
 
 		// override operator [][]
-		int* operator [] (const int& i) {
+		inline int* operator [] (const int& i) {
 			return value[i];
 		}
 
-		COORD getSpot(int i, int j) {
-			return spot[i][j];
+		inline COORD getSpot(int i, int j) {
+			return gui[i][j];
+		}
+
+		inline void removeStoneNoGUI(int x, int y) {
+			value[x][y] = 0;
+		}
+
+		inline void addStoneNoGUI(int x, int y, bool black) {
+			value[x][y] = black ? 2 : 1;
+		}
+
+		inline bool addStone(int x, int y, bool black) {
+			if (value[x][y] != 0) return false;
+
+			value[x][y] = black ? 2 : 1;
+			View::drawMove(gui[x][y].X, gui[x][y].Y, value[x][y]);
+			return true;
+		}
+
+		// return data array 
+		inline int** getDataArray() {
+			return (int**)value;
+		}
+
+		std::vector<COORD> generateMoves() {
+			std::vector<COORD> moveList;
+
+			for (int i = 0; i < sz; i++) {
+				for (int j = 0; j < sz; j++) {
+					if (value[i][j] != 0) continue;
+
+					if (i > 0) {
+						if (j > 0) {
+							if (value[i - 1][j - 1] > 0 ||
+								value[i][j - 1] > 0) {
+								COORD move = { i,j };
+								moveList.push_back(move);
+								continue;
+							}
+						}
+						if (j < sz - 1) {
+							if (value[i - 1][j + 1] > 0 ||
+								value[i][j + 1] > 0) {
+								COORD move = { i,j };
+								moveList.push_back(move);
+								continue;
+							}
+						}
+						if (value[i - 1][j] > 0) {
+							COORD move = { i,j };
+							moveList.push_back(move);
+							continue;
+						}
+					}
+					if (i < sz - 1) {
+						if (j > 0) {
+							if (value[i + 1][j - 1] > 0 ||
+								value[i][j - 1] > 0) {
+								COORD move = { i,j };
+								moveList.push_back(move);
+								continue;
+							}
+						}
+						if (j < sz - 1) {
+							if (value[i + 1][j + 1] > 0 ||
+								value[i][j + 1] > 0) {
+								COORD move = { i,j };
+								moveList.push_back(move);
+								continue;
+							}
+						}
+						if (value[i + 1][j] > 0) {
+							COORD move = { i,j };
+							moveList.push_back(move);
+							continue;
+						}
+					}
+				}
+			}
+
+			return moveList;
 		}
 	};
 	
@@ -82,6 +170,7 @@ namespace Model {
 		Model::Player player, 
 		Model::GameInformation& game_info
 	);
+	void computerTurn(Model::Player player, Model::GameInformation& game_info);
 	void makePlayerMove(std::wstring key);
 	void markPlayerMove(
 		COORD spot, 

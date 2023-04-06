@@ -13,6 +13,7 @@ using namespace Model;
 namespace FileIO {
 	const string folder = "SavedGame//";
 	const string extension = ".dat";
+	const string savedGame = "SavedGameList.txt";
 
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
 	void saveFileNameToFile(std::string fileName);
@@ -22,6 +23,5 @@ namespace FileIO {
 	bool fileNameExistedInList(std::string file);
 	bool saveSetting(std::string fileName, Setting setting);
 	Setting readSetting(std::string fileName);
-	void saveGameList(std::vector<std::string> gameList);
 	std::vector<std::string> getSavedGameList();
 }	
