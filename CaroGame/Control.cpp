@@ -20,8 +20,8 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	View::splashScreen();
-	system("cls");
+	/*View::splashScreen();
+	system("cls");*/
 
 	// show menu screen
 	Control::NavigationController();

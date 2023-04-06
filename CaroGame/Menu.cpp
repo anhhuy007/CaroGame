@@ -25,11 +25,10 @@ bool checkIndex(int* index, int num) {
 }
 
 void clearMenu(
-	MenuItem menu_items[],
-	COORD start,
-	int menu_size
+	std::vector<MenuItem> menu_items,
+	COORD start
 ) {
-	for (int i = 0; i < menu_size; i++) {
+	for (int i = 0; i < menu_items.size(); i++) {
 		short y = start.Y + (i * 2);
 		wstring selected_content = L">> " + menu_items[i].content + L" <<";
 		short x = start.X - selected_content.length() / 2;
@@ -39,44 +38,63 @@ void clearMenu(
 	}
 }
 
+std::vector<MenuItem> getMenuItems(std::vector<MenuItem> menu_items, int indx, int displaymenu_size) {
+	std::vector<MenuItem> display_menu_items;
+	if (indx >= displaymenu_size) {
+		for (int i = indx - displaymenu_size + 1; i <= indx; i++) {
+			display_menu_items.push_back(menu_items[i]);
+		}
+	}
+	else {
+		for (int i = 0; i < displaymenu_size; i++) {
+			display_menu_items.push_back(menu_items[i]);
+		}
+	}
+
+	return display_menu_items;
+}
+
 // draw menu 
 void drawMenu(
-	MenuItem menu_items[],
+	std::vector<MenuItem> menu_items,
 	COORD start,
 	View::Color textcolor,
 	View::Color selected_textcolor,
 	int* cur_index,
-	int menu_size) {
-	//clearMenu(menu_items, start, menu_size);
-	for (int i = 0; i < menu_size; i++) {
+	int displaymenu_size
+) {
+	std::vector<MenuItem> display_items = getMenuItems(menu_items, *cur_index, displaymenu_size);
+
+	for (int i = 0; i < displaymenu_size; i++) {
 		short y = start.Y + (i * 2);
-		if (i == *cur_index) {
-			wstring selected_content = L">> " + menu_items[i].content + L" <<";
+		if (i == *cur_index || (*cur_index >= displaymenu_size && i == displaymenu_size - 1)) {
+			wstring selected_content = L">> " + display_items[i].content + L" <<";
 			short x = start.X - selected_content.length() / 2;
 			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
 		else {
-			short x = start.X - menu_items[i].content.length() / 2;
-			View::printCharactors(menu_items[i].content, { x, y }, textcolor, View::Color::WHITE);
+			short x = start.X - display_items[i].content.length() / 2;
+			View::printCharactors(display_items[i].content, { x, y }, textcolor, View::Color::WHITE);
 		}
 	}
 }
 
 // listen on keyboard input and return the index of selected menu item
 void menuOptionChanged(
-	MenuItem menu_items[],
+	std::vector<MenuItem> menu_items,
 	COORD start,
 	View::Color text_color,
 	View::Color selected_text_color,
 	int* cur_index,
-	int menu_size
+	int displaymenu_size
 ) {
 	wstring selected_item = InputHandle::Get();
+	clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 
 	while (selected_item != L"ENTER") {
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
-			if (checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, menu_items.size())) {
 				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
@@ -85,19 +103,16 @@ void menuOptionChanged(
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
-			if (checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, menu_items.size())) {
 				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
 				Sound::playSoundEffect(Sound::VALID, soundManager);
 			}
 		}
-		/*else if (selected_item == L"ESC") {
-			Control::returnMenu();
-		}*/
-		clearMenu(menu_items, start, menu_size);
-		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, menu_size);
+		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, displaymenu_size);
 		selected_item = InputHandle::Get();
+		clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 	}
 }
 
@@ -109,18 +124,18 @@ MenuOption mainMenu(
 ) {
 	int index = 0;
 	int menu_size = 6;
-	MenuItem main_menu_items[7] = {
-		{ 1, L"NEW GAME", MenuOption::NEW_GAME },
-		{ 2, L"LOAD GAME", MenuOption::LOAD_GAME },
-		{ 3, L"SETTING", MenuOption::SETTING },
-		{ 4, L"INSTRUCTION", MenuOption::INSTRUCTION},
-		{ 5, L"ABOUT", MenuOption::ABOUT },
-		{ 6, L"QUIT", MenuOption::QUIT }
+	std::vector<MenuItem> main_menu_items = {
+		{ 0, L"NEW GAME", MenuOption::NEW_GAME },
+		{ 1, L"LOAD GAME", MenuOption::LOAD_GAME },
+		{ 2, L"SETTING", MenuOption::SETTING },
+		{ 3, L"INSTRUCTION", MenuOption::INSTRUCTION},
+		{ 4, L"ABOUT", MenuOption::ABOUT },
+		{ 5, L"QUIT", MenuOption::QUIT }
 	};
 
 	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	clearMenu(main_menu_items, start, menu_size);
+	clearMenu(main_menu_items, start);
 
 	return main_menu_items[index].menu_option;
 }
@@ -133,7 +148,7 @@ MenuOption newGameMenu(
 	int index = 0;
 	int menu_size = 4;
 	start = { 70, 15 };
-	MenuItem newgame_menu_items[4] = {
+	std::vector<MenuItem> newgame_menu_items = {
 		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
 		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
 		{2, L"VS COMPUTER (HARD)", MenuOption::NEW_GAME_VS_COMPUTER_HARD },
@@ -142,7 +157,7 @@ MenuOption newGameMenu(
 
 	drawMenu(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 	menuOptionChanged(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	clearMenu(newgame_menu_items, start, menu_size);
+	clearMenu(newgame_menu_items, start);
 
 	return newgame_menu_items[index].menu_option;
 }
@@ -159,7 +174,6 @@ MenuOption MenuScreen() {
 	}
 	return option;
 }
-
 
 MenuOption aboutMenu() {
 	COORD start = { 70, 2 };
@@ -238,7 +252,7 @@ MenuOption instructionMenu() {
 }
 
 void drawSettingMenu(
-	SettingItem setting_items[],
+	std::vector<SettingItem> setting_items,
 	COORD start,
 	View::Color textcolor,
 	View::Color selected_textcolor,
@@ -269,19 +283,18 @@ void drawSettingMenu(
 }
 
 void settingMenuOptionChanged(
-	SettingItem setting_items[],
+	std::vector<SettingItem>& setting_items,
 	COORD start,
 	View::Color text_color,
 	View::Color selected_textcolor,
-	int* cur_index,
-	int menu_size
+	int* cur_index
 ) {
 	wstring selected_item = InputHandle::Get();
 
 	while (selected_item != L"ESC") {
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
-			if (checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, setting_items.size())) {
 				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
@@ -290,7 +303,7 @@ void settingMenuOptionChanged(
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
-			if (checkIndex(cur_index, menu_size)) {
+			if (checkIndex(cur_index, setting_items.size())) {
 				Sound::playSoundEffect(Sound::INVALID, soundManager);
 			}
 			else {
@@ -308,7 +321,7 @@ void settingMenuOptionChanged(
 			Sound::playSoundEffect(Sound::VALID, soundManager);
 		}
 		system("cls");
-		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
+		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
 		selected_item = InputHandle::Get();
 	}
 }
@@ -316,16 +329,15 @@ void settingMenuOptionChanged(
 void settingMenu() {
 	COORD start = { 70, 10 };
 	int index = 0;
-	int menu_size = 3;
-	SettingItem setting_items[3] = {
+	std::vector<SettingItem> setting_items = {
 		{ 0, L"BACKGROUND SOUND: ", soundManager.onSoundBackGround, L"ON", L"OFF"},
 		{ 1, L"SOUND EFFECT: ", soundManager.onSoundEffect, L"ON", L"OFF"},
 		{ 2, L"BACK", false, L"", L""}
 	};
 
 	system("cls");
-	drawSettingMenu(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
-	settingMenuOptionChanged(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
+	drawSettingMenu(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, setting_items.size());
+	settingMenuOptionChanged(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index);
 
 	Setting setting;
 	setting.backgroundSound = setting_items[0].status;

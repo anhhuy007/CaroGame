@@ -467,7 +467,7 @@ void View::drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box)
 	cout << box.Left << " " << box.Top << " " << box.Right << " " << box.Bottom << endl;
 	View::drawBorder2(box.Left, box.Right, box.Top, box.Top + gameList.size() + 4);
 	View::printVerticalCenteredCharactors(L"Saved Games", box, 1, Color::WHITE, Color::BLACK);
-	
+			
 	for (int i = 0; i < gameList.size(); i++) {
 		View::gotoXY(box.Left + 5, box.Top + 3 + i);
 		cout << i + 1 << ". " << gameList[i];
@@ -1254,15 +1254,15 @@ void View::confirmDialog(
 
 	// print dialog buttons
 	int indx = 0;
-	MenuItem items[] = {
+	std::vector<MenuItem> items = {
 		{ 0, L"YES", MenuOption::YES },
 		{ 1, L"NO", MenuOption::NO }
 	};
 
 	short center_x = spot.X + width / 2;
 	
-	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
-	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, 2);
+	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
+	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
 
 	switch (items[indx].menu_option) {
 	case MenuOption::YES:
