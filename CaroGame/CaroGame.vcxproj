@@ -128,7 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
-    <ClCompile Include="AI2.cpp" />
     <ClCompile Include="CaroGame.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="FileIO.cpp" />
@@ -140,7 +139,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI.h" />
-    <ClInclude Include="AI2.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="InputHandle.h" />
