@@ -181,9 +181,10 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			system("cls");
 			View::confirmDialog(
 				L"Do you want to save this game before loading another game?",
-				{ 40, 10 },
+				{ 35, 10 },
 				[&]() -> void {
 					// if click YES then return menu
+					system("cls");
 					endTurn = true;
 					Control::saveGame(game_info);
 					// restore screen's information
@@ -192,7 +193,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				[&]() -> void {
 					// continue game
 					// restore screen's information
-					View::writeScreenBuffer(buffer);
+					system("cls");
+					Control::loadGame();
 				}
 				);
 		}
