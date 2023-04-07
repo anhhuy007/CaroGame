@@ -100,19 +100,19 @@ void menuOptionChanged(
 		if (key == L"UP" || key == L"W" || key == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_items.size())) {
-				Sound::playSoundEffect(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSoundEffect(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, soundManager);
 			}
 		}
 		else if (key == L"DOWN" || key == L"S" || key == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_items.size())) {
-				Sound::playSoundEffect(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSoundEffect(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, soundManager);
 			}
 		}
 		else if (key == L"ESC" && escEnable) {
@@ -173,8 +173,9 @@ MenuOption newGameMenu(
 
 MenuOption MenuScreen() {
 	Setting soundSetting = FileIO::readSetting("GameSetting.dat");
-	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect };
-	Sound::playSoundBackGround(soundManager);
+	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.isPlayingBackground };
+	Sound::playBackgroundSound(soundManager);
+	View::gotoXY(0, 0);
 	MenuOption option = mainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 
 	switch (option) {
@@ -217,7 +218,7 @@ MenuOption aboutMenu() {
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSoundEffect(Sound::INVALID, soundManager);
+		Sound::playEffectSound(Sound::INVALID, soundManager);
 	}
 
 	return MenuOption::ABOUT;
@@ -259,7 +260,7 @@ MenuOption instructionMenu() {
 
 	while (key != L"ESC") {
 		key = InputHandle::Get();
-		Sound::playSoundEffect(Sound::INVALID, soundManager);
+		Sound::playEffectSound(Sound::INVALID, soundManager);
 	}
 	return MenuOption::INSTRUCTION;
 }
@@ -311,19 +312,19 @@ void settingMenuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, setting_items.size())) {
-				Sound::playSoundEffect(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSoundEffect(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, soundManager);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, setting_items.size())) {
-				Sound::playSoundEffect(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, soundManager);
 			}
 			else {
-				Sound::playSoundEffect(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, soundManager);
 			}
 		}
 		else if (selected_item == L"ENTER") {
@@ -333,8 +334,16 @@ void settingMenuOptionChanged(
 
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
 			soundManager = { setting_items[0].status, setting_items[1].status };
-			Sound::playSoundBackGround(soundManager);
-			Sound::playSoundEffect(Sound::VALID, soundManager);
+			if (soundManager.backgroundSound == true) {
+				soundManager.isPlayingBackground = true;
+			}
+			else {
+				soundManager.isPlayingBackground = false;
+			}
+			Sound::playBackgroundSound(soundManager);
+			Sound::playEffectSound(Sound::VALID, soundManager);
+			View::gotoXY(0, 0);
+			cout << "Sound: " << soundManager.backgroundSound << " " << soundManager.effectSound << " " << soundManager.isPlayingBackground;
 		}
 		View::clearRectangleArea({ 40,10 }, 50, 10);
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
@@ -346,8 +355,8 @@ void settingMenu() {
 	COORD start = { 70, 10 };
 	int index = 0;
 	std::vector<SettingItem> setting_items = {
-		{ 0, L"BACKGROUND SOUND: ", soundManager.onSoundBackGround, L"ON", L"OFF"},
-		{ 1, L"SOUND EFFECT: ", soundManager.onSoundEffect, L"ON", L"OFF"},
+		{ 0, L"BACKGROUND SOUND: ", soundManager.backgroundSound, L"ON", L"OFF"},
+		{ 1, L"SOUND EFFECT: ", soundManager.effectSound, L"ON", L"OFF"},
 		{ 2, L"BACK", false, L"", L""}
 	};
 
