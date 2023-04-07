@@ -1,9 +1,12 @@
 #pragma once
+#pragma warning(disable:4996)
+#include "View.h"
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
 #include <vector>
-#include "View.h"
+#include <chrono>
+#include <ctime> 
 
 using namespace std;
 
@@ -16,6 +19,8 @@ namespace Model {
 	const bool PLAY_WITH_HUMAN = 1;
 	const bool EASY = 0;
 	const bool HARD = 1;
+	const bool CREATED = 0;
+	const bool MODIFIED = 1;
 	
 	struct Setting {
 		bool backgroundSound = false;
@@ -164,6 +169,52 @@ namespace Model {
 		int curX; 
 		int curY;
 		bool endGame;
+	};
+
+	// store general game information, including name, date created or modified, and game mode
+	struct GeneralGameInformation {
+		char name[20];
+		pair<time_t, bool> date = { time(0), false };
+		GameMode gameMode;
+
+		// constructer
+		GeneralGameInformation(char name[], pair<time_t, bool> date, GameMode gameMode) {
+			strcpy_s(this->name, name);
+			this->date = date;
+			this->gameMode = gameMode;
+		}
+
+		void updateNewDate() {
+			// get current date
+			auto now = std::chrono::system_clock::now();
+			time_t now_c = std::chrono::system_clock::to_time_t(now);
+
+			// if player created new game, then save current time
+			if (date.first == time(0)) {
+				date.second = CREATED;
+			}
+			// if player modified game
+			else {
+				date.second = MODIFIED;
+			}
+			date.first = now_c;
+		}
+
+		std::string getFormatedDate() {
+			char buffer[80];
+			tm* timeinfo = localtime(&date.first);
+			strftime(buffer, 80, "%d-%m-%Y - %I:%M:%S", timeinfo);
+			std::string str(buffer);
+			return str;
+		}
+
+		std::string getGameType() {
+			if (gameMode.isPlayWithHuman == true) return "Player vs Player";
+			else {
+				if (gameMode.level == EASY) return "Player vs Computer (Easy)"; 
+				else return "Player vs Computer (Hard)";
+			}
+		}
 	};
 	
 	void playerTurn(

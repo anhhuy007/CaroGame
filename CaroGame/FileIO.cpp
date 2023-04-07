@@ -13,7 +13,8 @@ bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
 	return 1;
 }
 
-void FileIO::saveFileNameToFile(std::string fileName) {
+// information pattern: name@date@type
+void FileIO::SaveGameGeneralInformation(std::string fileName) {
 	if (FileIO::fileNameExistedInList(fileName)) return;
 	std::ofstream ofs(folder + savedGame, std::ios::app);
 	ofs << fileName << std::endl;

@@ -216,7 +216,6 @@ void View::drawFireWorkList2(int k) {
 	
 
 }
-
 //who win, 1 :player1, 2:player2 , 0 draw
 void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, wstring player2_name) {
 	system("cls");
@@ -273,8 +272,6 @@ void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, 
 	}
 
 }
-
-
 void View::drawWinDrawBanner(bool win,int x, int y) {
 	//x = 75;
 	//y = 20;
@@ -427,7 +424,6 @@ void View::drawGameBoard() {
 	View::printCharactors(L"╚", { (short)(x + 0),(short)(y + 2 * space_row - 1 + 1) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"╝", { (short)(x + 4 * space_col - 1 + 1),(short)(y + 2 * space_row - 1 + 1) }, Color::BLACK, Color::WHITE);
 }
-
 void View::drawTurnBoard() {
 	int x, y;		//x+10 , y+2
 	x = 80;
@@ -474,7 +470,6 @@ void View::drawTurnBoard() {
 	View::printCharactors(L"11", { (short)(x + 10 + 6),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
 	View::printCharactors(L"12", { (short)(x + 10 + 13),(short)(y + 2 + 7) }, Color::CYAN, Color::WHITE);
 }
-
 void View::drawRectangleBorder(COORD spot, int width, int height, Color color) {
 
 	for (short i = spot.X; i < spot.X + width; i++) {
@@ -508,7 +503,6 @@ void View::drawBorder2(int left, int right, int top , int bot) {
 	View::printCharactors(L"╔", { (short)(left),(short)(top) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"╚", { (short)(left),(short)(bot) }, Color::BLACK, Color::WHITE);
 }
-
 void View::drawXOart(COORD spot,bool isFirstPlayerTurn) {
 	int x = int(spot.X);
 	int y = int(spot.Y);
@@ -638,24 +632,6 @@ void View::drawXOart(COORD spot,bool isFirstPlayerTurn) {
 		View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 1) }, Color::LIGHT_CYAN, Color::WHITE);
 		View::printCharactors(L"\x2580", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::LIGHT_CYAN, Color::WHITE);
 	}
-}
-void View::drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box) {
-	cout << box.Left << " " << box.Top << " " << box.Right << " " << box.Bottom << endl;
-	View::drawBorder2(box.Left, box.Right, box.Top, box.Top + gameList.size() + 4);
-	View::printVerticalCenteredCharactors(L"Saved Games", box, 1, Color::WHITE, Color::BLACK);
-			
-	std::vector<MenuItem> titles;
-	
-	for (int i = 0; i < gameList.size(); i++) {
-		View::gotoXY(box.Left + 5, box.Top + 3 + i);
-		cout << i + 1 << ". " << gameList[i];
-		std::wstring title(gameList[i].begin(), gameList[i].end());
-		titles.push_back({ i, title, MenuOption::NONE });
-	}
-
-	int index = 0;
-	drawMenu(titles, { box.Left, box.Top }, Color::WHITE, Color::BLACK, &index, titles.size());
-	menuOptionChanged(titles, { box.Left, box.Top }, Color::WHITE, Color::BLACK, &index, titles.size());
 }
 void View::drawF1F2list(int x, int y) {
 	//int x, y;
@@ -1513,8 +1489,8 @@ void View::drawBox(COORD spot, int width, int height, Color color) {
 	short x = spot.X + width;
 	short y = spot.Y + height;
 	for (short i = spot.X; i <= x; i++) {
-		View::printCharactors(L"═", { i,spot.Y }, color, Color::WHITE);
-		View::printCharactors(L"═", { i,y }, color, Color::WHITE);
+		View::printCharactors(L"─", { i,spot.Y }, color, Color::WHITE);
+		View::printCharactors(L"─", { i,y }, color, Color::WHITE);
 	}
 
 	for (short j = spot.Y; j <= y; j++) {
@@ -1528,6 +1504,27 @@ void View::drawBox(COORD spot, int width, int height, Color color) {
 	View::printCharactors(L"╚", { spot.X,y }, color, Color::WHITE);
 
 	View::printCharactors(L"╝", { x,y }, color, Color::WHITE);
+}
+
+void View::drawBoxLoad(COORD spot, int width, int height, Color color) {
+	short x = spot.X + width;
+	short y = spot.Y + height;
+	for (short i = spot.X + 1; i <= x - 1; i++) {
+		View::printCharactors(L"▀", { i,spot.Y  }, Color::WHITE,color);
+		View::printCharactors(L"▄", { i,y }, Color::WHITE, color);
+	}
+
+	for (short j = spot.Y; j <= y; j++) {
+		View::printCharactors(L"║", { spot.X,j }, color, Color::BLACK);
+		View::printCharactors(L"║", { x,j }, color, Color::BLACK);
+	}
+	View::printCharactors(L" ", spot, color, Color::BLACK);
+
+	View::printCharactors(L" ", { x,spot.Y }, color, Color::BLACK);
+
+	View::printCharactors(L" ", { spot.X,y }, color, Color::BLACK);
+
+	View::printCharactors(L" ", { x,y }, color, Color::BLACK);
 }
 
 void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {

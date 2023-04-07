@@ -328,7 +328,7 @@ void settingMenuOptionChanged(
 			Sound::playSoundEffect(Sound::VALID, soundManager);
 		}
 		View::clearRectangleArea({ 40,10 }, 50, 10);
-		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, menu_size);
+		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
 		selected_item = InputHandle::Get();
 	}
 }
@@ -351,4 +351,53 @@ void settingMenu() {
 	setting.soundEffect = setting_items[1].status;
 
 	FileIO::saveSetting("GameSetting.dat", setting);
+}
+
+// formating string so that it can fill the whole line with the given width
+std::wstring formatStringToWidth(std::vector<std::string> contents, std::vector<int> widths) {
+	// fill the string with spaces
+	for (int i = 0; i < contents.size(); i++) {
+		contents[i] = contents[i].substr(0, widths[i]);
+		while (contents[i].length() < widths[i]) {
+			contents[i] += " ";
+		}
+	}
+
+	// concat the whole string
+	std::wstring result = L"";
+	for (int i = 0; i < contents.size(); i++) {
+		result += std::wstring(contents[i].begin(), contents[i].end());
+	}
+
+	return result;
+}
+
+std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box) {
+	// display saved games' table
+	box.Bottom = box.Top + gameList.size() + 4;
+	View::drawBoxLoad({ 25,12 }, 91, 20,View::Color::BLACK);
+	View::printCharactors(L"╠", { 25,14 }, View::Color::BLACK, View::Color::BLACK);
+	View::printCharactors(L"╣", { 116,14 }, View::Color::BLACK, View::Color::BLACK);
+	for (short x = 26; x < 116; x++) {
+		for (short y = 13; y < 14; y++) {
+			View::printCharactors(L" ", { x,y }, View::Color::BLACK, View::Color::BLACK);
+		}
+	}
+	View::printVerticalCenteredCharactors(L"NAME", { 25,12,55 ,14 }, 1, View::Color::WHITE, View::Color::BLACK);
+	View::printVerticalCenteredCharactors(L"DATE", { 55,12,86,14 }, 1, View::Color::WHITE, View::Color::BLACK);
+	View::printVerticalCenteredCharactors(L"TYPE", { 86,12,116,14 }, 1, View::Color::WHITE, View::Color::BLACK);
+	
+	std::vector<MenuItem> titles;
+
+	for (int i = 0; i < gameList.size(); i++) {
+		std::wstring title(gameList[i].begin(), gameList[i].end());
+		titles.push_back({ i, title, MenuOption::NONE });
+	}
+
+	int index = 0, menu_size = min(gameList.size(), 7);
+	COORD spot = View::getCenteredSpot(L"", box);
+	drawMenu(titles, { spot.X, short(box.Top + 3) }, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
+	menuOptionChanged(titles, { spot.X, short(box.Top + 3) }, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
+
+	return gameList[index];
 }

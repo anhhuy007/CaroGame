@@ -85,3 +85,8 @@
 		View::Color selected_textcolor,
 		int* cur_index
 	);
+
+	std::string GetSavedGameTitle(
+		std::vector<std::string> gameList, 
+		SMALL_RECT box
+	);

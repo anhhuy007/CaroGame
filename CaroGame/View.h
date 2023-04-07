@@ -98,7 +98,6 @@ namespace View {
 	void drawLoadGameText();
 	void drawSettingText();
 	void drawAboutText();
-	void drawSavedGameTable(std::vector<std::string> gameList, SMALL_RECT box);
 	void splashScreenInfo();
 	void splashScreen();
 
@@ -108,7 +107,7 @@ namespace View {
 	void drawBorder3(int left, int right, int top, int bot, std::wstring winnerName);
 	void LoadGameBorder(int left, int right, int top, int bot);
 	void drawBox(COORD spot, int width, int height, Color color);
-	
+	void drawBoxLoad(COORD spot, int width, int height, Color color);
 	// draw animated image 
 	void drawIronmanAvatar(int x, int y);
 	void drawBotAvatar(int x, int y);
@@ -130,4 +129,5 @@ namespace View {
 
 	void drawFireWork2(int k,int color, int x, int y);
 	void drawFireWorkList2(int k);
+
 }

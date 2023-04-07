@@ -20,8 +20,8 @@ void Control::startGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	View::splashScreen();
-	system("cls");
+	/*View::splashScreen();
+	system("cls");*/
 
 	// show menu screen
 	Control::NavigationController();
@@ -318,7 +318,13 @@ void Control::saveGame(Model::GameInformation& game_info) {
 
 	if (isSuccess) {
 		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
-		FileIO::saveFileNameToFile(fileName);
+		Model::GeneralGameInformation information = Model::GeneralGameInformation(
+			game_info.name,
+			{0, 0},
+			{1, 1}
+		);
+		information.updateNewDate();
+		FileIO::SaveGameGeneralInformation(fileName);
 	}
 	else {
 		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
@@ -332,9 +338,8 @@ void Control::loadGame() {
 	system("cls");
 	View::drawLoadGameText();
 
-	// show saved game list
-	View::drawSavedGameTable(FileIO::getSavedGameList(), { 20, 15, 50, 30 });
-	std::string fileName = InputHandle::getFileName(true, { 70, 15, 100, 20 });
+	// show saved game list and return game name 
+	std::string fileName = GetSavedGameTitle(FileIO::getSavedGameList(), { 45, 15, 95, 30 });
 
 	// check if player want to return menu
 	if (fileName == "-1") {

@@ -16,7 +16,7 @@ namespace FileIO {
 	const string savedGame = "SavedGameList.txt";
 
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
-	void saveFileNameToFile(std::string fileName);
+	void SaveGameGeneralInformation(std::string fileName);
 	GameInformation readGameInfoFromFile(char fileName[]);
 	bool isValidFileName(std::string file);
 	bool fileNameExisted(std::string file);
