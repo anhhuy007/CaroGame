@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-void Sound::playBackgroundSound(SoundManager soundManager) {
+void Sound::playBackgroundSound(SoundManager& soundManager) {
 	if (soundManager.backgroundSound) {
 		if (soundManager.backgroundPlaying) {
 			resumeSound(BACKGROUND);

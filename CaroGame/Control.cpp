@@ -204,6 +204,7 @@ void Control::resetGame() {
 void Control::quitGame() {
 	escPressed = true;
 	system("cls");
+	cout << "Thank you for playing!" << endl;
 }
 
 void Control::returnMenu() {

@@ -22,7 +22,7 @@ namespace Sound {
 	void pauseSound(std::wstring path);
 	void resumeSound(std::wstring path);
 	void closeSound(std::wstring path);
-	void playBackgroundSound(SoundManager soundManager);
+	void playBackgroundSound(SoundManager& soundManager);
 	void playEffectSound(std::wstring path, SoundManager soundManager);
 	std::wstring findAlias(std::wstring path);
 }
