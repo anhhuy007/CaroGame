@@ -108,6 +108,7 @@ namespace View {
 	void LoadGameBorder(int left, int right, int top, int bot);
 	void drawBox(COORD spot, int width, int height, Color color);
 	void drawBoxLoad(COORD spot, int width, int height, Color color);
+	
 	// draw animated image 
 	void drawIronmanAvatar(int x, int y);
 	void drawBotAvatar(int x, int y);
@@ -121,13 +122,12 @@ namespace View {
 	void drawVSText();
 	
 	//win screen
-	void drawWinner(int winplayer,bool playervsplayer, std::wstring player1_name, std::wstring player2_name);
+	void drawWinner(int winplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
 	void drawFireWork(int x, int y, int k);
 	void drawFireWorkList(int k);
-
 	void drawFireWork2(int k,int color, int x, int y);
 	void drawFireWorkList2(int k);
-
+	void displayGameResult(int player, std::vector<COORD> winning_moves, std::wstring name1, std::wstring name2);
 }

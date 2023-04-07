@@ -43,7 +43,7 @@ void Control::NavigationController() {
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
-		//Control::newGame();
+		Control::playWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::HARD }));
 		break;
 		
 	case MenuOption::LOAD_GAME:
@@ -104,11 +104,6 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 		strcpy(game_info.player2.name, "Computer");
 	}
 
-	system("cls");
-	cout << "Player 1: " << game_info.player1.name << endl;
-	cout << "Player 2: " << game_info.player2.name << endl;
-	system("pause");
-
 	// initialize game information
 	game_info.isFirstPlayerTurn = true;
 	game_info.gameMode = mode;
@@ -125,6 +120,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 
 void Control::playWithHuman(Model::GameInformation game_info) {
 	Control::resetGame();
+	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	string player1_name = game_info.player1.name;
 	wstring name1(player1_name.begin(), player1_name.end());
 	string player2_name = game_info.player2.name;
@@ -147,66 +143,21 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
 		Model::playerTurn(player, game_info);
 		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
-		// check if player 1 win
-
-		if (result.first == 1) {
-			// show winner here
-// ....
-			//cout << 1;
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			//show winner congratulation screen
-			View::drawWinner(1, 1, name1, name2);
-
+		if (result.first != 0) {
 			game_info.endGame = true;
-			break;
-
-		}
-		else if (result.first == 2) {
-			// show winner here
-// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-			View::drawWinner(2, 1, name1, name2);
-
-			game_info.endGame = true;
-			break;
-		}
-		else if (result.first == 3) {
-			// show winner here
-// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-			View::drawWinner(0, 1, name1, name2);
-
-			game_info.endGame = true;
+			View::displayGameResult(result.first, result.second, name1, name2);
 			break;
 		}
 		
-
 		if (escPressed) break;
 	}
 
-	system("pause");
 	Control::returnMenu();
 }
 
 void Control::playWithComputer(Model::GameInformation game_info) {
 	Control::resetGame();
+	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	string player1_name = game_info.player1.name;
 	wstring name1(player1_name.begin(), player1_name.end());
 	string player2_name = game_info.player2.name;
@@ -226,45 +177,18 @@ void Control::playWithComputer(Model::GameInformation game_info) {
 	View::drawF1F2list(88, 32);
 
 	while (!game_info.endGame && !escPressed) {
-		// player 1 turn
-		Model::playerTurn(game_info.player1, game_info);
-		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
-		// check if player 1 win
+		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
+
+		View::gotoXY(0, 0);
+		cout << "Current player: " << player.name << endl;
+		
+		if (strcmp(player.name, "Computer") == 0) Model::computerTurn(player, game_info);
+		else Model::playerTurn(player, game_info);
+		
+		pair<int, vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		if (result.first != 0) {
-			// show winner here
-			// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-			View::drawWinner(1, 1, name1, name2);
-
 			game_info.endGame = true;
-			break;
-		}
-
-		if (escPressed) break;
-
-		// Computer turn 
-		Model::computerTurn(game_info.player2, game_info);
-		result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
-		// check if player 1 win
-		if (result.first != 0) {
-			// show winner here
-			// ....
-			View::gotoXY(0, 0);
-			cout << "Player " << result.first << " win!" << endl;
-
-			// show winning moves
-			View::showWinningMoves(result.first, result.second);
-
-			// show winner congratulation screen
-			View::drawWinner(1, 1, name1, name2);
-
-			game_info.endGame = true;
+			View::displayGameResult(result.first, result.second, name1, name2);
 			break;
 		}
 	}
@@ -321,10 +245,10 @@ void Control::saveGame(Model::GameInformation& game_info) {
 		Model::GeneralGameInformation information = Model::GeneralGameInformation(
 			game_info.name,
 			{0, 0},
-			{1, 1}
+			game_info.gameMode
 		);
 		information.updateNewDate();
-		FileIO::SaveGameGeneralInformation(fileName);
+		FileIO::SaveGameGeneralInformation(fileName, information);
 	}
 	else {
 		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
@@ -355,14 +279,13 @@ void Control::loadGame() {
 	// read game information from file
 	Model::GameInformation game_info = FileIO::readGameInfoFromFile(file);
 	if (game_info.name != "") {
-		// if previous game is two players game
 		if (game_info.gameMode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
+			// two players game
 			Control::playWithHuman(game_info);
 		}
-		// if previous game is player vs computer game
 		else {
 			// play with computer
-			//Control::playWithComputer();
+			Control::playWithComputer(game_info);
 		}
 	}
 	else {

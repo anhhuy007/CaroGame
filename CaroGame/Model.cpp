@@ -14,37 +14,29 @@ void Model::previousMove(Model::GameInformation& game_info) {
 
 	if (n == 0) return;
 
-	int preX = game_info.playerMoveHistory[n - 1].move.X;
-	int preY = game_info.playerMoveHistory[n - 1].move.Y;
+	short preX = game_info.playerMoveHistory[n - 1].move.X;
+	short preY = game_info.playerMoveHistory[n - 1].move.Y;
 	int player = game_info.playerMoveHistory[n - 1].player;
+	game_info.updateDisplayedHistory({ { preX, preY, player }, true } );
 	
 	// pop the last from the move history 
 	game_info.playerMoveHistory[n - 1] = { { 0, 0 }, 0 };
 	game_info.moveHistorySize--;
-	if (game_info.isFirstPlayerTurn) game_info.player1.numberOfMoves--;
-	else game_info.player2.numberOfMoves--;
+	if (game_info.isFirstPlayerTurn) game_info.player2.numberOfMoves--;
+	else game_info.player1.numberOfMoves--;
+	game_info.totalStep++;
+	// change player turn
+	game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 
 	int i = (preY - View::TOP - 1) / 2;
 	int j = (preX - View::LEFT - 2) / 4;
-
-	// change player turn
-	game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 
 	// mark the previous move as empty
 	game_info.board[i][j] = 0;
 	curX = preX; curY = preY;
 	View::printCharactors(L" ", { curX, curY }, View::Color::WHITE, View::Color::WHITE);
 	View::gotoXY(curX, curY);
-}
-
-std::vector<Model::PlayerMove> Model::getMoveHistory(GameInformation game_info, int num)
-{
-	std::vector<Model::PlayerMove> moves;	
-	for (int i = game_info.moveHistorySize - 1; i >= max(0, game_info.moveHistorySize - num); i--) {
-		moves.push_back(game_info.playerMoveHistory[i]);
-	}
-
-	return moves;
+	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 }
 
 void Model::makePlayerMove(std::wstring key) {	
@@ -100,6 +92,8 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		// add move to history
 		game_info.playerMoveHistory[game_info.moveHistorySize] = { spot, playerNum };
 		game_info.moveHistorySize++; 
+		game_info.totalStep++;
+		game_info.updateDisplayedHistory({ { spot.X, spot.Y, playerNum }, false });
 		// show move on the game board
 		wstring playerMark = playerNum == 1 ? L"X" : L"O";
 		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
@@ -205,8 +199,18 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 
 		// undo move
 		else if (key == L"F4") {
-			previousMove(game_info);
-			if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
+			// if two players mode then undo 1 time
+			if (game_info.gameMode.isPlayWithHuman) {
+				previousMove(game_info);
+				if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
+			}
+			else {
+				// if one player mode then undo 2 times
+				previousMove(game_info);
+				previousMove(game_info);
+				if (game_info.isFirstPlayerTurn != player.isFirstPlayer) endTurn = true;
+			}
+			
 		}
 		
 		// player's move
@@ -363,45 +367,47 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		}
 	}
 	View::drawXOart({short(spot.X + 1),short(spot.Y + 4) }, game_info.isFirstPlayerTurn);
-	if (!game_info.isFirstPlayerTurn) {
-		int moveX = game_info.player1.numberOfMoves;
-		short x = spot.X;
-		short y = spot.Y + (height / 2 - 2) / 2;
-		wstring xMoves = formats(moveX);
-		View::printVerticalCenteredCharactors(
-			xMoves,
-			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-			short(((height / 2 - 2) / 2) / 2),
-			View::Color::BLACK,
-			View::Color::WHITE
-		);
-	}
-	else {
-		short x = spot.X + (((width - 4) / 3) * 2 + 3);
-		short y = spot.Y + (height / 2 - 2) / 2;
-		int moveY = game_info.player2.numberOfMoves;
-		wstring yMoves = formats(moveY);
-		View::printVerticalCenteredCharactors(
-			yMoves,
-			{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-			short(((height / 2 - 2) / 2) / 2),
-			View::Color::BLACK,
-			View::Color::WHITE
-		);
-	}
-	short x = spot.X + 44;
-	short y = spot.Y + 7;
-	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
-	std::vector<PlayerMove> get_move = getMoveHistory(game_info, 4);
+
+	// update total move of player
+	int moveX = game_info.player1.numberOfMoves;
+	short x = spot.X;
+	short y = spot.Y + (height / 2 - 2) / 2;
+	wstring xMoves = formats(moveX);
+	View::printVerticalCenteredCharactors(
+		xMoves,
+		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+		short(((height / 2 - 2) / 2) / 2),
+		View::Color::BLACK,
+		View::Color::WHITE
+	);
+	x = spot.X + (((width - 4) / 3) * 2 + 3);
+	y = spot.Y + (height / 2 - 2) / 2;
+	int moveY = game_info.player2.numberOfMoves;
+	wstring yMoves = formats(moveY);
+	View::printVerticalCenteredCharactors(
+		yMoves,
+		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
+		short(((height / 2 - 2) / 2) / 2),
+		View::Color::BLACK,
+		View::Color::WHITE
+	);
+	x = spot.X + 44;
+	y = spot.Y + 7;
 	for (int i = int(spot.X +2 + width/2); i <int(spot.X + width); i++) {
 		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}
-	for (int i = 0, idx = game_info.moveHistorySize; i < get_move.size(); i++,idx--) {
+	
+	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
+	int idx = game_info.totalStep;
+	for (int i = 3, cnt = 0; i >= 0; i--, cnt++) {
+		if (game_info.displayedHistory[i].playerMove.move.X == -1) continue;
+
 		wstring history = L" " + to_wstring(idx);
+		idx--;
 		history += L". ";
-		PlayerMove move = get_move[i];
+		PlayerMove move = game_info.displayedHistory[i].playerMove;
 		if (move.player == 1) {
 			string player_name = game_info.player1.name;
 			wstring name(player_name.begin(), player_name.end());
@@ -414,12 +420,15 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			history += name;
 			history += L"(O)";
 		}
+		if (game_info.displayedHistory[i].isPrevious) {
+			history += L": Undo";
+		}
 		char character = char((move.move.X - 6) / 4 + 97);
 		string tmp_string(1, character);
 		wstring moveX(tmp_string.begin(), tmp_string.end());
 		wstring moveY = to_wstring(int(16 - (move.move.Y - 1) / 2));
 		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
 		x = short(spot.X + width / 2 + (width / 2) / 2 + 1 - (history.length() / 2));
-		View::printCharactors(history, { x,short(y + i * 2) }, View::Color::BLACK, View::Color::WHITE);
+		View::printCharactors(history, { x, short(y + cnt * 2) }, View::Color::BLACK, View::Color::WHITE);
 	}
 }

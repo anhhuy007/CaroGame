@@ -4,9 +4,13 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
-#include <vector>
+#include <vector>	
 #include <chrono>
 #include <ctime> 
+#include <string>
+#include <time.h>
+#include <locale.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -35,7 +39,7 @@ namespace Model {
 
 	struct PlayerMove {
 		COORD move;
-		int player;
+		int player;	
 	};
 
 	struct GameMode {
@@ -155,6 +159,11 @@ namespace Model {
 			return moveList;
 		}
 	};
+
+	struct DisplayedHistory {
+		PlayerMove playerMove = { {-1,-1}, 0 };
+		bool isPrevious;
+	};
 	
 	struct GameInformation {
 		char name[20] = "";
@@ -166,9 +175,18 @@ namespace Model {
 		Board board;
 		PlayerMove playerMoveHistory[250];
 		int moveHistorySize = 0;
+		DisplayedHistory displayedHistory[4];
 		int curX; 
 		int curY;
+		int totalStep = 0; // total step of game
 		bool endGame;
+
+		void updateDisplayedHistory(DisplayedHistory history) {
+			for (int i = 0; i < 3; i++) {
+				displayedHistory[i] = displayedHistory[i + 1];
+			}
+			displayedHistory[3] = history;
+		}
 	};
 
 	// store general game information, including name, date created or modified, and game mode
@@ -177,7 +195,7 @@ namespace Model {
 		pair<time_t, bool> date = { time(0), false };
 		GameMode gameMode;
 
-		// constructer
+		// default constructer
 		GeneralGameInformation(char name[], pair<time_t, bool> date, GameMode gameMode) {
 			strcpy_s(this->name, name);
 			this->date = date;
@@ -206,6 +224,16 @@ namespace Model {
 			strftime(buffer, 80, "%d-%m-%Y - %I:%M:%S", timeinfo);
 			std::string str(buffer);
 			return str;
+		}
+
+		std::string getFormatedInformation() {
+			std::string formatStr = name;
+			formatStr += "@";
+			formatStr += getFormatedDate();
+			formatStr += "@";
+			formatStr += getGameType();
+
+			return formatStr;
 		}
 
 		std::string getGameType() {
@@ -260,7 +288,6 @@ namespace Model {
 	void previousMove(
 		GameInformation& game_info
 	);
-	std::vector<Model::PlayerMove> getMoveHistory(GameInformation game_info, int num);
 	void updateInform(GameInformation& game_info, COORD spot, int width, int height, View::Color color);
 }
 

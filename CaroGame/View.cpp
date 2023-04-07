@@ -216,61 +216,44 @@ void View::drawFireWorkList2(int k) {
 	
 
 }
+
+void View::displayGameResult(
+	int player, 
+	std::vector<COORD> winning_moves, 
+	std::wstring name1, 
+	std::wstring name2
+) {
+	View::showWinningMoves(player, winning_moves);
+	View::clearRectangleArea({ 70, 0 }, 70, 40); 
+	View::drawWinner(player, name1, name2);
+}
 //who win, 1 :player1, 2:player2 , 0 draw
-void View::drawWinner(int winplayer, bool playervsplayer, wstring player1_name, wstring player2_name) {
-	system("cls");
+void View::drawWinner(int winplayer, wstring player1_name, wstring player2_name) {
 	int x, y;
 	//avatar coordinate: x = 88, y = 5
 	//banner coordinate: x = 75, y = 20
-	View::drawGameBoard();
-	if (playervsplayer == 1) {
-		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player1_name);
-			View::drawIronmanAvatar(88, 5);
-			View::drawWinDrawBanner(1,75,20);
-			View::drawFireWorkList2(1);
-		}
-		else if (winplayer == 2){
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10,player2_name);
-			View::drawThanosAvatar(88, 5);
-			View::drawWinDrawBanner(1,75, 20);
-			View::drawFireWorkList2(1);
-		}
-		else {
-			View::drawBorder3(94-15, 94-15 + 20, 7, 7 + 10,player1_name);
-			View::drawIronmanAvatar(88-15, 5);
-
-			View::drawBorder3(94+15, 94+15 + 20, 7, 7 + 10, player2_name);
-			View::drawThanosAvatar(88+15, 5);
-			View::drawWinDrawBanner(0,75, 20);
-			View::drawFireWorkList2(0);
-		}
-
+	
+	if (winplayer == 1) {
+		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
+		View::drawIronmanAvatar(88, 5);
+		View::drawWinDrawBanner(1, 75, 20);
+		View::drawFireWorkList2(1);
+	}
+	else if (winplayer == 2) {
+		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player2_name);
+		View::drawThanosAvatar(88, 5);
+		View::drawWinDrawBanner(1, 75, 20);
+		View::drawFireWorkList2(1);
 	}
 	else {
-		if (winplayer == 1) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
-			View::drawSpidermanAvatar(88, 5);
-			View::drawWinDrawBanner(1, 75, 20);
-			View::drawFireWorkList2(1);
-		}
-		else if (winplayer == 2) {
-			View::drawBorder3(94, 94 + 20, 7, 7 + 10, L"Cute Robot"); //bot name
-			View::drawBotAvatar(88, 5);
-			View::drawWinDrawBanner(1, 75, 20);
-			View::drawFireWorkList2(1);
-		}
-		else {
-			View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
-			View::drawSpidermanAvatar(88 - 15, 5);
+		View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
+		View::drawIronmanAvatar(88 - 15, 5);
 
-			View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10,L"Cute Robot");
-			View::drawBotAvatar(88 + 15, 5);
-			View::drawWinDrawBanner(0, 75, 20);
-			View::drawFireWorkList2(0);
-		}
+		View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10, player2_name);
+		View::drawThanosAvatar(88 + 15, 5);
+		View::drawWinDrawBanner(0, 75, 20);
+		View::drawFireWorkList2(0);
 	}
-
 }
 void View::drawWinDrawBanner(bool win,int x, int y) {
 	//x = 75;
@@ -1328,11 +1311,15 @@ void View::clearRectangleArea(
 	DWORD dwWritten;
 	int startY = start.Y;
 	int color = (int)View::Color::WHITE + (int)View::Color::WHITE * 16;
+	short x = start.X;
 
-	for (int i = startY; i < startY + height; i++) {
-		FillConsoleOutputCharacterA(hOut, ' ', width, start, &dwWritten);
-		FillConsoleOutputAttribute(hOut, color, 1, start, &dwWritten);
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			View::printCharactors(L"X", start, Color::WHITE, Color::WHITE);
+			start.X++;
+		}
 		start.Y++;
+		start.X = x;
 	}
 }
 
@@ -1489,8 +1476,8 @@ void View::drawBox(COORD spot, int width, int height, Color color) {
 	short x = spot.X + width;
 	short y = spot.Y + height;
 	for (short i = spot.X; i <= x; i++) {
-		View::printCharactors(L"─", { i,spot.Y }, color, Color::WHITE);
-		View::printCharactors(L"─", { i,y }, color, Color::WHITE);
+		View::printCharactors(L"═", { i,spot.Y }, color, Color::WHITE);
+		View::printCharactors(L"═", { i,y }, color, Color::WHITE);
 	}
 
 	for (short j = spot.Y; j <= y; j++) {

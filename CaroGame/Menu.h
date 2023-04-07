@@ -87,6 +87,6 @@
 	);
 
 	std::string GetSavedGameTitle(
-		std::vector<std::string> gameList, 
+		std::vector<std::string> gameList,
 		SMALL_RECT box
 	);

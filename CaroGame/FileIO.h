@@ -7,7 +7,6 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <direct.h>
 using namespace Model;
 
 namespace FileIO {
@@ -16,7 +15,7 @@ namespace FileIO {
 	const string savedGame = "SavedGameList.txt";
 
 	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
-	void SaveGameGeneralInformation(std::string fileName);
+	void SaveGameGeneralInformation(std::string fileName, Model::GeneralGameInformation information);
 	GameInformation readGameInfoFromFile(char fileName[]);
 	bool isValidFileName(std::string file);
 	bool fileNameExisted(std::string file);

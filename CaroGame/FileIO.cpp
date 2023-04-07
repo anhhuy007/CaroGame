@@ -14,10 +14,11 @@ bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
 }
 
 // information pattern: name@date@type
-void FileIO::SaveGameGeneralInformation(std::string fileName) {
+void FileIO::SaveGameGeneralInformation(std::string fileName, Model::GeneralGameInformation information) {
 	if (FileIO::fileNameExistedInList(fileName)) return;
 	std::ofstream ofs(folder + savedGame, std::ios::app);
-	ofs << fileName << std::endl;
+	std::string data = information.getFormatedInformation();
+	ofs << data << std::endl;
 	ofs.close();
 }
 
@@ -59,7 +60,11 @@ bool FileIO::fileNameExistedInList(std::string file) {
 	std::ifstream ifs(folder + savedGame);
 	std::string line;
 	while (std::getline(ifs, line)) {
-		if (line == file) return true;
+		std::string name = line.substr(0, line.find('@'));
+		if (name == file) {
+			ifs.close();
+			return true;
+		}
 	}
 
 	ifs.close();
