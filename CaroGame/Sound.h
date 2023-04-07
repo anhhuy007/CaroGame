@@ -13,7 +13,7 @@ namespace Sound {
 	struct SoundManager {
 		bool backgroundSound = true;
 		bool effectSound = true;
-		bool isPlayingBackground = false;
+		bool backgroundPlaying = false;
 	};
 	void openSound(std::wstring path);
 	void playSound(std::wstring path);

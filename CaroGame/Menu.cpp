@@ -173,7 +173,7 @@ MenuOption newGameMenu(
 
 MenuOption MenuScreen() {
 	Setting soundSetting = FileIO::readSetting("GameSetting.dat");
-	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.isPlayingBackground };
+	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.backgroundPlaying };
 	Sound::playBackgroundSound(soundManager);
 	View::gotoXY(0, 0);
 	MenuOption option = mainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
@@ -335,15 +335,15 @@ void settingMenuOptionChanged(
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
 			soundManager = { setting_items[0].status, setting_items[1].status };
 			if (soundManager.backgroundSound == true) {
-				soundManager.isPlayingBackground = true;
+				soundManager.backgroundPlaying = true;
 			}
 			else {
-				soundManager.isPlayingBackground = false;
+				soundManager.backgroundPlaying = false;
 			}
 			Sound::playBackgroundSound(soundManager);
 			Sound::playEffectSound(Sound::VALID, soundManager);
 			View::gotoXY(0, 0);
-			cout << "Sound: " << soundManager.backgroundSound << " " << soundManager.effectSound << " " << soundManager.isPlayingBackground;
+			cout << "Sound: " << soundManager.backgroundSound << " " << soundManager.effectSound << " " << soundManager.backgroundPlaying;
 		}
 		View::clearRectangleArea({ 40,10 }, 50, 10);
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());

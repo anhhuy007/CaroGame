@@ -6,11 +6,22 @@
 using namespace std;
 
 void Sound::playBackgroundSound(SoundManager soundManager) {
-	playSound(BACKGROUND);
+	if (soundManager.backgroundSound) {
+		if (soundManager.backgroundPlaying) {
+			resumeSound(BACKGROUND);
+		}
+		else {
+			repeatSound(BACKGROUND);
+			soundManager.backgroundPlaying = true;
+		}
+	} 
+	else {
+		pauseSound(BACKGROUND);
+	}
 }
 
 void Sound::playEffectSound(std::wstring path, SoundManager soundManager) {
-	playSound(path);
+	if (soundManager.effectSound) playSound(path);
 }
 
 void Sound::openSound(wstring path) {
