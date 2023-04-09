@@ -77,6 +77,7 @@ void Control::NavigationController() {
 Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
 
+	system("cls");
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		// input player1 name
@@ -145,7 +146,23 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 		if (result.first != 0) {
 			game_info.endGame = true;
 			View::displayGameResult(result.first, result.second, name1, name2);
-			break;
+			
+			// show dialog check if player want to play again or return menu
+			system("cls");
+			View::confirmDialog(
+				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
+				{ 15, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					//Control::ResetGame(game_info);
+					Control::PlayWithHuman(game_info);
+				},
+				[&]() -> void {
+					// if click NO then continue game
+					// restore screen's information
+					Control::ReturnMenu();
+				}
+				);
 		}
 		
 		if (escPressed) break;
@@ -173,7 +190,23 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 		if (result.first != 0) {
 			game_info.endGame = true;
 			View::displayGameResult(result.first, result.second, name1, name2);
-			break;
+			
+			// show dialog check if player want to play again or return menu
+			system("cls");
+			View::confirmDialog(
+				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
+				{ 15, 10 },
+				[&]() -> void {
+					// if click YES then return menu
+					//Control::ResetGame(game_info);
+					Control::PlayWithComputer(game_info);
+				},
+				[&]() -> void {
+					// if click NO then continue game
+					// restore screen's information
+					Control::ReturnMenu();
+				}
+				);
 		}
 	}
 	

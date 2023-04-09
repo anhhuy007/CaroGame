@@ -86,7 +86,7 @@ void View::drawInstructionText() {
 	View::printCharactors(L"╚═╝╚═╝░░╚══╝╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝░╚═════╝░░╚════╝░░░░╚═╝░░░╚═╝░╚════╝░╚═╝░░╚══╝",{short(x),short(y+5)},Color::BLACK,Color::WHITE);
 	
 }
-void View::drawFireWork2(int k,int color, int x, int y) {
+void View::drawFireWork(int k,int color, int x, int y) {
 
 	switch (k)
 	{
@@ -179,70 +179,71 @@ void View::drawFireWork2(int k,int color, int x, int y) {
 	}
 }
 //k =1 : win, k = 0: draw
-void View::drawFireWorkList2(int k) {
+void View::drawFireWorkList(int k) {
 	int x, y;
 	int p1 = 0, p2 = 0, p3 = 0;
 	int count = 0;
 
 	vector<int>color = { 10,11,12,13,14 };
+	std::wstring key = L"";
 	if (k == 1) {
-		while (1) {
+		while (key != L"ESC") {
 			if (count >= 0) {
 				x = 74, y = 8;
-				drawFireWork2(p1 % 13, color[rand() % 5], x, y);
+				drawFireWork(p1 % 13, color[rand() % 5], x, y);
 
 				x = 125, y = 7;
-				drawFireWork2(p1 % 13, color[rand() % 5], x, y);
+				drawFireWork(p1 % 13, color[rand() % 5], x, y);
 				x = 80, y = 0;
-				drawFireWork2(p1 % 15, color[rand() % 5], x, y);
+				drawFireWork(p1 % 15, color[rand() % 5], x, y);
 				p1++;
 			}
 			if (count >= 8) {
 				x = 84, y = 5;
-				drawFireWork2(p2 % 13, color[rand() % 5], x, y);
+				drawFireWork(p2 % 13, color[rand() % 5], x, y);
 				x = 135, y = 4;
-				drawFireWork2(p2 % 13, color[rand() % 5], x, y);
+				drawFireWork(p2 % 13, color[rand() % 5], x, y);
 				p2++;
 
 			}
 			if (count >= 16) {
 				x = 108, y = 0;
-				drawFireWork2(7 + (p3 % 6), color[rand() % 5], x, y);
+				drawFireWork(7 + (p3 % 6), color[rand() % 5], x, y);
 				p3++;
 			}
 			count++;
-			//if (count >= 28) count = 5;
-			Sleep(150);
+			if (count >= 80) break;
+			View::gotoXY(90, 35);
+			if (count % 10 == 0) std::cout << "***** Game end in " << 7 - (count / 10) + 1 << "s *****";
+			Sleep(100);
 		}
 	}
 	else if (k == 0) {
-		while (1) {
+		while (key != L"ESC") {
 			if (count >= 0) {
 				x = 74, y = 0;
-				drawFireWork2(p1 % 13, color[rand() % 5], x, y);
+				drawFireWork(p1 % 13, color[rand() % 5], x, y);
 				x = 132, y = 0;
-				drawFireWork2(p1 % 13, color[rand() % 5], x, y);
+				drawFireWork(p1 % 13, color[rand() % 5], x, y);
 				p1++;
 			}
 			if (count >= 12) {
 				x = 88, y = 0;
-				drawFireWork2(7 + (p2 % 6), color[rand() % 5], x, y);
+				drawFireWork(7 + (p2 % 6), color[rand() % 5], x, y);
 				p2++;
 
 			}
 			if (count >= 16) {
 				x = 115, y = 0;
-				drawFireWork2(7 + (p3 % 6), color[rand() % 5], x, y);
+				drawFireWork(7 + (p3 % 6), color[rand() % 5], x, y);
 				p3++;
 			}
-			count++;
-			//if (count >= 28) count = 5;
-			Sleep(150);
+			if (count >= 80) break;
+			View::gotoXY(90, 35);
+			if (count % 10 == 0) std::cout << "***** Game end in " << 7 - (count / 10) + 1 << "s *****";
+			Sleep(100);
 		}
-		
 	}
-	
-
 }
 
 void View::displayGameResult(
@@ -265,13 +266,13 @@ void View::drawWinner(int winplayer, wstring player1_name, wstring player2_name)
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
 		View::drawIronmanAvatar(88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
-		View::drawFireWorkList2(1);
+		View::drawFireWorkList(1);
 	}
 	else if (winplayer == 2) {
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player2_name);
 		View::drawThanosAvatar(88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
-		View::drawFireWorkList2(1);
+		View::drawFireWorkList(1);
 	}
 	else {
 		View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
@@ -280,7 +281,7 @@ void View::drawWinner(int winplayer, wstring player1_name, wstring player2_name)
 		View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10, player2_name);
 		View::drawThanosAvatar(88 + 15, 5);
 		View::drawWinDrawBanner(0, 75, 20);
-		View::drawFireWorkList2(0);
+		View::drawFireWorkList(0);
 	}
 }
 void View::drawWinDrawBanner(bool win,int x, int y) {

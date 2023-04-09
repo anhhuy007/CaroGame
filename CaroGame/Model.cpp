@@ -92,13 +92,13 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		game_info.totalStep++;
 		game_info.updateDisplayedHistory({ { spot.X, spot.Y, playerNum }, false });
 		// show move on the game board
-		std::wstring playerMark = playerNum == 1 ? L"X" : L"O";
-		View::printCharactors(playerMark, { game_info.curX, game_info.curY }, View::Color::BLACK, View::Color::WHITE);
 		if (game_info.isFirstPlayerTurn) {
 			game_info.player1.numberOfMoves++;
+			View::printCharactors(L"X", { spot.X, spot.Y }, View::Color::RED, View::Color::WHITE);
 		}
 		else {
 			game_info.player2.numberOfMoves++;
+			View::printCharactors(L"O", { spot.X, spot.Y }, View::Color::BLUE, View::Color::WHITE);
 		}
 		// change player turn
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;

@@ -127,9 +127,7 @@ namespace View {
 	void drawWinner(int winplayer, std::wstring player1_name, std::wstring player2_name);
 	void drawWinDrawBanner(bool win ,int x, int y);
 	void showWinningMoves(int player, std::vector<COORD> winning_moves);
-	void drawFireWork(int x, int y, int k);
+	void drawFireWork(int k,int color, int x, int y);
 	void drawFireWorkList(int k);
-	void drawFireWork2(int k,int color, int x, int y);
-	void drawFireWorkList2(int k);
 	void displayGameResult(int player, std::vector<COORD> winning_moves, std::wstring name1, std::wstring name2);
 }
