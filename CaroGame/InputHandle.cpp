@@ -2,10 +2,8 @@
 #include <iostream>
 #include "View.h"
 #include "FileIO.h"
-using namespace std;
 
 // this function is used for get the input from keyboard
-// there are 6 main types of input: UP, DOWN, LEFT, RIGHT, ENTER, ESC
 wstring InputHandle::GetKey() {
 	wchar_t ch = _getwch();
 	if (ch == 0 || ch == 224) {
@@ -65,7 +63,7 @@ bool InputHandle::isMoveKey(std::wstring key) {
 }
 
 // input file name from keyboard 
-string InputHandle::getFileName(bool checkExisted, SMALL_RECT box) {
+string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
 	string fileName = ""; wstring key = L"";
 
 	wstring wstr = L"Enter file name: ";
@@ -74,7 +72,6 @@ string InputHandle::getFileName(bool checkExisted, SMALL_RECT box) {
 	COORD spot = View::getCenteredSpot(note, box);
 	View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
 	View::printCharactors(exitNote, { spot.X, short(spot.Y + 3) }, View::Color::BLACK, View::Color::WHITE);
-
 
 	while (1) {
 		if (key == L"ENTER") {
@@ -137,8 +134,8 @@ bool InputHandle::isValidName(string userName) {
 	return true;
 }
 
-// input user name from keyboard
-string InputHandle::getPlayerName(string message, string player1Name) {
+// input player name from keyboard
+string InputHandle::GetPlayerName(string message, string player1Name) {
 	string fileName = ""; wstring key = L"";
 	SMALL_RECT box = View::WINDOW_SIZE;
 	wstring note = L"Note: Player name must contain only alphabet and number";
