@@ -35,6 +35,12 @@ namespace Model {
 		char name[20] = "";
 		int numberOfMoves = 0;
 		bool isFirstPlayer;
+
+		wstring getWStringName() {
+			wstring wstr;
+			wstr.assign(name, name + strlen(name));
+			return wstr;
+		}
 	};
 
 	struct PlayerMove {

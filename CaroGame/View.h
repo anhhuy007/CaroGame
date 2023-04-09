@@ -97,6 +97,8 @@ namespace View {
 	void drawInstructionText();
 	void drawLoadGameText();
 	void drawSettingText();
+	void DisplayGame(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE], std::wstring name1, std::wstring name2);
+	void drawXO(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE]);
 	void drawAboutText();
 	void splashScreenInfo();
 	void splashScreen();

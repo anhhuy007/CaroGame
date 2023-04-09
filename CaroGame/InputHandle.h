@@ -5,10 +5,10 @@
 #include <Windows.h>
 
 namespace InputHandle {
-	std::wstring Get();
+	std::wstring GetKey();
 	bool isMoveKey(std::wstring key);
 	std::string getFileName(bool checkExisted, SMALL_RECT box);
-	bool isValidUserName(std::string userName);
+	bool isValidName(std::string userName);
 	std::string getPlayerName(std::string message, std::string player1Name);
 }
 

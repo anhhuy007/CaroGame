@@ -93,7 +93,7 @@ void menuOptionChanged(
 	int* cur_index,
 	int displaymenu_size
 ) {
-	wstring key = InputHandle::Get();
+	wstring key = InputHandle::GetKey();
 	clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 
 	while (key != L"ENTER") {
@@ -120,7 +120,7 @@ void menuOptionChanged(
 			break;
 		}
 		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, displaymenu_size);
-		key = InputHandle::Get();
+		key = InputHandle::GetKey();
 		clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 	}
 }
@@ -217,7 +217,7 @@ MenuOption aboutMenu() {
 	View::drawAboutText();
 
 	while (key != L"ESC") {
-		key = InputHandle::Get();
+		key = InputHandle::GetKey();
 		Sound::playEffectSound(Sound::INVALID, soundManager);
 	}
 
@@ -259,7 +259,7 @@ MenuOption instructionMenu() {
 
 
 	while (key != L"ESC") {
-		key = InputHandle::Get();
+		key = InputHandle::GetKey();
 		Sound::playEffectSound(Sound::INVALID, soundManager);
 	}
 	return MenuOption::INSTRUCTION;
@@ -306,7 +306,7 @@ void settingMenuOptionChanged(
 	View::Color selected_textcolor,
 	int* cur_index
 ) {
-	wstring selected_item = InputHandle::Get();
+	wstring selected_item = InputHandle::GetKey();
 
 	while (selected_item != L"ESC") {
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
@@ -347,7 +347,7 @@ void settingMenuOptionChanged(
 		}
 		View::clearRectangleArea({ 40,10 }, 50, 10);
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
-		selected_item = InputHandle::Get();
+		selected_item = InputHandle::GetKey();
 	}
 }
 

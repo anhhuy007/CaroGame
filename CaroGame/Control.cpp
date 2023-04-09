@@ -3,17 +3,14 @@
 #endif
 #include "Control.h"
 #include "View.h"
-#include "Model.h"
 #include "Menu.h"
 #include "FileIO.h"
-#include <string>
 #include "InputHandle.h"
-#include <thread>
+#include <string>
 
 bool escPressed = false;
-bool isPauseGame = true;
 
-void Control::startGame() {
+void Control::StartGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
@@ -27,6 +24,7 @@ void Control::startGame() {
 	Control::NavigationController();
 }
 
+// control navigation between menu and game
 void Control::NavigationController() {
 	// start menu screen
 	View::drawCaroGameText(0);
@@ -35,72 +33,84 @@ void Control::NavigationController() {
 	switch (option) {
 
 	case MenuOption::NEW_GAME_VS_PLAYER:
-		Control::playWithHuman(initNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
+		Control::PlayWithHuman(initNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
-		Control::playWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
+		Control::PlayWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
-		Control::playWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::HARD }));
+		Control::PlayWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::HARD }));
 		break;
 		
 	case MenuOption::LOAD_GAME:
-		Control::loadGame();
+		Control::LoadGame();
 		break;
 		
 	case MenuOption::INSTRUCTION:
 		instructionMenu();
-		Control::returnMenu();
+		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::SETTING:
 		settingMenu();
-		Control::returnMenu();
+		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::ABOUT:
 		aboutMenu();
-		Control::returnMenu();
+		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::BACK:
-		Control::returnMenu();
+		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::QUIT:
-		Control::quitGame();
+		Control::QuitGame();
 		break;
 	}
 }
 
+// initialize information for new game
 Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
 
-	// input user name
-	string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
-	strcpy(game_info.player1.name, p1.c_str());
-	 
-	// if exit game
-	if (p1 == "-1") {
-		Control::returnMenu();
-		return GameInformation();
-	}
+	
 
-	// if user 2 is human then input player name
+	// if player2 is human then get name
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
+		// input player1 name
+		string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+		strcpy(game_info.player1.name, p1.c_str());
+
+		// if exit game
+		if (p1 == "-1") {
+			Control::ReturnMenu();
+			return GameInformation();
+		}
+
 		string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
 		strcpy(game_info.player2.name, p2.c_str());
 
 		// if exit game
 		if (p2 == "-1") {
-			Control::returnMenu();
+			Control::ReturnMenu();
 			return GameInformation();
 		}
 	}
-	// if user 2 is computer
+	// if player2 is computer
 	else {
+		string p1 = InputHandle::getPlayerName("Enter Player name: ", "");
+		strcpy(game_info.player1.name, p1.c_str());
+
+		// if exit game
+		if (p1 == "-1") {
+			Control::ReturnMenu();
+			return GameInformation();
+		}
+
 		strcpy(game_info.player2.name, "Computer");
 	}
 
@@ -118,31 +128,22 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	return game_info;
 }
 
-void Control::playWithHuman(Model::GameInformation game_info) {
-	Control::resetGame();
+// play game with human
+void Control::PlayWithHuman(Model::GameInformation game_info) {
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	string player1_name = game_info.player1.name;
-	wstring name1(player1_name.begin(), player1_name.end());
-	string player2_name = game_info.player2.name;
-	wstring name2(player2_name.begin(), player2_name.end());
+	wstring name1 = game_info.player1.getWStringName();
+	wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
-	View::drawGameBoard();
-	Model::drawXO(game_info.board);
-	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
-	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
-	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
-	View::drawIronmanAvatar(69, -2);
-	View::drawThanosAvatar(113, -2);
-	View::drawVSText();
-	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
-	View::drawF1F2list(88, 32);
+	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, name2);
 	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
 		Model::playerTurn(player, game_info);
 		Model::GameResult result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		
+		// if game is end
 		if (result.first != 0) {
 			game_info.endGame = true;
 			View::displayGameResult(result.first, result.second, name1, name2);
@@ -152,36 +153,21 @@ void Control::playWithHuman(Model::GameInformation game_info) {
 		if (escPressed) break;
 	}
 
-	Control::returnMenu();
+	Control::ReturnMenu();
 }
 
-void Control::playWithComputer(Model::GameInformation game_info) {
-	Control::resetGame();
+// play game with computer
+void Control::PlayWithComputer(Model::GameInformation game_info) {
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	string player1_name = game_info.player1.name;
-	wstring name1(player1_name.begin(), player1_name.end());
-	string player2_name = game_info.player2.name;
-	wstring name2(player2_name.begin(), player2_name.end());
+	wstring name1 = game_info.player1.getWStringName();
+	wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
-	View::drawGameBoard();
-	Model::drawXO(game_info.board);
-	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
-	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
-	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
-	View::drawIronmanAvatar(69, -2);
-	View::drawThanosAvatar(113, -2);
-	View::drawVSText();
-	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
-	View::drawF1F2list(88, 32);
+	View::DisplayGame(game_info.board.value, game_info.board.gui ,name1, name2);
 
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
-
-		View::gotoXY(0, 0);
-		cout << "Current player: " << player.name << endl;
-		
 		if (strcmp(player.name, "Computer") == 0) Model::computerTurn(player, game_info);
 		else Model::playerTurn(player, game_info);
 		
@@ -193,27 +179,21 @@ void Control::playWithComputer(Model::GameInformation game_info) {
 		}
 	}
 	
-	Control::returnMenu();
+	Control::ReturnMenu();
 }
 
-void Control::resetGame() {
-	PlaySound(NULL, NULL, 0);
-	system("cls");
-}
-
-void Control::quitGame() {
+void Control::QuitGame() {
 	escPressed = true;
 	system("cls");
-	cout << "Thank you for playing!" << endl;
 }
 
-void Control::returnMenu() {
+void Control::ReturnMenu() {
 	// return to menu screen
 	system("cls");
 	Control::NavigationController();
 }
 // save game to file
-void Control::saveGame(Model::GameInformation& game_info) {
+void Control::SaveGame(Model::GameInformation& game_info) {
 	char* file; std::string fileName;
 	
 	if (strlen(game_info.name) == 0) {
@@ -255,11 +235,10 @@ void Control::saveGame(Model::GameInformation& game_info) {
 		View::printCenteredToast(L"Save game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
 	}
 	View::pressAnyKey(View::WINDOW_SIZE);
-	system("cls");
 }
 
 // load game from file
-void Control::loadGame() {
+void Control::LoadGame() {
 	system("cls");
 	View::drawLoadGameText();
 
@@ -268,30 +247,30 @@ void Control::loadGame() {
 
 	// check if player want to return menu
 	if (fileName == "-1") {
-		Control::returnMenu();
+		Control::ReturnMenu();
 		return;
 	}
 
 	std::string filePath = FileIO::folder + fileName + FileIO::extension;
-	
 	char* file = new char[filePath.length() + 1];
 	strcpy(file, filePath.c_str());
 	
 	// read game information from file
 	Model::GameInformation game_info = FileIO::readGameInfoFromFile(file);
 	if (game_info.name != "") {
+		system("cls");
 		if (game_info.gameMode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 			// two players game
-			Control::playWithHuman(game_info);
+			Control::PlayWithHuman(game_info);
 		}
 		else {
 			// play with computer
-			Control::playWithComputer(game_info);
+			Control::PlayWithComputer(game_info);
 		}
 	}
 	else {
 		View::printCenteredToast(L"Load game failed!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::RED);
-		system("pause");
+		View::pressAnyKey(View::WINDOW_SIZE);
 	}
 }
 

@@ -115,7 +115,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 	endTurn = false;
 
 	while (!endTurn) {
-		key = InputHandle::Get();
+		key = InputHandle::GetKey();
 		// if is a player move
 		if (key == L"ENTER") {
 			// mark the move on the board and update game's information
@@ -138,8 +138,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				[]() -> void {
 					// if click YES then return menu
 					endTurn = true;
-					Control::quitGame();
-				},
+					Control::QuitGame();
+					},
 				[&]() -> void {
 					// continue game
 					// restore screen's information
@@ -161,7 +161,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				[&]() -> void {
 					// if click YES then return menu
 					system("cls");
-					Control::saveGame(game_info);
+					Control::SaveGame(game_info);
 					// restore screen's information
 					View::writeScreenBuffer(buffer);
 				},
@@ -186,15 +186,15 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					// if click YES then return menu
 					system("cls");
 					endTurn = true;
-					Control::saveGame(game_info);
+					Control::SaveGame(game_info);
 					// restore screen's information
-					Control::loadGame();
+					Control::LoadGame();
 				},
 				[&]() -> void {
 					// continue game
 					// restore screen's information
 					system("cls");
-					Control::loadGame();
+					Control::LoadGame();
 				}
 				);
 		}
@@ -337,21 +337,6 @@ bool Model::checkSubDiagonal(int i, int j, int player, int board[sz][sz]) {
 		board[i - 3][j + 3] == player &&
 		board[i - 4][j + 4] == player
 		);
-}
-
-void Model::drawXO(Model::Board board) {
-	for (int i = 0; i < View::BOARD_SIZE; i++) {
-		for (int j = 0; j < View::BOARD_SIZE; j++) {
-			if (board[i][j] == 0) continue;
-			COORD spot = board.getSpot(i, j);
-			View::printCharactors(
-				board[i][j] == 1 ? L"X" : L"O",
-				{ spot.X , spot.Y },
-				View::Color::BLACK,
-				View::Color::WHITE
-			);
-		}
-	}
 }
 
 wstring formats(int t) {

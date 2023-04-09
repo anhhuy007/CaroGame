@@ -6,6 +6,34 @@
 
 using namespace std;
 
+void View::DisplayGame(int board[sz][sz], COORD cell[sz][sz], wstring name1, wstring name2) {
+	View::drawGameBoard();
+	View::drawXO(board, cell);
+	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
+	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
+	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
+	View::drawIronmanAvatar(69, -2);
+	View::drawThanosAvatar(113, -2);
+	View::drawVSText();
+	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
+	View::drawF1F2list(88, 32);
+}
+
+void View::drawXO(int board[sz][sz], COORD cell[sz][sz]) {
+	for (int i = 0; i < View::BOARD_SIZE; i++) {
+		for (int j = 0; j < View::BOARD_SIZE; j++) {
+			if (board[i][j] == 0) continue;
+			COORD spot = cell[i][j];
+			View::printCharactors(
+				board[i][j] == 1 ? L"X" : L"O",
+				{ spot.X , spot.Y },
+				View::Color::BLACK,
+				View::Color::WHITE
+			);
+		}
+	}
+}
+
 void View::drawAboutText() {
 	int x, y;
 	x = 49;
@@ -1226,7 +1254,7 @@ void View::splashScreen() {
 	View::splashScreenInfo();
 	View::drawPacman();
 
-	InputHandle::Get();
+	InputHandle::GetKey();
 }
 void View::drawPacman() {
 	int x, y;
@@ -1653,7 +1681,7 @@ void View::pressAnyKey(SMALL_RECT box) {
 	wstring message = L"Press any key to continue...";
 	COORD spot = View::getCenteredSpot(message, box);
 	View::printCharactors(message, spot, Color::BLACK, Color::WHITE);
-	InputHandle::Get();
+	InputHandle::GetKey();
 }
 
 void View::displayTimer() {
