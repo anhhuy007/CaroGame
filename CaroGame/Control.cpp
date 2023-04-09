@@ -77,9 +77,7 @@ void Control::NavigationController() {
 Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
 
-	
-
-	// if player2 is human then get name
+	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		// input player1 name
 		string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
@@ -240,6 +238,8 @@ void Control::SaveGame(Model::GameInformation& game_info) {
 // load game from file
 void Control::LoadGame() {
 	system("cls");
+
+	// print LOAD GAME title text
 	View::drawLoadGameText();
 
 	// show saved game list and return game name 

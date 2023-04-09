@@ -82,10 +82,10 @@ string InputHandle::getFileName(bool checkExisted, SMALL_RECT box) {
 				system("cls");
 				bool isExisted = FileIO::fileNameExisted(fileName);
 				
-				if (checkExisted && isExisted) {
+				if (!checkExisted && isExisted) {
 					View::printCenteredToast(L"File name is existed!", box, View::Color::BLACK, View::Color::WHITE);
 				}
-				else if (!checkExisted && !isExisted) {
+				else if (checkExisted && !isExisted) {
 					View::printCenteredToast(L"File name is not existed!", box, View::Color::BLACK, View::Color::WHITE);
 				}
 				else if (!isValidName(fileName)) {
