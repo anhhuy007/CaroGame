@@ -49,17 +49,17 @@ void Control::NavigationController() {
 		break;
 		
 	case MenuOption::INSTRUCTION:
-		instructionMenu();
+		InstructionMenu();
 		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::SETTING:
-		settingMenu();
+		SettingMenu();
 		Control::ReturnMenu();
 		break;
 		
 	case MenuOption::ABOUT:
-		aboutMenu();
+		AboutMenu();
 		Control::ReturnMenu();
 		break;
 		
@@ -80,7 +80,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		// input player1 name
-		string p1 = InputHandle::getPlayerName("Enter Player 1 name: ", "");
+		string p1 = InputHandle::GetPlayerName("Enter Player 1 name: ", "");
 		strcpy(game_info.player1.name, p1.c_str());
 
 		// if exit game
@@ -89,7 +89,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 			return GameInformation();
 		}
 
-		string p2 = InputHandle::getPlayerName("Enter Player 2 name: ", p1);
+		string p2 = InputHandle::GetPlayerName("Enter Player 2 name: ", p1);
 		strcpy(game_info.player2.name, p2.c_str());
 
 		// if exit game
@@ -100,7 +100,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	}
 	// if player2 is computer
 	else {
-		string p1 = InputHandle::getPlayerName("Enter Player name: ", "");
+		string p1 = InputHandle::GetPlayerName("Enter Player name: ", "");
 		strcpy(game_info.player1.name, p1.c_str());
 
 		// if exit game
@@ -196,7 +196,7 @@ void Control::SaveGame(Model::GameInformation& game_info) {
 	
 	if (strlen(game_info.name) == 0) {
 		// input file name from keyboard
-		fileName = InputHandle::getFileName(false, View::WINDOW_SIZE);
+		fileName = InputHandle::GetFileName(false, View::WINDOW_SIZE);
 
 		// check if player want to return
 		if (fileName == "-1") {

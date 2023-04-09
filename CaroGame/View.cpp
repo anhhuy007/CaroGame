@@ -1436,7 +1436,7 @@ void View::confirmDialog(
 
 	short center_x = spot.X + width / 2;
 	
-	drawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
+	DrawMenu(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
 	menuOptionChanged(items, { center_x, short(spot.Y + 6) }, View::Color::BLACK, View::Color::PURPLE, &indx, items.size());
 
 	switch (items[indx].menu_option) {

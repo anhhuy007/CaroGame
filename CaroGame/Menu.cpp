@@ -4,10 +4,9 @@
 #include "Menu.h"
 #include "Sound.h"
 #include "InputHandle.h"
+#include "FileIO.h"
 #include <vector>
 #include <string.h>
-#include "FileIO.h"
-using namespace std;
 
 // global variable 
 Sound::SoundManager soundManager;
@@ -59,7 +58,7 @@ std::vector<MenuItem> getMenuItems(std::vector<MenuItem> menu_items, int indx, i
 }
 
 // draw menu 
-void drawMenu(
+void DrawMenu(
 	std::vector<MenuItem> menu_items,
 	COORD start,
 	View::Color textcolor,
@@ -72,11 +71,13 @@ void drawMenu(
 
 	for (int i = 0; i < displaymenu_size; i++) {
 		short y = start.Y + (i * 2);
+		// selected item
 		if (i == *cur_index || (*cur_index >= displaymenu_size && i == displaymenu_size - 1)) {
 			wstring selected_content = L">> " + display_items[i].content + L" <<";
 			short x = start.X - selected_content.length() / 2;
 			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
+		// not selected item
 		else {
 			short x = start.X - display_items[i].content.length() / 2;
 			View::printCharactors(display_items[i].content, { x, y }, textcolor, View::Color::WHITE);
@@ -97,6 +98,7 @@ void menuOptionChanged(
 	clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 
 	while (key != L"ENTER") {
+		// move up
 		if (key == L"UP" || key == L"W" || key == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_items.size())) {
@@ -106,6 +108,7 @@ void menuOptionChanged(
 				Sound::playEffectSound(Sound::VALID, soundManager);
 			}
 		}
+		// move down
 		else if (key == L"DOWN" || key == L"S" || key == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_items.size())) {
@@ -119,14 +122,15 @@ void menuOptionChanged(
 			menuEscPressed = true;
 			break;
 		}
-		drawMenu(menu_items, start, text_color, selected_text_color, cur_index, displaymenu_size);
+		// update menu status
+		DrawMenu(menu_items, start, text_color, selected_text_color, cur_index, displaymenu_size);
 		key = InputHandle::GetKey();
 		clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 	}
 }
 
 // draw main menu screen
-MenuOption mainMenu(
+MenuOption MainMenu(
 	COORD start,
 	View::Color text_color,
 	View::Color selected_textcolor
@@ -142,14 +146,13 @@ MenuOption mainMenu(
 		{ 5, L"QUIT", MenuOption::QUIT }
 	};
 
-	drawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	DrawMenu(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 	menuOptionChanged(main_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	clearMenu(main_menu_items, start);
 
 	return main_menu_items[index].menu_option;
 }
 
-MenuOption newGameMenu(
+MenuOption NewGameMenu(
 	COORD start,
 	View::Color text_color,
 	View::Color selected_textcolor
@@ -164,9 +167,8 @@ MenuOption newGameMenu(
 		{3, L"BACK", MenuOption::BACK},
 	};
 
-	drawMenu(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
+	DrawMenu(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
 	menuOptionChanged(newgame_menu_items, start, text_color, selected_textcolor, &index, menu_size);
-	clearMenu(newgame_menu_items, start);
 
 	return newgame_menu_items[index].menu_option;
 }
@@ -179,18 +181,18 @@ MenuOption MenuScreen() {
 	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.backgroundPlaying };
 	Sound::playBackgroundSound(soundManager);
 	
-	MenuOption option = mainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
+	MenuOption option = MainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 
 	switch (option) {
 	case MenuOption::NEW_GAME:
-		return newGameMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
+		return NewGameMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 	}
 	return option;
 }
 
-MenuOption aboutMenu() {
-	COORD start = { 70, 10 };
+MenuOption AboutMenu() {
 	system("cls");
+	COORD start = { 70, 10 };
 	wstring key;
 	wstring about_content[12] = {
 		L"DESIGNED BY TEAM 10 - HCMUS",
@@ -227,10 +229,11 @@ MenuOption aboutMenu() {
 	return MenuOption::ABOUT;
 }
 
-MenuOption instructionMenu() {
-	COORD start = { 70, 10 };
-
+MenuOption InstructionMenu() {
 	system("cls");
+	// draw INSTRUCTION title 
+	View::drawInstructionText();
+	COORD start = { 70, 10 };
 	wstring key;
 	wstring instruction_content[12] = {
 		L"Controls",
@@ -247,10 +250,7 @@ MenuOption instructionMenu() {
 		L"PRESS ESC TO BACK"
 	};
 
-
 	View::clearRectangleArea({ 50, 15 }, 50, 50);
-
-	View::drawInstructionText();
 
 	for (int i = 0; i < 12; i++) {
 
@@ -260,11 +260,11 @@ MenuOption instructionMenu() {
 		View::printCharactors(instruction_content[i], { x,y }, View::Color::BLACK, View::Color::WHITE);
 	}
 
-
 	while (key != L"ESC") {
 		key = InputHandle::GetKey();
 		Sound::playEffectSound(Sound::INVALID, soundManager);
 	}
+	
 	return MenuOption::INSTRUCTION;
 }
 
@@ -276,8 +276,8 @@ void drawSettingMenu(
 	int* cur_index,
 	int menu_size
 ) {
+	// draw SETTING title
 	View::drawSettingText();
-	//clearMenu(menu_items, start, menu_size);
 
 	for (int i = 0; i < menu_size; i++) {
 		short y = start.Y + (i * 2);
@@ -289,11 +289,13 @@ void drawSettingMenu(
 			content += setting_items[i].status_false;
 		}
 
+		// selected item
 		if (i == *cur_index) {
 			wstring selected_content = L">> " + content + L" <<";
 			short x = start.X - selected_content.length() / 2;
 			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
+		// unselected item
 		else {
 			short x = start.X - content.length() / 2;
 			View::printCharactors(content, { x, y }, textcolor, View::Color::WHITE);
@@ -335,6 +337,7 @@ void settingMenuOptionChanged(
 				return;
 			}
 
+			// update sound manager and setting items
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
 			soundManager = { setting_items[0].status, setting_items[1].status };
 			Sound::playBackgroundSound(soundManager);
@@ -346,7 +349,8 @@ void settingMenuOptionChanged(
 	}
 }
 
-void settingMenu() {
+void SettingMenu() {
+	system("cls");
 	COORD start = { 70, 10 };
 	int index = 0;
 	std::vector<SettingItem> setting_items = {
@@ -355,7 +359,6 @@ void settingMenu() {
 		{ 2, L"BACK", false, L"", L""}
 	};
 
-	system("cls");
 	drawSettingMenu(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, setting_items.size());
 	settingMenuOptionChanged(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index);
 
@@ -363,6 +366,7 @@ void settingMenu() {
 	setting.backgroundSound = setting_items[0].status;
 	setting.soundEffect = setting_items[1].status;
 
+	// save lastest setting to file 
 	FileIO::SaveSetting("GameSetting.dat", setting);
 }
 
@@ -385,6 +389,7 @@ std::wstring formatStringToWidth(std::vector<std::string> contents, std::vector<
 	return result;
 }
 
+// display saved games table and return the selected game that user want to load
 std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box) {
 	// display saved games' table
 	box.Bottom = box.Top + gameList.size() + 4;
@@ -396,6 +401,8 @@ std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box)
 			View::printCharactors(L" ", { x,y }, View::Color::BLACK, View::Color::BLACK);
 		}
 	}
+
+	// print table header
 	View::printVerticalCenteredCharactors(L"NAME", { 25,12,55 ,14 }, 1, View::Color::WHITE, View::Color::BLACK);
 	View::printVerticalCenteredCharactors(L"DATE", { 55,12,86,14 }, 1, View::Color::WHITE, View::Color::BLACK);
 	View::printVerticalCenteredCharactors(L"TYPE", { 86,12,116,14 }, 1, View::Color::WHITE, View::Color::BLACK);
@@ -408,12 +415,7 @@ std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box)
 		std::string date = gameList[i].substr(gameList[i].find_first_of("@") + 1, gameList[i].find_last_of("@") - gameList[i].find_first_of("@") - 1);
 		std::string type = gameList[i].substr(gameList[i].find_last_of("@") + 1, gameList[i].length() - gameList[i].find_last_of("@") - 1);
 		
-		std::vector<std::string> contents = {
-			name,
-			date,
-			type
-		};
-
+		std::vector<std::string> contents = { name, date, type };
 		std::wstring data = formatStringToWidth(contents, { 25, 30, 18 });
 		titles.push_back({ i, data, MenuOption::NONE });
 	}
@@ -421,10 +423,11 @@ std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box)
 	escEnable = true;
 	int index = 0, menu_size = min(gameList.size(), 7);
 	COORD spot = View::getCenteredSpot(L"", box);
-	drawMenu(titles, { short(spot.X + 2), short(box.Top + 1) }, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
+	DrawMenu(titles, { short(spot.X + 2), short(box.Top + 1) }, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
 	menuOptionChanged(titles, { short(spot.X + 2), short(box.Top + 1) }, View::Color::BLACK, View::Color::PURPLE, &index, menu_size);
 	escEnable = false;
 	
+	// if user press ESC, return 
 	if (menuEscPressed) return "-1";
 	return gameList[index].substr(0, gameList[index].find_first_of("@"));
 }
