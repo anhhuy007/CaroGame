@@ -1,23 +1,14 @@
 #include "AI.h"
 #include "Model.h"
-// black is computer
-// white is human
 
 static int evaluationCount = 0;
-
-int AI::getWinScore() {
-	return AI::MAX_SCORE;
-}
-
-/*
-	playersTurn = 1: human's turn
-	playersTurn = 0: computer's turn
-*/
+/* playersTurn = 1: human's turn
+   playersTurn = 0: computer's turn */
 int AI::getScore(Model::Board board, bool playerTurn) {
 	evaluationCount++;
-	View::clearRectangleArea({ 0, 0 }, 50, 1);
+	/*View::clearRectangleArea({ 0, 0 }, 50, 1);
 	View::gotoXY(0, 0);
-	cout << "Evaluation count: " << evaluationCount << endl;
+	cout << "Evaluation count: " << evaluationCount << endl;*/
 	double playerScore = AI::evaluateHorizontal(board, true, playerTurn)
 		+ AI::evaluateVertical(board, true, playerTurn)
 		+ AI::evaluateDiagonal(board, true, playerTurn);
@@ -26,15 +17,12 @@ int AI::getScore(Model::Board board, bool playerTurn) {
 		+ AI::evaluateVertical(board, false, playerTurn)
 		+ AI::evaluateDiagonal(board, false, playerTurn);
 
-	/*cout << "Player score: " << playerScore << endl;
-	cout << "Computer score: " << computerScore << endl;*/
-
 	return computerScore - playerScore;
 }
 
-COORD AI::calculateNextMove(int depth, Model::Board board) {
+COORD AI::findNextMove(int depth, Model::Board board) {
 	COORD move = { -1, -1 };
-	AI::EvaluatedMove bestMove = AI::searchWinningMove(board);
+	AI::EvaluatedMove bestMove = AI::findWinningMove(board);
 
 	if (bestMove.move.X != -1) {
 		move = bestMove.move;
@@ -48,72 +36,9 @@ COORD AI::calculateNextMove(int depth, Model::Board board) {
 
 	return move;
 }
-/*
-if max: -> computer's turn
-if !max: -> human's turn
-*/
-AI::EvaluatedMove AI::minimaxSearch(int depth, Model::Board dummyBoard, bool max) {
-	if (depth == 0) {
-		/*cout << "Score: " << AI::getScore(dummyBoard, !max) << endl;
-		for (int i = 0; i < sz; i++) {
-			for (int j = 0; j < sz; j++) {
-				cout << dummyBoard[i][j] << " ";
-			}
-			cout << endl;
-		}*/
-		return AI::EvaluatedMove({ getScore(dummyBoard, !max), { -1, -1} });
-	}
-
-	std::vector<COORD> allPossibleMoves = dummyBoard.generateMoves();
-	AI::EvaluatedMove bestMove;
-
-	if (max) {
-		bestMove.score = AI::MIN_SCORE;
-		for (COORD move : allPossibleMoves) {
-			//std::cout << "Max: " << move.X << ", " << move.Y << std::endl;
-			dummyBoard.addStoneNoGUI(move.X, move.Y, true);
-
-			AI::EvaluatedMove tempMove = AI::minimaxSearch(depth - 1, dummyBoard, false);
-
-			dummyBoard.removeStoneNoGUI(move.X, move.Y);
-
-			if ((double)(tempMove.score) > (double)(bestMove.score)) {
-				bestMove = tempMove;
-				bestMove.move = move;
-			}
-		}
-	}
-	else {
-		bestMove.score = AI::MAX_SCORE;
-		bestMove.move = allPossibleMoves[0];
-
-		for (COORD move : allPossibleMoves) {
-			//std::cout << "Min: " << move.X << ", " << move.Y << std::endl;
-			dummyBoard.addStoneNoGUI(move.X, move.Y, false);
-
-			AI::EvaluatedMove tempMove = minimaxSearch(depth - 1, dummyBoard, true);
-
-			dummyBoard.removeStoneNoGUI(move.X, move.Y);
-
-			if ((double)(tempMove.score) < (double)(bestMove.score)) {
-				bestMove = tempMove;
-				bestMove.move = move;
-			}
-		}
-	}
-
-	return bestMove;
-}
 
 AI::EvaluatedMove AI::minimaxSearchAB(int depth, Model::Board dummyBoard, bool max, double alpha, double beta) {
 	if (depth == 0) {
-		cout << "Score: " << AI::getScore(dummyBoard, !max) << endl;
-		for (int i = 0; i < sz; i++) {
-			for (int j = 0; j < sz; j++) {
-				cout << dummyBoard[i][j] << " ";
-			}
-			cout << endl;
-		}
 		return AI::EvaluatedMove({ getScore(dummyBoard, !max), { -1, -1} });
 	}
 
@@ -123,12 +48,11 @@ AI::EvaluatedMove AI::minimaxSearchAB(int depth, Model::Board dummyBoard, bool m
 	if (max) {
 		bestMove.score = AI::MIN_SCORE;
 		for (COORD move : allPossibleMoves) {
-			//std::cout << "Max: " << move.X << ", " << move.Y << std::endl;
-			dummyBoard.addStoneNoGUI(move.X, move.Y, true);
+			dummyBoard.addMoveNoGUI(move.X, move.Y, true);
 
 			AI::EvaluatedMove tempMove = AI::minimaxSearchAB(depth - 1, dummyBoard, false, alpha, beta);
 
-			dummyBoard.removeStoneNoGUI(move.X, move.Y);
+			dummyBoard.removeMoveNoGUI(move.X, move.Y);
 
 			if ((double)(tempMove.score) > (double)(bestMove.score)) {
 				bestMove = tempMove;
@@ -149,12 +73,11 @@ AI::EvaluatedMove AI::minimaxSearchAB(int depth, Model::Board dummyBoard, bool m
 		bestMove.move = allPossibleMoves[0];
 
 		for (COORD move : allPossibleMoves) {
-			//std::cout << "Min: " << move.X << ", " << move.Y << std::endl;
-			dummyBoard.addStoneNoGUI(move.X, move.Y, false);
+			dummyBoard.addMoveNoGUI(move.X, move.Y, false);
 
-			AI::EvaluatedMove tempMove = minimaxSearch(depth - 1, dummyBoard, true);
+			AI::EvaluatedMove tempMove = minimaxSearchAB(depth - 1, dummyBoard, true, alpha, beta);
 
-			dummyBoard.removeStoneNoGUI(move.X, move.Y);
+			dummyBoard.removeMoveNoGUI(move.X, move.Y);
 
 			if ((double)(tempMove.score) < (double)(bestMove.score)) {
 				bestMove = tempMove;
@@ -175,7 +98,7 @@ AI::EvaluatedMove AI::minimaxSearchAB(int depth, Model::Board dummyBoard, bool m
 }
 
 
-AI::EvaluatedMove AI::searchWinningMove(Model::Board board) {
+AI::EvaluatedMove AI::findWinningMove(Model::Board board) {
 	std::vector<COORD> allPossibleMoves = board.generateMoves();
 	AI::EvaluatedMove winningMove = EvaluatedMove();
 
@@ -184,12 +107,12 @@ AI::EvaluatedMove AI::searchWinningMove(Model::Board board) {
 		evaluationCount++;
 		Model::Board dummyBoard = Model::Board(board);
 
-		dummyBoard.addStoneNoGUI(move.X, move.Y, false);
+		dummyBoard.addMoveNoGUI(move.X, move.Y, false);
 
 		// if first player wins then return winning move
-		if (AI::getScore(dummyBoard, false) >= AI::WIN_SCORE) {
+		if (AI::getScore(dummyBoard, false) >= AI::MAX_SCORE) {
 			winningMove.move = move;
-			winningMove.score = AI::WIN_SCORE;
+			winningMove.score = AI::MAX_SCORE;
 			return winningMove;
 		}
 	}
@@ -197,13 +120,17 @@ AI::EvaluatedMove AI::searchWinningMove(Model::Board board) {
 	return winningMove;
 }
 
+// evaluate all horizontal consecutive sets of moves
 int AI::evaluateHorizontal(Model::Board board, bool isHuman, bool playerTurn) {
+	// contain the evaluation of current set of moves
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
+	
+	// contain the evaluation of previous set of moves
 	AI::Evaluation preEvaluation = AI::Evaluation(0, 2, 0);
+	
 	for (int i = 0; i < sz; i++) {
 		for (int j = 0; j < sz; j++) {
 			evaluateDirections(board, i, j, isHuman, playerTurn, evaluation, preEvaluation);
-			//std::cout << "Evaluation: " << i << " " << j << ": " << evaluation.third << std::endl;
 		}
 		preEvaluation = AI::Evaluation(0, 2, 0);
 		evaluateDirectionAfterOnePass(evaluation, isHuman, playerTurn);
@@ -212,6 +139,7 @@ int AI::evaluateHorizontal(Model::Board board, bool isHuman, bool playerTurn) {
 	return evaluation.third;
 }
 
+// evaluate all vertical consecutive sets of moves
 int AI::evaluateVertical(Model::Board board, bool isHuman, bool playerTurn) {
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
 	AI::Evaluation preEvaluation = AI::Evaluation(0, 2, 0);
@@ -226,16 +154,16 @@ int AI::evaluateVertical(Model::Board board, bool isHuman, bool playerTurn) {
 	return evaluation.third;
 }
 
+// evaluate all diagonal consecutive sets of moves
 int AI::evaluateDiagonal(Model::Board board, bool isHuman, bool playerTurn) {
 	AI::Evaluation evaluation = AI::Evaluation(0, 2, 0);
 	AI::Evaluation preEvaluation = AI::Evaluation(0, 2, 0);
 	// from bottom-left to top-right
 	for (int k = 0; k <= 2 * (sz - 1); k++) {
-		int iStart = max(0, k - sz + 1);
-		int iEnd = min(sz - 1, k);
-		for (int i = iStart; i <= iEnd; ++i) {
+		int start = max(0, k - sz + 1);
+		int end = min(sz - 1, k);
+		for (int i = start; i <= end; ++i) {
 			evaluateDirections(board, i, k - i, isHuman, playerTurn, evaluation, preEvaluation);
-			//cout << i << " " << k-i << " " << evaluation.first << " " << evaluation.second << " " << evaluation.third << endl;
 		}
 		preEvaluation = AI::Evaluation(0, 2, 0);
 		evaluateDirectionAfterOnePass(evaluation, isHuman, playerTurn);
@@ -243,12 +171,10 @@ int AI::evaluateDiagonal(Model::Board board, bool isHuman, bool playerTurn) {
 
 	// from top-left to bottom-right
 	for (int k = 1 - sz; k < sz; k++) {
-		int iStart = max(0, k);
-		int iEnd = min(sz + k - 1, sz - 1);
-		for (int i = iStart; i <= iEnd; i++) {
+		int start = max(0, k);
+		int end = min(sz + k - 1, sz - 1);
+		for (int i = start; i <= end; i++) {
 			evaluateDirections(board, i, i - k, isHuman, playerTurn, evaluation, preEvaluation);
-			//cout << i << " " << i - k << " " << evaluation.first << " " << evaluation.second << " " << evaluation.third << endl;
-
 		}
 		preEvaluation = AI::Evaluation(0, 2, 0);
 		evaluateDirectionAfterOnePass(evaluation, isHuman, playerTurn);
@@ -259,10 +185,6 @@ int AI::evaluateDiagonal(Model::Board board, bool isHuman, bool playerTurn) {
 }
 
 void AI::evaluateDirections(Model::Board board, int i, int j, bool isHuman, bool playerTurn, AI::Evaluation& evaluation, AI::Evaluation& preEvaluation) {
-	if (i == 3 && j == 6) {
-		int here = 1;
-	}
-
 	int playerMark = board[i][j];
 	// check if selected player has marked in this cell
 	if (playerMark == (isHuman ? 1 : 2)) {
@@ -276,7 +198,7 @@ void AI::evaluateDirections(Model::Board board, int i, int j, bool isHuman, bool
 			// decrease block count
 			evaluation.second--;
 			// calculate the score of previous consecutive marks
-			evaluation.third += AI::getConsecutiveSetScore(evaluation.first, evaluation.second, preEvaluation.first, preEvaluation.second, isHuman == playerTurn);
+			evaluation.third += AI::evaluateConsecutiveSetScore(evaluation.first, evaluation.second, preEvaluation.first, preEvaluation.second, isHuman == playerTurn);
 			if (preEvaluation.second != 2) preEvaluation = evaluation;
 			// set consecutive marks to 0
 			evaluation.first = 0;
@@ -286,7 +208,7 @@ void AI::evaluateDirections(Model::Board board, int i, int j, bool isHuman, bool
 
 	// cell is occupied by opponent
 	else if (evaluation.first > 0) {
-		evaluation.third += AI::getConsecutiveSetScore(evaluation.first, evaluation.second, preEvaluation.first, preEvaluation.second, isHuman == playerTurn);
+		evaluation.third += AI::evaluateConsecutiveSetScore(evaluation.first, evaluation.second, preEvaluation.first, preEvaluation.second, isHuman == playerTurn);
 		evaluation.first = 0;
 		evaluation.second = 2;
 		preEvaluation = AI::Evaluation(0, 2, 0);
@@ -298,23 +220,22 @@ void AI::evaluateDirections(Model::Board board, int i, int j, bool isHuman, bool
 
 void AI::evaluateDirectionAfterOnePass(AI::Evaluation& evaluation, bool isHuman, bool playerTurn) {
 	if (evaluation.first > 0) {
-		evaluation.third += AI::getConsecutiveSetScore(evaluation.first, evaluation.second, 0, 2, isHuman == playerTurn);
+		evaluation.third += AI::evaluateConsecutiveSetScore(evaluation.first, evaluation.second, 0, 2, isHuman == playerTurn);
 	}
 	evaluation.first = 0;
 	evaluation.second = 2;
 }
 
-/*
-This function will return the evaluation of a particular consecutive set of move
-*/
-int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlocks, bool currentTurn) {
+/* This function will return the evaluation of a particular consecutive set of move */
+int AI::evaluateConsecutiveSetScore(int count, int blocks, int preCount, int preBlocks, bool currentTurn) {
 	int winGuarantee = 1000000;
 
 	if (blocks == 2 && count < 5) return 0;
 
 	switch (count) {
 	case 5:
-		return AI::WIN_SCORE;
+		// if there are 5 consecutive marks then return winning score
+		return AI::MAX_SCORE;
 	case 4:
 		if (currentTurn) return winGuarantee;
 		else {
@@ -340,13 +261,13 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 			if (currentTurn) {
 				if (preBlocks == 1) {
 					// OX_XXX_
-					if (preCount > 0) return AI::WIN_SCORE;
+					if (preCount > 0) return AI::MAX_SCORE;
 					// O_XXX_
 					else return 50000;
 				}
 				else if (preBlocks == 0) {
 					// _XX_XXX_
-					if (preCount > 0) return AI::WIN_SCORE * 2;
+					if (preCount > 0) return AI::MAX_SCORE * 2;
 					// _O_XXX_
 					else return 50000;
 				}
@@ -358,13 +279,13 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 			if (currentTurn) {
 				if (preBlocks == 1) {
 					// OX_XXXO
-					if (preCount > 0) return AI::WIN_SCORE;
+					if (preCount > 0) return AI::MAX_SCORE;
 					// O_XXXO
 					else return 1;
 				}
 				else if (preBlocks == 0) {
 					// _XX_XXXO
-					if (preCount > 0) return AI::WIN_SCORE;
+					if (preCount > 0) return AI::MAX_SCORE;
 					// _O_XXXO
 					else return 1;
 				}
@@ -399,7 +320,7 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 			if (currentTurn) {
 				if (preBlocks == 1) {
 					// OXX_XX_
-					if (preCount > 1) return AI::WIN_SCORE;
+					if (preCount > 1) return AI::MAX_SCORE;
 					// OX_XX_
 					else if (preCount == 1) return 200;
 					// O_XX_
@@ -407,7 +328,7 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 				}
 				else if (preBlocks == 0) {
 					// _XX_XX_
-					if (preCount > 0) return AI::WIN_SCORE;
+					if (preCount > 0) return AI::MAX_SCORE;
 					// _O_XX_
 					else return 7;
 				}
@@ -434,12 +355,12 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 			if (currentTurn) {
 				if (preBlocks == 1) {
 					// OXX_XXO
-					if (preCount > 1) return AI::WIN_SCORE;
+					if (preCount > 1) return AI::MAX_SCORE;
 					else return 1;
 				}
 				else if (preBlocks == 0) {
 					// _XX_XXO
-					if (preCount > 0) return AI::WIN_SCORE;
+					if (preCount > 0) return AI::MAX_SCORE;
 					// _O_XXO
 					else return 1;
 				}
@@ -463,5 +384,5 @@ int AI::getConsecutiveSetScore(int count, int blocks, int preCount, int preBlock
 		return 1;
 	}
 
-	return AI::WIN_SCORE * 2;
+	return AI::MAX_SCORE * 2;
 }

@@ -16,6 +16,7 @@ void Sound::playBackgroundSound(SoundManager& soundManager) {
 		}
 	} 
 	else {
+		soundManager.backgroundPlaying = false;
 		pauseSound(BACKGROUND);
 	}
 }
@@ -52,7 +53,7 @@ void Sound::stopSound(wstring path) {
 void Sound::pauseSound(wstring path) {
 	wstring alias = findAlias(path);
 	wstring command = L"pause " + alias;
-	cout << mciSendString(command.c_str(), NULL, 0, NULL);
+	mciSendString(command.c_str(), NULL, 0, NULL);
 }
 
 void Sound::resumeSound(wstring path) {

@@ -224,7 +224,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 }
 
 void Model::computerTurn(Model::Player player, Model::GameInformation& game_info) {
-	COORD move = AI::calculateNextMove(2, game_info.board);
+	COORD move = AI::findNextMove(2, game_info.board);
 
 	COORD spot = game_info.board.getSpot(move.X, move.Y);
 	curX = spot.X;

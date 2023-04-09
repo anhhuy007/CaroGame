@@ -85,27 +85,22 @@ namespace Model {
 			return gui[i][j];
 		}
 
-		inline void removeStoneNoGUI(int x, int y) {
+		inline void removeMoveNoGUI(int x, int y) {
 			value[x][y] = 0;
 		}
 
-		inline void addStoneNoGUI(int x, int y, bool black) {
-			value[x][y] = black ? 2 : 1;
+		inline void addMoveNoGUI(int x, int y, bool computer) {
+			value[x][y] = computer ? 2 : 1;
 		}
 
-		inline bool addStone(int x, int y, bool black) {
+		inline bool addMove(int x, int y, bool black) {
 			if (value[x][y] != 0) return false;
 
 			value[x][y] = black ? 2 : 1;
 			View::drawMove(gui[x][y].X, gui[x][y].Y, value[x][y]);
 			return true;
 		}
-
-		// return data array 
-		inline int** getDataArray() {
-			return (int**)value;
-		}
-
+		
 		std::vector<COORD> generateMoves() {
 			std::vector<COORD> moveList;
 
@@ -232,17 +227,19 @@ namespace Model {
 			return str;
 		}
 
+		// information pattern: name@date@gameMode
 		std::string getFormatedInformation() {
 			std::string formatStr = name;
 			formatStr += "@";
 			formatStr += getFormatedDate();
 			formatStr += "@";
-			formatStr += getGameType();
+			formatStr += getGameMode();
 
 			return formatStr;
 		}
 
-		std::string getGameType() {
+		// return game mode 
+		std::string getGameMode() {
 			if (gameMode.isPlayWithHuman == true) return "Player vs Player";
 			else {
 				if (gameMode.level == EASY) return "Player vs Computer (Easy)"; 
@@ -255,6 +252,7 @@ namespace Model {
 		Model::Player player, 
 		Model::GameInformation& game_info
 	);
+	
 	void computerTurn(Model::Player player, Model::GameInformation& game_info);
 	void makePlayerMove(std::wstring key);
 	void markPlayerMove(
@@ -290,7 +288,6 @@ namespace Model {
 		int player, 
 		int board[sz][sz]
 	);
-	void drawXO(Board board);
 	void previousMove(
 		GameInformation& game_info
 	);
