@@ -10,9 +10,9 @@
 using namespace Model;
 
 namespace FileIO {
-	const string folder = "SavedGame//";
-	const string extension = ".dat";
-	const string savedGame = "SavedGameList.txt";
+	const std::string folder = "SavedGame//";
+	const std::string extension = ".dat";
+	const std::string savedGame = "SavedGameList.txt";
 
 	// write and read all game information to file
 	bool WriteGameInfoToFile(char fileName[], GameInformation game_info);

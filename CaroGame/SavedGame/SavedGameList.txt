@@ -4,3 +4,5 @@ game2@07-04-2023 - 04:48:53@Player vs Computer (Easy)
 randomGame@07-04-2023 - 04:53:08@Player vs Computer (Hard)
 ninja@07-04-2023 - 05:01:46@Player vs Player
 orz@09-04-2023 - 11:07:25@Player vs Computer (Hard)
+notagame@10-04-2023 - 12:29:32@Player vs Computer (Easy)
+adventureTime@10-04-2023 - 12:30:17@Player vs Player

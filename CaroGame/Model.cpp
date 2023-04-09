@@ -3,10 +3,7 @@
 #include "View.h"
 #include "Control.h"
 #include "AI.h"
-using namespace std;
 
-short curX = View::LEFT + 38;
-short curY = View::TOP + 19;
 bool endTurn = false;
 
 void Model::previousMove(Model::GameInformation& game_info) {
@@ -33,50 +30,50 @@ void Model::previousMove(Model::GameInformation& game_info) {
 
 	// mark the previous move as empty
 	game_info.board[i][j] = 0;
-	curX = preX; curY = preY;
-	View::printCharactors(L" ", { curX, curY }, View::Color::WHITE, View::Color::WHITE);
-	View::gotoXY(curX, curY);
+	game_info.curX = preX; game_info.curY = preY;
+	View::printCharactors(L" ", { game_info.curX, game_info.curY }, View::Color::WHITE, View::Color::WHITE);
+	View::gotoXY(game_info.curX, game_info.curY);
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 }
 
-void Model::makePlayerMove(std::wstring key) {	
+void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) {
 	// move up
 	if (key == L"UP") {
-		if (curY > View::TOP + 1) {
-			curY -= 2;
+		if (game_info.curY > View::TOP + 1) {
+			game_info.curY -= 2;
 		}
 		else {
-			curY = View::BOT - 1;
+			game_info.curY = View::BOT - 1;
 		}
 	}
 
 	// move down
 	else if (key == L"DOWN") {
-		if (curY < View::BOT - 1) {
-			curY += 2;
+		if (game_info.curY < View::BOT - 1) {
+			game_info.curY += 2;
 		}
 		else {
-			curY = View::TOP + 1;
+			game_info.curY = View::TOP + 1;
 		}
 	}
 
 	// move left
 	else if (key == L"LEFT") {
-		if (curX > View::LEFT + 2) {
-			curX -= 4;
+		if (game_info.curX > View::LEFT + 2) {
+			game_info.curX -= 4;
 		}
 		else {
-			curX = View::RIGHT - 2;
+			game_info.curX = View::RIGHT - 2;
 		}
 	}
 
 	// move right
 	else if (key == L"RIGHT") {
-		if (curX < View::RIGHT - 2) {
-			curX += 4;
+		if (game_info.curX < View::RIGHT - 2) {
+			game_info.curX += 4;
 		}
 		else {
-			curX = View::LEFT + 2;
+			game_info.curX = View::LEFT + 2;
 		}
 	}
 }
@@ -95,8 +92,8 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		game_info.totalStep++;
 		game_info.updateDisplayedHistory({ { spot.X, spot.Y, playerNum }, false });
 		// show move on the game board
-		wstring playerMark = playerNum == 1 ? L"X" : L"O";
-		View::printCharactors(playerMark, { curX, curY }, View::Color::BLACK, View::Color::WHITE);
+		std::wstring playerMark = playerNum == 1 ? L"X" : L"O";
+		View::printCharactors(playerMark, { game_info.curX, game_info.curY }, View::Color::BLACK, View::Color::WHITE);
 		if (game_info.isFirstPlayerTurn) {
 			game_info.player1.numberOfMoves++;
 		}
@@ -110,8 +107,8 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 }
 
 void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {
-	View::gotoXY(curX, curY);
-	wstring key;
+	View::gotoXY(game_info.curX, game_info.curY);
+	std::wstring key;
 	endTurn = false;
 
 	while (!endTurn) {
@@ -120,9 +117,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		if (key == L"ENTER") {
 			// mark the move on the board and update game's information
 			int playerNum = game_info.isFirstPlayerTurn ? 1 : 2;
-			Model::markPlayerMove({ curX, curY }, playerNum, game_info);
+			Model::markPlayerMove({ game_info.curX, game_info.curY }, playerNum, game_info);
 			Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-
 		} 
 		
 		// quit game
@@ -141,7 +137,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					Control::QuitGame();
 					},
 				[&]() -> void {
-					// continue game
+					// if click NO then continue game
 					// restore screen's information
 					View::writeScreenBuffer(buffer);
 				}
@@ -166,7 +162,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					View::writeScreenBuffer(buffer);
 				},
 				[&]() -> void {
-					// continue game
+					// if click NO then continue game
 					// restore screen's information
 					View::writeScreenBuffer(buffer);
 				}
@@ -191,7 +187,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					Control::LoadGame();
 				},
 				[&]() -> void {
-					// continue game
+					// if click NO then continue game
 					// restore screen's information
 					system("cls");
 					Control::LoadGame();
@@ -217,8 +213,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		
 		// player's move
 		else {
-			Model::makePlayerMove(key);
-			View::gotoXY(curX, curY);
+			Model::makePlayerMove(key, game_info);
+			View::gotoXY(game_info.curX, game_info.curY);
 		}
 	}
 }
@@ -227,9 +223,9 @@ void Model::computerTurn(Model::Player player, Model::GameInformation& game_info
 	COORD move = AI::findNextMove(2, game_info.board);
 
 	COORD spot = game_info.board.getSpot(move.X, move.Y);
-	curX = spot.X;
-	curY = spot.Y;
-	markPlayerMove({curX, curY}, 2, game_info);
+	game_info.curX = spot.X;
+	game_info.curY = spot.Y;
+	markPlayerMove({game_info.curX, game_info.curY}, 2, game_info);
 	updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 }
 
@@ -238,8 +234,8 @@ void Model::computerTurn(Model::Player player, Model::GameInformation& game_info
 // 2 : player 2 win
 // 3 : draw
 // if game ended, return a pair of result and a vector of coordinates of winning line
-pair<int, vector<COORD>> Model::checkResult(int player, int board[sz][sz]) {
-	vector<COORD> winPos;
+std::pair<int, std::vector<COORD>> Model::checkResult(int player, int board[sz][sz]) {
+	std::vector<COORD> winPos;
 	int count = 0;
 	for (int i = 0; i < View::BOARD_SIZE; i++) {
 		for (int j = 0; j < View::BOARD_SIZE; j++) {
@@ -339,10 +335,11 @@ bool Model::checkSubDiagonal(int i, int j, int player, int board[sz][sz]) {
 		);
 }
 
-wstring formats(int t) {
-	wstring time = to_wstring(t);
+// format number to two digits
+std::wstring formats(int t) {
+	std::wstring time = std::to_wstring(t);
 	if (t < 10) {
-		time = L"0" + to_wstring(t);
+		time = L"0" + std::to_wstring(t);
 	}
 	return time;
 }
@@ -353,13 +350,16 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
 	}	
+
+	// display current turn: X or O
 	View::drawXOart({short(spot.X - 6),short(spot.Y + 4) }, game_info.isFirstPlayerTurn);
 
 	// update total move of player
 	int moveX = game_info.player1.numberOfMoves;
 	short x = spot.X;
 	short y = spot.Y + (height / 2 - 2) / 2;
-	wstring xMoves = formats(moveX);
+	std::wstring xMoves = formats(moveX);
+	// display total move of player X
 	View::printVerticalCenteredCharactors(
 		xMoves,
 		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
@@ -370,7 +370,8 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	x = spot.X + (((width - 4) / 3) * 2 + 3);
 	y = spot.Y + (height / 2 - 2) / 2;
 	int moveY = game_info.player2.numberOfMoves;
-	wstring yMoves = formats(moveY);
+	std::wstring yMoves = formats(moveY);
+	// display total move of player Y
 	View::printVerticalCenteredCharactors(
 		yMoves,
 		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
@@ -382,28 +383,34 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	y = spot.Y + 7;
 	for (int i = int(spot.X + 22); i <int(spot.X + width); i++) {
 		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
-			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
+			View::printCharactors(
+				L"\x2588", 
+				{ (short)(i),(short)(j) }, 
+				View::Color::WHITE, 
+				View::Color::WHITE
+			);
 		}
 	}
 	
+	// display game history
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	int idx = game_info.totalStep;
 	for (int i = 3, cnt = 0; i >= 0; i--, cnt++) {
 		if (game_info.displayedHistory[i].playerMove.move.X == -1) continue;
 
-		wstring history = L" " + to_wstring(idx);
+		std::wstring history = L" " + std::to_wstring(idx);
 		idx--;
 		history += L". ";
 		PlayerMove move = game_info.displayedHistory[i].playerMove;
 		if (move.player == 1) {
-			string player_name = game_info.player1.name;
-			wstring name(player_name.begin(), player_name.end());
+			std::string player_name = game_info.player1.name;
+			std::wstring name(player_name.begin(), player_name.end());
 			history += name;
 			history += L"(X)";
 		}
 		else {
-			string player_name = game_info.player2.name;
-			wstring name(player_name.begin(), player_name.end());
+			std::string player_name = game_info.player2.name;
+			std::wstring name(player_name.begin(), player_name.end());
 			history += name;
 			history += L"(O)";
 		}
@@ -411,9 +418,9 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 			history += L": Undo";
 		}
 		char character = char((move.move.X - 6) / 4 + 97);
-		string tmp_string(1, character);
-		wstring moveX(tmp_string.begin(), tmp_string.end());
-		wstring moveY = to_wstring(int(16 - (move.move.Y - 1) / 2));
+		std::string tmp_string(1, character);
+		std::wstring moveX(tmp_string.begin(), tmp_string.end());
+		std::wstring moveY = std::to_wstring(int(16 - (move.move.Y - 1) / 2));
 		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
 		x = short(spot.X + 22 + (width-22)/2 - (history.length() / 2));
 		View::printCharactors(history, { x, short(y + cnt * 2) }, View::Color::BLACK, View::Color::WHITE);

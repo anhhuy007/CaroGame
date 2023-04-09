@@ -1,7 +1,7 @@
 #include "FileIO.h" 
 
 bool FileIO::WriteGameInfoToFile(char fileName[], GameInformation game_info) {
-	ofstream ofs(fileName, ios::binary);
+	std::ofstream ofs(fileName, std::ios::binary);
 
 	// if cannot open file
 	if (!ofs) {
@@ -32,7 +32,7 @@ void FileIO::SaveGameGeneralInformation(std::string fileName, Model::GeneralGame
 }
 
 GameInformation FileIO::ReadGameInfoFromFile(char fileName[]) {
-	ifstream ifs(fileName, ios::binary);
+	std::ifstream ifs(fileName, std::ios::binary);
 
 	// if cannot open file
 	if (!ifs) {
@@ -83,7 +83,7 @@ bool FileIO::fileNameExistedInList(std::string file) {
 
 bool FileIO::SaveSetting(std::string fileName, Setting setting)
 {
-	ofstream ofs(fileName, ios::binary);
+	std::ofstream ofs(fileName, std::ios::binary);
 
 	// if cannot open file
 	if (!ofs) {
@@ -98,7 +98,7 @@ bool FileIO::SaveSetting(std::string fileName, Setting setting)
 }
 
 Setting FileIO::ReadSetting(std::string fileName) {
-	ifstream ifs(fileName, ios::binary);
+	std::ifstream ifs(fileName, std::ios::binary);
 
 	// if cannot open file
 	if (!ifs) {
@@ -115,7 +115,7 @@ Setting FileIO::ReadSetting(std::string fileName) {
 
 std::vector<std::string> FileIO::GetSavedGameList()	{
 	std::vector<std::string> savedGameList;
-	ifstream ifs(folder + savedGame);
+	std::ifstream ifs(folder + savedGame);
 	
 	// if cannot open file
 	if (!ifs) {

@@ -12,12 +12,10 @@
 #include <locale.h>
 #include <stdio.h>
 
-using namespace std;
-
 const int sz = View::BOARD_SIZE;
 
 namespace Model {
-	typedef pair<int, vector<COORD>> GameResult;
+	typedef std::pair<int, std::vector<COORD>> GameResult;
 
 	const bool PLAY_WITH_COMPUTER = 0;
 	const bool PLAY_WITH_HUMAN = 1;
@@ -36,8 +34,8 @@ namespace Model {
 		int numberOfMoves = 0;
 		bool isFirstPlayer;
 
-		wstring getWStringName() {
-			wstring wstr;
+		std::wstring getWStringName() {
+			std::wstring wstr;
 			wstr.assign(name, name + strlen(name));
 			return wstr;
 		}
@@ -57,7 +55,7 @@ namespace Model {
 		int value[sz][sz];
 		COORD gui[sz][sz];
 
-		// constructor for board
+		// default constructor for board
 		Board() {
 			for (int i = 0; i < sz; i++) {
 				for (int j = 0; j < sz; j++) {
@@ -81,6 +79,7 @@ namespace Model {
 			return value[i];
 		}
 
+		// return cell position
 		inline COORD getSpot(int i, int j) {
 			return gui[i][j];
 		}
@@ -177,8 +176,8 @@ namespace Model {
 		PlayerMove playerMoveHistory[250];
 		int moveHistorySize = 0;
 		DisplayedHistory displayedHistory[4];
-		int curX; 
-		int curY;
+		short curX; 
+		short curY;
 		int totalStep = 0; // total step of game
 		bool endGame;
 
@@ -193,11 +192,11 @@ namespace Model {
 	// store general game information, including name, date created or modified, and game mode
 	struct GeneralGameInformation {
 		char name[20];
-		pair<time_t, bool> date = { time(0), false };
+		std::pair<time_t, bool> date = { time(0), false };
 		GameMode gameMode;
 
 		// default constructer
-		GeneralGameInformation(char name[], pair<time_t, bool> date, GameMode gameMode) {
+		GeneralGameInformation(char name[], std::pair<time_t, bool> date, GameMode gameMode) {
 			strcpy_s(this->name, name);
 			this->date = date;
 			this->gameMode = gameMode;
@@ -253,14 +252,37 @@ namespace Model {
 		Model::GameInformation& game_info
 	);
 	
-	void computerTurn(Model::Player player, Model::GameInformation& game_info);
-	void makePlayerMove(std::wstring key);
+	void computerTurn(
+		Model::Player player, 
+		Model::GameInformation& game_info
+	);
+	
+	// display cursor's movement on board
+	void makePlayerMove(
+		std::wstring key, 
+		Model::GameInformation& game_info
+	);
+	
+	// mark player move to board and
 	void markPlayerMove(
 		COORD spot, 
 		int player, 
 		Model::GameInformation& game_info
 	);
-	pair<int, vector<COORD>> checkResult(
+
+	void previousMove(GameInformation& game_info);
+
+	// display current game information on screen
+	void updateInform(
+		GameInformation& game_info, 
+		COORD spot, 
+		int width, 
+		int height, 
+		View::Color color
+	);
+
+	// check if there is a winning move then return winner and list of winning moves
+	std::pair<int, std::vector<COORD>> checkResult(
 		int player, 
 		int board[sz][sz]
 	);
@@ -288,9 +310,5 @@ namespace Model {
 		int player, 
 		int board[sz][sz]
 	);
-	void previousMove(
-		GameInformation& game_info
-	);
-	void updateInform(GameInformation& game_info, COORD spot, int width, int height, View::Color color);
 }
 

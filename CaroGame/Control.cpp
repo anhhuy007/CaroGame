@@ -80,7 +80,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 		// input player1 name
-		string p1 = InputHandle::GetPlayerName("Enter Player 1 name: ", "");
+		std::string p1 = InputHandle::GetPlayerName("Enter Player 1 name: ", "");
 		strcpy(game_info.player1.name, p1.c_str());
 
 		// if exit game
@@ -89,7 +89,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 			return GameInformation();
 		}
 
-		string p2 = InputHandle::GetPlayerName("Enter Player 2 name: ", p1);
+		std::string p2 = InputHandle::GetPlayerName("Enter Player 2 name: ", p1);
 		strcpy(game_info.player2.name, p2.c_str());
 
 		// if exit game
@@ -100,7 +100,7 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	}
 	// if player2 is computer
 	else {
-		string p1 = InputHandle::GetPlayerName("Enter Player name: ", "");
+		std::string p1 = InputHandle::GetPlayerName("Enter Player name: ", "");
 		strcpy(game_info.player1.name, p1.c_str());
 
 		// if exit game
@@ -119,8 +119,8 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	game_info.board = Model::Board();
 	memset(game_info.playerMoveHistory, 0, sizeof(game_info.playerMoveHistory));
 	game_info.moveHistorySize = 0;
-	game_info.curX = 0;
-	game_info.curY = 0;
+	game_info.curX = View::LEFT + 38;
+	game_info.curY = View::TOP + 19;
 	game_info.endGame = false;
 
 	return game_info;
@@ -129,8 +129,8 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 // play game with human
 void Control::PlayWithHuman(Model::GameInformation game_info) {
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	wstring name1 = game_info.player1.getWStringName();
-	wstring name2 = game_info.player2.getWStringName();
+	std::wstring name1 = game_info.player1.getWStringName();
+	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
@@ -157,8 +157,8 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 // play game with computer
 void Control::PlayWithComputer(Model::GameInformation game_info) {
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	wstring name1 = game_info.player1.getWStringName();
-	wstring name2 = game_info.player2.getWStringName();
+	std::wstring name1 = game_info.player1.getWStringName();
+	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
@@ -169,7 +169,7 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 		if (strcmp(player.name, "Computer") == 0) Model::computerTurn(player, game_info);
 		else Model::playerTurn(player, game_info);
 		
-		pair<int, vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
+		std::pair<int, std::vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		if (result.first != 0) {
 			game_info.endGame = true;
 			View::displayGameResult(result.first, result.second, name1, name2);

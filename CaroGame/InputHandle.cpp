@@ -4,7 +4,7 @@
 #include "FileIO.h"
 
 // this function is used for get the input from keyboard
-wstring InputHandle::GetKey() {
+std::wstring InputHandle::GetKey() {
 	wchar_t ch = _getwch();
 	if (ch == 0 || ch == 224) {
 		wchar_t temp = _getwch();
@@ -55,7 +55,7 @@ wstring InputHandle::GetKey() {
 		return L"";
 	}
 
-	return wstring(1, ch);
+	return std::wstring(1, ch);
 }
 
 bool InputHandle::isMoveKey(std::wstring key) {
@@ -63,12 +63,12 @@ bool InputHandle::isMoveKey(std::wstring key) {
 }
 
 // input file name from keyboard 
-string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
-	string fileName = ""; wstring key = L"";
+std::string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
+	std::string fileName = ""; std::wstring key = L"";
 
-	wstring wstr = L"Enter file name: ";
-	wstring note = L"Note: File name must contain only alphabet and number";
-	wstring exitNote = L"Press ESC to exit";
+	std::wstring wstr = L"Enter file name: ";
+	std::wstring note = L"Note: File name must contain only alphabet and number";
+	std::wstring exitNote = L"Press ESC to exit";
 	COORD spot = View::getCenteredSpot(note, box);
 	View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
 	View::printCharactors(exitNote, { spot.X, short(spot.Y + 3) }, View::Color::BLACK, View::Color::WHITE);
@@ -117,13 +117,13 @@ string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
 		}
 
 		View::gotoXY(spot.X, spot.Y);
-		wcout << wstr;
-		cout << fileName;
+		std::wcout << wstr;
+		std::cout << fileName;
 		key = InputHandle::GetKey();
 	}
 }
 
-bool InputHandle::isValidName(string userName) {
+bool InputHandle::isValidName(std::string userName) {
 	for (int i = 0; i < userName.length(); i++) {
 		userName[i] = tolower(userName[i]);
 		if (!isalpha(userName[i]) && !isdigit(userName[i]) && userName[i] != ' ') return false;
@@ -135,11 +135,11 @@ bool InputHandle::isValidName(string userName) {
 }
 
 // input player name from keyboard
-string InputHandle::GetPlayerName(string message, string player1Name) {
-	string fileName = ""; wstring key = L"";
+std::string InputHandle::GetPlayerName(std::string message, std::string player1Name) {
+	std::string fileName = ""; std::wstring key = L"";
 	SMALL_RECT box = View::WINDOW_SIZE;
-	wstring note = L"Note: Player name must contain only alphabet and number";
-	wstring exitNote = L"Press ESC to exit";
+	std::wstring note = L"Note: Player name must contain only alphabet and number";
+	std::wstring exitNote = L"Press ESC to exit";
 	COORD spot = View::getCenteredSpot(note, box);
 	View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
 	View::printCharactors(exitNote, { spot.X, short(spot.Y + 3) }, View::Color::BLACK, View::Color::WHITE);
@@ -184,8 +184,8 @@ string InputHandle::GetPlayerName(string message, string player1Name) {
 		}
 
 		View::gotoXY(spot.X, spot.Y);
-		cout << message;
-		cout << fileName;
+		std::cout << message;
+		std::cout << fileName;
 		key = InputHandle::GetKey();
 	}
 }

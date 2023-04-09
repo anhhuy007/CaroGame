@@ -33,7 +33,7 @@ void clearMenu(
 ) {
 	for (int i = 0; i < menu_items.size(); i++) {
 		short y = start.Y + (i * 2);
-		wstring selected_content = L">> " + menu_items[i].content + L" <<";
+		std::wstring selected_content = L">> " + menu_items[i].content + L" <<";
 		short x = start.X - selected_content.length() / 2;
 		for (short i = 0; i < selected_content.length(); i++) {
 			View::printCharactors(L" ", { short(x + i), y }, View::Color::WHITE, View::Color::WHITE);
@@ -73,7 +73,7 @@ void DrawMenu(
 		short y = start.Y + (i * 2);
 		// selected item
 		if (i == *cur_index || (*cur_index >= displaymenu_size && i == displaymenu_size - 1)) {
-			wstring selected_content = L">> " + display_items[i].content + L" <<";
+			std::wstring selected_content = L">> " + display_items[i].content + L" <<";
 			short x = start.X - selected_content.length() / 2;
 			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
@@ -94,7 +94,7 @@ void menuOptionChanged(
 	int* cur_index,
 	int displaymenu_size
 ) {
-	wstring key = InputHandle::GetKey();
+	std::wstring key = InputHandle::GetKey();
 	clearMenu(getMenuItems(menu_items, *cur_index, displaymenu_size), start);
 
 	while (key != L"ENTER") {
@@ -193,8 +193,8 @@ MenuOption MenuScreen() {
 MenuOption AboutMenu() {
 	system("cls");
 	COORD start = { 70, 10 };
-	wstring key;
-	wstring about_content[12] = {
+	std::wstring key;
+	std::wstring about_content[12] = {
 		L"DESIGNED BY TEAM 10 - HCMUS",
 		L"22127086 - Nguyễn Lâm Anh Duy",
 		L"22127149 - Huỳnh Anh Huy",
@@ -234,8 +234,8 @@ MenuOption InstructionMenu() {
 	// draw INSTRUCTION title 
 	View::drawInstructionText();
 	COORD start = { 70, 10 };
-	wstring key;
-	wstring instruction_content[12] = {
+	std::wstring key;
+	std::wstring instruction_content[12] = {
 		L"Controls",
 		L"Press 'W' or '↑' to move UP",
 		L"Press 'S' or '↓' to move DOWN",
@@ -281,7 +281,7 @@ void drawSettingMenu(
 
 	for (int i = 0; i < menu_size; i++) {
 		short y = start.Y + (i * 2);
-		wstring content = setting_items[i].content;
+		std::wstring content = setting_items[i].content;
 		if (setting_items[i].status == true) {
 			content += setting_items[i].status_true;
 		}
@@ -291,7 +291,7 @@ void drawSettingMenu(
 
 		// selected item
 		if (i == *cur_index) {
-			wstring selected_content = L">> " + content + L" <<";
+			std::wstring selected_content = L">> " + content + L" <<";
 			short x = start.X - selected_content.length() / 2;
 			View::printCharactors(selected_content, { x, y }, selected_textcolor, View::Color::WHITE);
 		}
@@ -311,7 +311,7 @@ void settingMenuOptionChanged(
 	View::Color selected_textcolor,
 	int* cur_index
 ) {
-	wstring selected_item = InputHandle::GetKey();
+	std::wstring selected_item = InputHandle::GetKey();
 
 	while (selected_item != L"ESC") {
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
