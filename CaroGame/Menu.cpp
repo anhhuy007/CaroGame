@@ -172,7 +172,7 @@ MenuOption newGameMenu(
 }
 
 MenuOption MenuScreen() {
-	Setting soundSetting = FileIO::readSetting("GameSetting.dat");
+	Setting soundSetting = FileIO::ReadSetting("GameSetting.dat");
 	Sound::openSound(Sound::BACKGROUND);
 	Sound::openSound(Sound::INVALID);
 	Sound::openSound(Sound::VALID);
@@ -363,7 +363,7 @@ void settingMenu() {
 	setting.backgroundSound = setting_items[0].status;
 	setting.soundEffect = setting_items[1].status;
 
-	FileIO::saveSetting("GameSetting.dat", setting);
+	FileIO::SaveSetting("GameSetting.dat", setting);
 }
 
 // formating string so that it can fill the whole line with the given width

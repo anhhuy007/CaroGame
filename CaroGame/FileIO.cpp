@@ -1,14 +1,16 @@
 #include "FileIO.h" 
 
-bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
+bool FileIO::WriteGameInfoToFile(char fileName[], GameInformation game_info) {
 	ofstream ofs(fileName, ios::binary);
 
+	// if cannot open file
 	if (!ofs) {
-		std::cerr << "Cannot open file " << fileName << std::endl;
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 		return 0;
 	}
 
 	ofs.write((char*)&game_info, sizeof(Model::GameInformation));
+	
 	ofs.close();
 	return 1;
 }
@@ -17,16 +19,24 @@ bool FileIO::writeGameInfoToFile(char fileName[], GameInformation game_info) {
 void FileIO::SaveGameGeneralInformation(std::string fileName, Model::GeneralGameInformation information) {
 	if (FileIO::fileNameExistedInList(fileName)) return;
 	std::ofstream ofs(folder + savedGame, std::ios::app);
+
+	// if cannot open file
+	if (!ofs) {
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+		return;
+	}
+	
 	std::string data = information.getFormatedInformation();
 	ofs << data << std::endl;
 	ofs.close();
 }
 
-GameInformation FileIO::readGameInfoFromFile(char fileName[]) {
+GameInformation FileIO::ReadGameInfoFromFile(char fileName[]) {
 	ifstream ifs(fileName, ios::binary);
 
+	// if cannot open file
 	if (!ifs) {
-		std::cerr << "Cannot open file " << fileName << std::endl;
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 		return GameInformation();
 	}
 
@@ -71,25 +81,28 @@ bool FileIO::fileNameExistedInList(std::string file) {
 	return false;
 }
 
-bool FileIO::saveSetting(std::string fileName, Setting setting)
+bool FileIO::SaveSetting(std::string fileName, Setting setting)
 {
 	ofstream ofs(fileName, ios::binary);
 
+	// if cannot open file
 	if (!ofs) {
-		std::cerr << "Cannot open file " << fileName << std::endl;
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 		return 0;
 	}
 
 	ofs.write((char*)&setting, sizeof(Setting));
+	
 	ofs.close();
 	return 1;
 }
 
-Setting FileIO::readSetting(std::string fileName) {
+Setting FileIO::ReadSetting(std::string fileName) {
 	ifstream ifs(fileName, ios::binary);
 
+	// if cannot open file
 	if (!ifs) {
-		std::cerr << "Cannot open file " << fileName << std::endl;
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 		return Setting();
 	}
 
@@ -100,12 +113,13 @@ Setting FileIO::readSetting(std::string fileName) {
 	return setting;
 }
 
-std::vector<std::string> FileIO::getSavedGameList()	{
+std::vector<std::string> FileIO::GetSavedGameList()	{
 	std::vector<std::string> savedGameList;
 	ifstream ifs(folder + savedGame);
 	
+	// if cannot open file
 	if (!ifs) {
-		std::cerr << "Cannot open file " << folder + savedGame << std::endl;
+		View::printCenteredToast(L"Cannot open file ", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
 		return savedGameList;
 	}
 

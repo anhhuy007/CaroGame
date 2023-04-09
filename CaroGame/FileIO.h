@@ -14,13 +14,22 @@ namespace FileIO {
 	const string extension = ".dat";
 	const string savedGame = "SavedGameList.txt";
 
-	bool writeGameInfoToFile(char fileName[], GameInformation game_info);
+	// write and read all game information to file
+	bool WriteGameInfoToFile(char fileName[], GameInformation game_info);
+	GameInformation ReadGameInfoFromFile(char fileName[]);
+
+	// write game name, date, game mode to file
 	void SaveGameGeneralInformation(std::string fileName, Model::GeneralGameInformation information);
-	GameInformation readGameInfoFromFile(char fileName[]);
+	
+	// return list of saved game titles
+	std::vector<std::string> GetSavedGameList();
+
+	// write and read game setting to file
+	bool SaveSetting(std::string fileName, Setting setting);
+	Setting ReadSetting(std::string fileName);
+
+	// checking functions
 	bool isValidFileName(std::string file);
 	bool fileNameExisted(std::string file);
 	bool fileNameExistedInList(std::string file);
-	bool saveSetting(std::string fileName, Setting setting);
-	Setting readSetting(std::string fileName);
-	std::vector<std::string> getSavedGameList();
 }	

@@ -217,7 +217,7 @@ void Control::SaveGame(Model::GameInformation& game_info) {
 	strcpy(file, filePath.c_str());
 
 	// write game information to file
-	bool isSuccess = FileIO::writeGameInfoToFile(file, game_info);
+	bool isSuccess = FileIO::WriteGameInfoToFile(file, game_info);
 
 	if (isSuccess) {
 		View::printCenteredToast(L"Save game successfully!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::GREEN);
@@ -243,7 +243,7 @@ void Control::LoadGame() {
 	View::drawLoadGameText();
 
 	// show saved game list and return game name 
-	std::string fileName = GetSavedGameTitle(FileIO::getSavedGameList(), { 45, 15, 95, 30 });
+	std::string fileName = GetSavedGameTitle(FileIO::GetSavedGameList(), { 45, 15, 95, 30 });
 
 	// check if player want to return menu
 	if (fileName == "-1") {
@@ -251,12 +251,13 @@ void Control::LoadGame() {
 		return;
 	}
 
+	// format file name to path name
 	std::string filePath = FileIO::folder + fileName + FileIO::extension;
 	char* file = new char[filePath.length() + 1];
 	strcpy(file, filePath.c_str());
 	
 	// read game information from file
-	Model::GameInformation game_info = FileIO::readGameInfoFromFile(file);
+	Model::GameInformation game_info = FileIO::ReadGameInfoFromFile(file);
 	if (game_info.name != "") {
 		system("cls");
 		if (game_info.gameMode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
