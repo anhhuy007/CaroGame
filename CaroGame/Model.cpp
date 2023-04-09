@@ -363,12 +363,12 @@ wstring formats(int t) {
 }
 
 void Model::updateInform(GameInformation &game_info, COORD spot, int width, int height, View::Color color) {
-	for (int i = int(spot.X + 6); i <int(spot.X + 25); i++) {
+	for (int i = int(spot.X + 1); i <int(spot.X + 20); i++) {
 		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
-	}
-	View::drawXOart({short(spot.X + 1),short(spot.Y + 4) }, game_info.isFirstPlayerTurn);
+	}	
+	View::drawXOart({short(spot.X - 6),short(spot.Y + 4) }, game_info.isFirstPlayerTurn);
 
 	// update total move of player
 	int moveX = game_info.player1.numberOfMoves;
@@ -395,7 +395,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	);
 	x = spot.X + 44;
 	y = spot.Y + 7;
-	for (int i = int(spot.X +2 + width/2); i <int(spot.X + width); i++) {
+	for (int i = int(spot.X + 22); i <int(spot.X + width); i++) {
 		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
 			View::printCharactors(L"\x2588", { (short)(i),(short)(j) }, View::Color::WHITE, View::Color::WHITE);
 		}
@@ -430,7 +430,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		wstring moveX(tmp_string.begin(), tmp_string.end());
 		wstring moveY = to_wstring(int(16 - (move.move.Y - 1) / 2));
 		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
-		x = short(spot.X + width / 2 + (width / 2) / 2 + 1 - (history.length() / 2));
+		x = short(spot.X + 22 + (width-22)/2 - (history.length() / 2));
 		View::printCharactors(history, { x, short(y + cnt * 2) }, View::Color::BLACK, View::Color::WHITE);
 	}
 }
