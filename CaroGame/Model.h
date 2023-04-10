@@ -33,6 +33,7 @@ namespace Model {
 		char name[20] = "";
 		int numberOfMoves = 0;
 		bool isFirstPlayer;
+		int score = 0;
 
 		std::wstring getWStringName() {
 			std::wstring wstr;
@@ -161,7 +162,7 @@ namespace Model {
 	};
 
 	struct DisplayedHistory {
-		PlayerMove playerMove = { {-1,-1}, 0 };
+		PlayerMove playerMove = { { -1, -1 }, 0 };
 		bool isPrevious;
 	};
 	
@@ -171,7 +172,6 @@ namespace Model {
 		Player player2;
 		GameMode gameMode;
 		bool isFirstPlayerTurn;
-		int timer; // in seconds
 		Board board;
 		PlayerMove playerMoveHistory[250];
 		int moveHistorySize = 0;

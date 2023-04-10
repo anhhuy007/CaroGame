@@ -1598,7 +1598,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 
 	x = spot.X + ((width - 4) / 3 + 1);
 	View::printVerticalCenteredCharactors(
-		L"TIMER",
+		L"SCORE",
 		{ x,spot.Y,short(x + ((width - 4) / 3 + 3)),short(spot.Y + ((height / 2 - 2) / 2)) },
 		short(((height / 2 - 2) / 2) / 2),
 		View::Color::BLACK,
@@ -1606,7 +1606,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	);
 
 	View::printVerticalCenteredCharactors(
-		L"X's moves",
+		L"X MOVE",
 		{ spot.X,spot.Y,short(spot.X + ((width - 4) / 3 + 2)),short(spot.Y + ((height / 2 - 2) / 2)) },
 		short(((height / 2 - 2) / 2) / 2),
 		View::Color::BLACK,
@@ -1617,7 +1617,7 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 	y = spot.Y;
 
 	View::printVerticalCenteredCharactors(
-		L"O's moves",
+		L"O MOVE",
 		{ x,y,short(x + (width - 4) / 3 + 4),short(y + ((height / 2 - 2) / 2)) },
 		short(((height / 2 - 2) / 2) / 2),
 		View::Color::BLACK,

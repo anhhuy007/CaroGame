@@ -379,6 +379,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
+	
 	x = spot.X + 44;
 	y = spot.Y + 7;
 	for (int i = int(spot.X + 22); i <int(spot.X + width); i++) {

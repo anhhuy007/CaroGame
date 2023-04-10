@@ -76,7 +76,6 @@ namespace View {
 		std::function<void()> negativeAction
 	);
 
-	void pressAnyKey(SMALL_RECT box);
 	
 	// funcional functions
 	void clearRectangleArea(COORD start, int width, int height);
@@ -84,6 +83,8 @@ namespace View {
 	PCHAR_INFO getScreenBuffer();
 	int GetRandom(int min, int max);
 	COORD getCenteredSpot(std::wstring content, SMALL_RECT box);
+	void pressAnyKey(SMALL_RECT box); // press any key to continue
+
 
 	// display game information
 	void displayTimer();

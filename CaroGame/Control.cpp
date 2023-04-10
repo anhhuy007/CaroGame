@@ -33,15 +33,15 @@ void Control::NavigationController() {
 	switch (option) {
 
 	case MenuOption::NEW_GAME_VS_PLAYER:
-		Control::PlayWithHuman(initNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
+		Control::PlayWithHuman(InitNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_EASY:
-		Control::PlayWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
+		Control::PlayWithComputer(InitNewGame({ Model::PLAY_WITH_COMPUTER, Model::EASY }));
 		break;
 		
 	case MenuOption::NEW_GAME_VS_COMPUTER_HARD:
-		Control::PlayWithComputer(initNewGame({ Model::PLAY_WITH_COMPUTER, Model::HARD }));
+		Control::PlayWithComputer(InitNewGame({ Model::PLAY_WITH_COMPUTER, Model::HARD }));
 		break;
 		
 	case MenuOption::LOAD_GAME:
@@ -74,7 +74,7 @@ void Control::NavigationController() {
 }
 
 // initialize information for new game
-Model::GameInformation Control::initNewGame(Model::GameMode mode) {
+Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
 
 	system("cls");
@@ -116,7 +116,6 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 	// initialize game information
 	game_info.isFirstPlayerTurn = true;
 	game_info.gameMode = mode;
-	game_info.timer = 0;
 	game_info.board = Model::Board();
 	memset(game_info.playerMoveHistory, 0, sizeof(game_info.playerMoveHistory));
 	game_info.moveHistorySize = 0;
@@ -129,12 +128,13 @@ Model::GameInformation Control::initNewGame(Model::GameMode mode) {
 
 // play game with human
 void Control::PlayWithHuman(Model::GameInformation game_info) {
-	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	std::wstring name1 = game_info.player1.getWStringName();
 	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
+	system("cls");
+	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, name2);
 	
 	while (!game_info.endGame && !escPressed) {
@@ -154,7 +154,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 				{ 15, 10 },
 				[&]() -> void {
 					// if click YES then return menu
-					//Control::ResetGame(game_info);
+					Control::ResetGame(game_info);
 					Control::PlayWithHuman(game_info);
 				},
 				[&]() -> void {
@@ -173,12 +173,13 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 
 // play game with computer
 void Control::PlayWithComputer(Model::GameInformation game_info) {
-	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	std::wstring name1 = game_info.player1.getWStringName();
 	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
 
 	// draw game board and game information
+	system("cls");
+	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
 	View::DisplayGame(game_info.board.value, game_info.board.gui ,name1, name2);
 
 	while (!game_info.endGame && !escPressed) {
@@ -198,7 +199,7 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 				{ 15, 10 },
 				[&]() -> void {
 					// if click YES then return menu
-					//Control::ResetGame(game_info);
+					Control::ResetGame(game_info);
 					Control::PlayWithComputer(game_info);
 				},
 				[&]() -> void {
@@ -216,6 +217,26 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 void Control::QuitGame() {
 	escPressed = true;
 	system("cls");
+}
+
+void Control::ResetGame(Model::GameInformation& game_info) {
+	// reset game information
+	game_info.player1.numberOfMoves = 0;
+	game_info.player2.numberOfMoves = 0;
+	game_info.board = Model::Board();
+	game_info.moveHistorySize = 0;
+	game_info.curX = View::LEFT + 38;
+	game_info.curY = View::TOP + 19;
+	game_info.totalStep = 0;
+	game_info.endGame = false;
+
+	for (int i = 0; i < 250; i++) {
+		game_info.playerMoveHistory[i] = { {-1, -1}, 0};
+	}
+
+	for (int i = 0; i < 4; i++) {
+		game_info.displayedHistory[i] = { {-1,  -1}, 0 }; 
+	}
 }
 
 void Control::ReturnMenu() {
