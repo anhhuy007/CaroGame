@@ -379,21 +379,24 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
+
+	// display game score
+	std::wstring score = std::to_wstring(game_info.player1.score) + L" - " + std::to_wstring(game_info.player2.score);
+	View::printVerticalCenteredCharactors(
+		score,
+		{ short(spot.X + 1),short(spot.Y + 6),short(spot.X + 20),short(spot.Y + 6 + (height / 2 - 2) / 2) },
+		short(((height / 2 - 2) / 2) / 2),
+		View::Color::BLACK,
+		View::Color::WHITE
+	);
 	
+	// clear history table
+	int w = int(spot.X + width) - int(spot.X + 22);
+	int h = int(spot.Y + height) - int(spot.Y + 6);
+	View::clearRectangleArea({ short(spot.X + 22),short(spot.Y + 6) }, w, h);
+	// display game history
 	x = spot.X + 44;
 	y = spot.Y + 7;
-	for (int i = int(spot.X + 22); i <int(spot.X + width); i++) {
-		for (int j = int(spot.Y + 6); j < int(spot.Y + height); j++) {
-			View::printCharactors(
-				L"\x2588", 
-				{ (short)(i),(short)(j) }, 
-				View::Color::WHITE, 
-				View::Color::WHITE
-			);
-		}
-	}
-	
-	// display game history
 	int totalMoves = game_info.player1.numberOfMoves + game_info.player2.numberOfMoves;
 	int idx = game_info.totalStep;
 	for (int i = 3, cnt = 0; i >= 0; i--, cnt++) {
