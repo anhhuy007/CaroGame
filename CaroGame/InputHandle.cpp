@@ -189,3 +189,49 @@ std::string InputHandle::GetPlayerName(std::string message, std::string player1N
 		key = InputHandle::GetKey();
 	}
 }
+
+int InputHandle::GetAvatar() {
+	std::wstring key = L"";
+	short posX = 5, posY = 5;
+
+	View::printVerticalCenteredCharactors(L"---------- CHOOSE YOUR AVATAR ----------", View::WINDOW_SIZE, 1, View::Color::BLACK, View::Color::WHITE);
+	while (key != L"ENTER") {
+		short x = 5, y = 5;
+		for (int i = 1; i <= 10; i++) {
+			View::DrawAvatar(static_cast<View::Avatar>(i), x, y);
+			x += 25;
+			if (x > 105) {
+				x = 5;
+				y += 14;
+			}
+		}
+
+		if (key == L"UP") {
+			posY -= 14;
+			if (posY < 5) posY = 5;
+		}
+		else if (key == L"DOWN") {
+			posY += 14;
+			if (posY > 19) posY = 19;
+		}
+		else if (key == L"LEFT") {
+			posX -= 25;
+			if (posX < 5) posX = 5;
+		}
+		else if (key == L"RIGHT") {
+			posX += 25;
+			if (posX > 105) posX = 105;
+		}
+
+		View::drawBorder3(posX + 5, posX + 26, posY + 2, posY + 12, L"Player 1");
+		key = InputHandle::GetKey();
+		View::clearRectangleArea({ posX, posY }, posX + 25, posY + 12);
+
+		if (key == L"ESC") {
+			return -1;
+		}
+	}
+		
+	system("cls");
+	return (posX - 5) / 25 + (posY - 5) / 14 * 5 + 1;
+}

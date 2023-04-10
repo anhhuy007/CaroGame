@@ -17,8 +17,8 @@ void Control::StartGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	/*View::splashScreen();
-	system("cls");*/
+	View::splashScreen();
+	system("cls");
 
 	// show menu screen
 	Control::NavigationController();
@@ -31,7 +31,6 @@ void Control::NavigationController() {
 	MenuOption option = MenuScreen();
 	
 	switch (option) {
-
 	case MenuOption::NEW_GAME_VS_PLAYER:
 		Control::PlayWithHuman(InitNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
 		break;
@@ -80,36 +79,64 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 	system("cls");
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
-		// input player1 name
+		// input player 1 name
 		std::string p1 = InputHandle::GetPlayerName("Enter Player 1 name: ", "");
-		strcpy(game_info.player1.name, p1.c_str());
-
 		// if exit game
 		if (p1 == "-1") {
 			Control::ReturnMenu();
 			return GameInformation();
 		}
+		// get player 1 avatar
+		int avatar1 = InputHandle::GetAvatar();
+		if (avatar1 == -1) {
+			Control::ReturnMenu();
+			return GameInformation();
+		}
 
+		// input player 2 name
 		std::string p2 = InputHandle::GetPlayerName("Enter Player 2 name: ", p1);
-		strcpy(game_info.player2.name, p2.c_str());
-
 		// if exit game
 		if (p2 == "-1") {
 			Control::ReturnMenu();
 			return GameInformation();
 		}
+		// get player 2 avatar
+		int avatar2 = InputHandle::GetAvatar();
+		if (avatar2 == -1) {
+			Control::ReturnMenu();
+			return GameInformation();
+		}
+
+		strcpy(game_info.player1.name, p1.c_str());
+		game_info.player1.avatar = (View::Avatar)avatar1;
+		strcpy(game_info.player2.name, p2.c_str());
+		game_info.player2.avatar = (View::Avatar)avatar2;
 	}
 	// if player2 is computer
 	else {
 		std::string p1 = InputHandle::GetPlayerName("Enter Player name: ", "");
-		strcpy(game_info.player1.name, p1.c_str());
 
 		// if exit game
 		if (p1 == "-1") {
 			Control::ReturnMenu();
 			return GameInformation();
 		}
+		// get player avatar
+		int avatar1 = InputHandle::GetAvatar();
+		if (avatar1 == -1) {
+			Control::ReturnMenu();
+			return GameInformation();
+		}
 
+		// get random avatar for computer
+		int avatar2 = View::GetRandom(1, 10);
+		while (avatar2 == avatar1) {
+			avatar2 = View::GetRandom(1, 10);
+		}
+		
+		game_info.player1.avatar = (View::Avatar)avatar1;
+		game_info.player2.avatar = (View::Avatar)avatar2;
+		strcpy(game_info.player1.name, p1.c_str());
 		strcpy(game_info.player2.name, "Computer");
 	}
 
@@ -135,7 +162,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 	// draw game board and game information
 	system("cls");
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, name2);
+	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
 	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
@@ -146,29 +173,36 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 		if (result.first != 0) {
 			game_info.endGame = true;
 			View::displayGameResult(result.first, result.second, name1, name2);
-			
+
 			// show dialog check if player want to play again or return menu
 			system("cls");
 			View::confirmDialog(
 				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
 				{ 15, 10 },
 				[&]() -> void {
-					// if click YES then return menu
+					// if click YES then play again
+
+					// update player score
+					if (result.first == 1) {
+						game_info.player1.score++;
+					}
+					else if (result.first == 2) {
+						game_info.player2.score++;
+					}
+
 					Control::ResetGame(game_info);
 					Control::PlayWithHuman(game_info);
 				},
 				[&]() -> void {
-					// if click NO then continue game
-					// restore screen's information
+					// if click NO then return menu
 					Control::ReturnMenu();
+					return;
 				}
 				);
 		}
 		
 		if (escPressed) break;
 	}
-
-	Control::ReturnMenu();
 }
 
 // play game with computer
@@ -180,7 +214,7 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 	// draw game board and game information
 	system("cls");
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	View::DisplayGame(game_info.board.value, game_info.board.gui ,name1, name2);
+	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
 
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
@@ -198,20 +232,27 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
 				{ 15, 10 },
 				[&]() -> void {
-					// if click YES then return menu
+					// if click YES then play again
+
+					// update player score
+					if (result.first == 1) {
+						game_info.player1.score++;
+					}
+					else if (result.first == 2) {
+						game_info.player2.score++;
+					}
+
 					Control::ResetGame(game_info);
 					Control::PlayWithComputer(game_info);
 				},
 				[&]() -> void {
-					// if click NO then continue game
-					// restore screen's information
+					// if click NO then return menu
 					Control::ReturnMenu();
+					return;
 				}
 				);
 		}
 	}
-	
-	Control::ReturnMenu();
 }
 
 void Control::QuitGame() {
@@ -228,6 +269,7 @@ void Control::ResetGame(Model::GameInformation& game_info) {
 	game_info.curX = View::LEFT + 38;
 	game_info.curY = View::TOP + 19;
 	game_info.totalStep = 0;
+	game_info.isFirstPlayerTurn = true;
 	game_info.endGame = false;
 
 	for (int i = 0; i < 250; i++) {

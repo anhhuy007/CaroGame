@@ -42,6 +42,19 @@ namespace View {
 		WHITE = 15
 	};
 
+	enum class Avatar {
+		CROCODILE = 1,
+		MARIO = 2,
+		JAKE = 3,
+		FINN = 4,
+		BMO = 5,
+		DOGE = 6,
+		BOT = 7, 
+		AMONGUS = 8,
+		SPIDERMAN = 9, 
+		IRONMAN = 10
+	};
+
 	// init console window function
 	void gotoXY(short x, short y);
 	void fixConsoleWindow();
@@ -50,17 +63,19 @@ namespace View {
 	
 	// print text 
 	void printCharactors(
-		std::wstring content, 
+		std::wstring content,
 		COORD spot, 
 		Color text_color, 
-		Color background_color
+		Color background_color,
+		short maxLength = -1
 	);
 	void printVerticalCenteredCharactors(
 		std::wstring content, 
 		SMALL_RECT box,
 		short y_offset,
 		Color text_color, 
-		Color background_color
+		Color background_color,
+		short maxLength = -1
 	);
 	void printCenteredToast(
 		std::wstring content, 
@@ -87,7 +102,6 @@ namespace View {
 
 
 	// display game information
-	void displayTimer();
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
 	void drawMove(short x, short y, int player);
 
@@ -98,7 +112,7 @@ namespace View {
 	void drawInstructionText();
 	void drawLoadGameText();
 	void drawSettingText();
-	void DisplayGame(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE], std::wstring name1, std::wstring name2);
+	void DisplayGame(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE], std::wstring name1, Avatar avatar1, std::wstring name2, Avatar avatar2);
 	void drawXO(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE]);
 	void drawAboutText();
 	void splashScreenInfo();
@@ -113,16 +127,25 @@ namespace View {
 	void drawBoxLoad(COORD spot, int width, int height, Color color);
 	
 	// draw animated image 
-	void drawIronmanAvatar(int x, int y);
-	void drawBotAvatar(int x, int y);
-	void drawSpidermanAvatar(int x, int y);
-	void drawThanosAvatar(int x, int y);
 	void drawBackGroundAvatar(int n, int left, int right, int top, int bot);
-	void drawPacman();
 	void drawXOart(COORD spot, bool isFirstPlayerTurn);
 	void drawTurnBoard();
 	void drawTrophy();
 	void drawVSText();
+	
+	//draw avatar
+	void DrawAvatar(Avatar avatar, int x, int y);
+	void DrawDogeAvatar(int x, int y);
+	void DrawIronmanAvatar(int x, int y);
+	void DrawBotAvatar(int x, int y);
+	void DrawSpidermanAvatar(int x, int y);
+	void DrawFinnAvatar(int x, int y);
+	void DrawBMOAvatar(int x, int y);
+	void DrawMarioAvatar(int x, int y);
+	void DrawAmongUsAvatar(int x, int y);
+	void DrawJakeAvatar(int x, int y);
+	void DrawCrocodileAvatar(int x, int y);
+	void DrawPacman();
 	
 	//win screen
 	void drawWinner(int winplayer, std::wstring player1_name, std::wstring player2_name);

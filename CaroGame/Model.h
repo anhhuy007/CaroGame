@@ -31,6 +31,7 @@ namespace Model {
 
 	struct Player {
 		char name[20] = "";
+		View::Avatar avatar;
 		int numberOfMoves = 0;
 		bool isFirstPlayer;
 		int score = 0;

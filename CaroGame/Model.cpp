@@ -134,7 +134,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				[]() -> void {
 					// if click YES then return menu
 					endTurn = true;
-					Control::QuitGame();
+					Control::ReturnMenu();
 					},
 				[&]() -> void {
 					// if click NO then continue game
@@ -155,7 +155,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 				L"Are you sure you want to save this game?",
 				{ 40, 10 },
 				[&]() -> void {
-					// if click YES then return menu
+					// if click YES then save game
 					system("cls");
 					Control::SaveGame(game_info);
 					// restore screen's information

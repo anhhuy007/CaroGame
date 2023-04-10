@@ -6,14 +6,14 @@
 
 using namespace std;
 
-void View::DisplayGame(int board[sz][sz], COORD cell[sz][sz], wstring name1, wstring name2) {
+void View::DisplayGame(int board[sz][sz], COORD cell[sz][sz], wstring name1, Avatar avatar1, wstring name2, Avatar avatar2) {
 	View::drawGameBoard();
 	View::drawXO(board, cell);
 	View::drawGamePlayInfoBox({ 75,13 }, 64, 15, View::Color::BLACK);
 	View::drawBorder3(75, 75 + 20, 0, 0 + 10, name1);
 	View::drawBorder3(119, 119 + 20, 0, 0 + 10, name2);
-	View::drawIronmanAvatar(69, -2);
-	View::drawThanosAvatar(113, -2);
+	View::DrawAvatar(avatar1, 69, -2);
+	View::DrawAvatar(avatar2, 113, -2);
 	View::drawVSText();
 	View::drawBorder2(80, 80 + 55, 31, 30 + 4);
 	View::drawF1F2list(88, 32);
@@ -24,10 +24,17 @@ void View::drawXO(int board[sz][sz], COORD cell[sz][sz]) {
 		for (int j = 0; j < View::BOARD_SIZE; j++) {
 			if (board[i][j] == 0) continue;
 			COORD spot = cell[i][j];
-			View::printCharactors(
-				board[i][j] == 1 ? L"X" : L"O",
+
+			if (board[i][j] == 1) View::printCharactors(
+					L"X",
+					{ spot.X , spot.Y },
+					View::Color::RED,
+					View::Color::WHITE
+				);
+			else View::printCharactors(
+				L"O",
 				{ spot.X , spot.Y },
-				View::Color::BLACK,
+				View::Color::BLUE,
 				View::Color::WHITE
 			);
 		}
@@ -264,22 +271,22 @@ void View::drawWinner(int winplayer, wstring player1_name, wstring player2_name)
 	
 	if (winplayer == 1) {
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
-		View::drawIronmanAvatar(88, 5);
+		View::DrawIronmanAvatar(88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
 		View::drawFireWorkList(1);
 	}
 	else if (winplayer == 2) {
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player2_name);
-		View::drawThanosAvatar(88, 5);
+		View::DrawBMOAvatar(88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
 		View::drawFireWorkList(1);
 	}
 	else {
 		View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
-		View::drawIronmanAvatar(88 - 15, 5);
+		View::DrawIronmanAvatar(88 - 15, 5);
 
 		View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10, player2_name);
-		View::drawThanosAvatar(88 + 15, 5);
+		View::DrawBMOAvatar(88 + 15, 5);
 		View::drawWinDrawBanner(0, 75, 20);
 		View::drawFireWorkList(0);
 	}
@@ -657,6 +664,928 @@ void View::drawF1F2list(int x, int y) {
 	View::printCharactors(L"F3 : Load game", { (short)(x),(short)(y + 1) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"F4 : Undo", { (short)(x + 25),(short)(y + 1 ) }, Color::BLACK, Color::WHITE);	
 }
+
+void View::DrawAvatar(View::Avatar avatar, int x, int y) {
+	switch (avatar) {
+	case View::Avatar::CROCODILE:
+		View::DrawCrocodileAvatar(x, y);
+		break;
+	case View::Avatar::MARIO:
+		View::DrawMarioAvatar(x, y);
+		break;
+	case View::Avatar::JAKE:
+		View::DrawJakeAvatar(x, y);
+		break;
+	case View::Avatar::AMONGUS:
+		View::DrawAmongUsAvatar(x, y);
+		break;
+	case View::Avatar::BMO:
+		View::DrawBMOAvatar(x, y);
+		break;
+	case View::Avatar::FINN:
+		View::DrawFinnAvatar(x, y);
+		break;
+	case View::Avatar::DOGE:
+		View::DrawDogeAvatar(x, y);
+		break;
+	case View::Avatar::BOT:
+		View::DrawBotAvatar(x, y);
+		break;
+	case View::Avatar::SPIDERMAN:
+		View::DrawSpidermanAvatar(x, y);
+		break;
+	case View::Avatar::IRONMAN:
+		View::DrawIronmanAvatar(x, y);
+		break;
+	}
+}
+
+void View::DrawCrocodileAvatar(int x, int y) {
+	x += 1;
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 6),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 2) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 2) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▄", { (short)(x + 10 - 2),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 - 1),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	for (int i = 3; i <= 7; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	}
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 3),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 2),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 7),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 5) }, Color::GREEN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 3),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 - 2),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10),(short)(y + 2 + 6) }, Color::GREEN, Color::WHITE);
+	for (int i = 1; i <= 8; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::GREEN, Color::BLACK);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▀", { (short)(x + 10 - 2),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 - 1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 7),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10),(short)(y + 2 + 8) }, Color::YELLOW, Color::BLACK);
+	for (int i = 1; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::YELLOW, Color::WHITE);
+	}
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+
+	for (int i = 1; i <= 8; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 9) }, Color::BLACK, Color::WHITE);
+	}
+
+}
+void View::DrawMarioAvatar(int x, int y) {
+	//LINE 1
+	View::printCharactors(L"▄▄▄▄", { (short)(x + 10 + 3),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+
+	//LINE 2
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"███", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▄▄", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	//LINE 3
+	View::printCharactors(L"▄", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄▄▄", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"████", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▄▄", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	//LINE 4
+	View::printCharactors(L"▀", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀▀", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::RED, Color::YELLOW);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"████", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::BLACK);
+
+	//LINE 5
+	View::printCharactors(L"▀", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"██", { (short)(x + 10 + 7),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"██", { (short)(x + 10 + 9),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	//LINE 6
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█████", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 7),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"██", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+
+	//LINE 7
+	View::printCharactors(L"▀", { (short)(x + 10 + 0),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀▀", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"██", { (short)(x + 10 + 5),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"███", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+
+	//LINE 8
+	View::printCharactors(L"▀", { (short)(x + 10 + 2),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀▀▀▀", { (short)(x + 10 + 3),(short)(y + 2 + 8) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+
+}
+void View::DrawJakeAvatar(int x, int y) {
+	x += 2;
+	for (int i = 2; i <= 6; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	}
+
+	View::printCharactors(L"▄", { (short)(x + 10 - 1),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	for (int i = 2; i <= 6; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 3) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10),(short)(y + 2 + 3) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▀", { (short)(x + 10 - 2),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	for (int i = 0; i <= 3; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	for (int i = 5; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▄", { (short)(x + 10 - 3),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 - 2),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 - 1),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	for (int i = 0; i <= 2; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	}
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 4),(short)(y + 2 + 6) }, Color::BROWN, Color::RED);
+	View::printCharactors(L"▄", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	for (int i = 6; i <= 8; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	}
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▀", { (short)(x + 10 - 3),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 2),(short)(y + 2 + 7) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 7) }, Color::BROWN, Color::BLACK);
+	for (int i = 0; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	for (int i = 0; i <= 2; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::BROWN, Color::WHITE);
+	}
+	for (int i = 3; i <= 5; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::BROWN, Color::BLACK);
+	}
+	for (int i = 6; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+}
+void View::DrawAmongUsAvatar(int x, int y) {
+	x += 2;
+	/*x = 50;
+	y = 10;*/
+
+	for (int i = 1; i <= 5; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	}
+
+	View::printCharactors(L"▄", { (short)(x + 10 - 1),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10),(short)(y + 2 + 2) }, Color::BLACK, Color::RED);
+	for (int i = 1; i <= 5; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
+	}
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 2) }, Color::BLACK, Color::RED);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_BLUE);
+	View::printCharactors(L"▀", { (short)(x + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_BLUE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_BLUE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::BLACK, Color::RED);
+	View::printCharactors(L"▀", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::WHITE, Color::BLACK);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 3),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 4) }, Color::LIGHT_BLUE, Color::WHITE);
+	for (int i = -1; i <= 1; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::LIGHT_BLUE, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 4) }, Color::DARK_GRAY, Color::LIGHT_BLUE);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::DARK_GRAY, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	for (int i = -1; i <= 3; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::BLACK, Color::DARK_GRAY);
+	}
+	View::printCharactors(L"▄", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color::RED, Color::BLACK);
+	for (int i = 5; i <= 7; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	for (int i = -1; i <= 7; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	for (int i = 2; i <= 4; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 7),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"▀", { (short)(x + 10 - 2),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 - 1),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 1),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 8),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+}
+void View::DrawBMOAvatar(int x, int y) {
+	x += 2;
+	/*x = 50;
+	y = 10;*/
+
+	for (int i = -1; i <= 9; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLUE, Color::WHITE);
+	}
+
+	for (int i = 2; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 - 2),(short)(y + 2 + i) }, Color::BLUE, Color::WHITE);
+		View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + i) }, Color::LIGHT_BLUE, Color::WHITE);
+	}
+
+
+	for (int i = 0; i <= 8; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::LIGHT_BLUE, Color::WHITE);
+	}
+
+	for (int i = 2; i <= 8; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + i) }, Color::LIGHT_BLUE, Color::WHITE);
+		View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + i) }, Color::BLUE, Color::WHITE);
+	}
+
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
+
+	for (int i = 3; i <= 5; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
+	}
+
+	for (int i = 0; i <= 8; i++)
+	{
+		View::printCharactors(L"▄", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::LIGHT_BLUE, Color::WHITE);
+	}
+
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 6) }, Color::BLUE, Color::LIGHT_BLUE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+
+	for (int i = 0; i <= 4; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::BLUE, Color::LIGHT_BLUE);
+	}
+
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10),(short)(y + 2 + 7) }, Color::YELLOW, Color::LIGHT_BLUE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::YELLOW, Color::LIGHT_BLUE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 7) }, Color::BLUE, Color::LIGHT_BLUE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 6),(short)(y + 2 + 7) }, Color::RED, Color::LIGHT_BLUE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 7),(short)(y + 2 + 7) }, Color::LIGHT_GREEN, Color::LIGHT_BLUE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+
+	View::printCharactors(L"█", { (short)(x + 10 - 1),(short)(y + 2 + 8) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10),(short)(y + 2 + 8) }, Color::LIGHT_BLUE, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 1),(short)(y + 2 + 8) }, Color::YELLOW, Color::LIGHT_BLUE);
+
+	for (int i = 2; i <= 9; i++)
+	{
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::LIGHT_BLUE, Color::WHITE);
+	}
+
+	for (int i = -1; i <= 9; i++)
+	{
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 9) }, Color::BLUE, Color::WHITE);
+	}
+}
+void View::DrawFinnAvatar(int x, int y) {
+	//x = 50;
+	//y = 10;
+	//
+	//LINE 1
+	View::printCharactors(L"▄▄", { (short)(x + 10 + 1),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄▄", { (short)(x + 10 + 10),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+
+	//LINE 2
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀▀▀▀▀▀▀", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	//LINE 3
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"███████", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	//LINE 4
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▀▀▀", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	//LINE 5
+	View::printCharactors(L"▄", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::LIGHT_GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::LIGHT_GREEN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::LIGHT_GREEN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::LIGHT_GREEN, Color::WHITE);
+	View::printCharactors(L"▀▀▀▀▀▀▀", { (short)(x + 10 + 3),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+
+	//LINE 6
+	View::printCharactors(L"█", { (short)(x + 10 + -1),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 13),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::LIGHT_GREEN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::LIGHT_GREEN, Color::WHITE);
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::LIGHT_BLUE, Color::WHITE);
+
+	}
+
+	//LINE 7
+	View::printCharactors(L"▀", { (short)(x + 10 + -1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 13),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 0),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 12),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	for (int i = 1; i <= 11; i++) {
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::LIGHT_BLUE, Color::WHITE);
+
+	}
+
+	//LINE 8
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"███", { (short)(x + 10 + 1),(short)(y + 2 + 8) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"███", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"▀▀▀▀▀", { (short)(x + 10 + 4),(short)(y + 2 + 8) }, Color::BLUE, Color::BLACK);
+
+
+
+}
+void View::DrawDogeAvatar(int x, int y) {
+	y += 1;
+	x += 2;
+	/*x = 50;
+	y = 10;*/
+
+
+	//LINE 1
+
+	View::printCharactors(L"▄", { (short)(x + 10 + 3),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 4),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 8),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+
+	//LINE 2
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 6),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 2) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	//LINE 3
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	for (int i = 3; i <= 8; i++) {
+		View::printCharactors(L"█", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::BROWN, Color::WHITE);
+	}
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	//LINE 4
+	View::printCharactors(L"▄", { (short)(x + 10 + -3),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + -2),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"▄", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::BLACK, Color::BROWN);
+	View::printCharactors(L"▄", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	//LINE 5 
+	View::printCharactors(L"█", { (short)(x + 10 + -3),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + -2),(short)(y + 2 + 5) }, Color::YELLOW, Color::BROWN);
+	View::printCharactors(L"█", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"███", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"▄", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color::DARK_GRAY, Color::WHITE);
+	View::printCharactors(L"▄▄▄▀", { (short)(x + 10 + 7),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	//LINE 6
+	View::printCharactors(L"▀", { (short)(x + 10 + -2),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▄▄", { (short)(x + 10 + -1),(short)(y + 2 + 6) }, Color::BLACK, Color::BROWN);
+	View::printCharactors(L"█", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 2),(short)(y + 2 + 6) }, Color::BROWN, Color::BLACK);
+	View::printCharactors(L"██", { (short)(x + 10 + 3),(short)(y + 2 + 6) }, Color::BROWN, Color::WHITE);
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::DARK_GRAY, Color::WHITE);
+	View::printCharactors(L"▄▄▄▄▄", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::DARK_GRAY, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::DARK_GRAY, Color::BLACK);
+	View::printCharactors(L"▀", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+	//LINE 7
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"▀", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	}
+
+	View::printCharactors(L"█", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"▀", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color::YELLOW, Color::BROWN);
+	View::printCharactors(L"▀", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::YELLOW, Color::BROWN);
+
+}
+void View::DrawBotAvatar(int x, int y) {
+	//int x, y;
+	//x = 113;		
+	//y = 0;
+	//View::drawBackGroundAvatar(4, x + 6, x + 6 + 18, y , y  + 10);
+	//blue
+	y += 2;
+	for (int i = 3; i <= 8; i++) {
+		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
+	}
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
+
+	for (int i = 2; i <= 9; i++) {
+		if (i == 5 || i == 6) 	View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
+		else View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::BLUE, Color::BLACK);
+	}
+	for (int i = 2; i <= 9; i++) {
+		if (i == 2 || i == 9) 	View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::LIGHT_CYAN, Color::BLACK);
+		else View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::BLUE, Color::BLACK);
+	}
+
+	//cyan
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::WHITE);
+
+	//blue + cyan
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLUE, Color::LIGHT_CYAN);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLUE, Color::LIGHT_CYAN);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLUE, Color::LIGHT_CYAN);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 5) }, Color::BLUE, Color::LIGHT_CYAN);
+
+
+	//cyan + black
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::LIGHT_CYAN, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 2) }, Color::LIGHT_CYAN, Color::BLACK);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
+
+	//black
+	for (int i = 2; i <= 9; i++) {
+		if (i == 7) View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+		else View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	}
+
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	for (int i = 2; i <= 9; i++) {
+		if (i == 3 || i == 8) 	View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::BLACK);
+		else View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	}
+
+	for (int i = 2; i <= 9; i++) {
+		if (i == 3 || i == 8) 	View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::BLACK);
+		else View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::BLACK, Color::BLACK);
+	}
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 0) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 0) }, Color::BLACK, Color::WHITE);
+}
+void View::DrawSpidermanAvatar(int x, int y) {
+	//red
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
+
+	}
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+
+	for (int i = 3; i <= 9; i++) {
+		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
+	}
+
+	//black
+
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	}
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 12),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 7),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+
+	//red + black
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 4),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color::RED, Color::BLACK);
+
+	for (int i = 4; i <= 8; i++) {
+		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	}
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
+
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
+}
+void View::DrawIronmanAvatar(int x, int y) {
+	//red
+	for (int i = 4; i <= 8; i++) {
+		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
+	}
+	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
+
+	//black
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
+	}
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
+
+
+	//YELLOW + BLACK
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
+
+	}
+	for (int i = 2; i <= 10; i++) {
+		if (i >= 5 && i <= 7) View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::YELLOW, Color::BLACK);
+		else {
+			View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);						//----------------WHITE
+		}
+	}
+	for (int i = 4; i <= 8; i++) {
+		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	}
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
+
+	//yellow
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
+
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
+	for (int i = 2; i <= 10; i++) {
+		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
+	}
+
+
+	// yellow+ red
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
+
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::YELLOW, Color::RED);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::YELLOW, Color::RED);
+
+	//red + black
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
+	for (int i = 4; i <= 8; i++) {
+		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
+	}
+
+	//black + WHITE
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2584", { (short)(x + 10 + 12),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::WHITE);
+
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::WHITE);
+}
+void View::DrawPacman() {
+	int x, y;
+	x = -5;
+	y = 25;
+	int color;
+	//srand((unsigned int)time(NULL));				//?
+	for (int i = 1; i <= 14; i++) {				//number of ghosts
+
+		color = View::GetRandom(1, 13);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
+
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+		View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
+
+		for (int i = 0; i <= 6; i++) {
+			View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color(color), Color::BLACK);
+		}
+
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
+
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
+		Sleep(100);
+
+		x += 10;
+	}
+}
 void View::drawTrophy() {
 	int x, y;
 	x = 82;
@@ -752,410 +1681,20 @@ void View::drawTrophy() {
 
 
 }
+
 void View::drawBorder3( int left, int right,int top, int bot, wstring winnerName) {
-	/*
-	int top = 2;
-	int left = 77;
-	int bot = top + 8;
-	int right = left + 20;
-	*/
 	for (int i = left+1 ; i <= right -1 ; i++) {
 		View::printCharactors(L"\x2584", { (short)i,(short)top }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2580", { (short)i,(short)bot }, Color::BLACK, Color::WHITE);
-
-		//View::printCharactors(L"\x2584", { (short)i,(short)(bot+2) }, Color::BLACK, Color::WHITE);
-
 	}
 
 	for (int i = top + 1; i <= bot - 1; i++) {
 		View::printCharactors(L"\x2588", { (short)left,(short)i }, Color::BLACK, Color::WHITE);
 		View::printCharactors(L"\x2588", { (short)right,(short)i }, Color::BLACK, Color::WHITE);
 	}
-	//View::printCharactors(L"quan phan", {(short)(left + 5),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
 	short x = (short)left+((right - left) / 2 - winnerName.length() / 2);
 		
 	View::printCharactors(winnerName, {(short)(x),(short)(bot + 1)}, Color::BLACK, Color::WHITE);
-	
-}
-
-void View::drawBotAvatar(int x, int y) {
-	//int x, y;
-	//x = 113;		
-	//y = 0;
-	//View::drawBackGroundAvatar(4, x + 6, x + 6 + 18, y , y  + 10);
-	//blue
-	y += 2;
-	for (int i = 3; i <= 8; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
-	}
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-
-	for (int i = 2; i <= 9; i++) {
-		if (i == 5 || i == 6) 	View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
-		else View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::BLUE, Color::BLACK);
-	}
-	for (int i = 2; i <= 9; i++) {
-		if (i == 2 || i == 9) 	View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::LIGHT_CYAN, Color::BLACK);
-		else View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::BLUE, Color::BLACK);
-	}
-
-	//cyan
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::WHITE);
-
-	//blue + cyan
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLUE, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLUE, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLUE, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 5) }, Color::BLUE, Color::LIGHT_CYAN);
-
-
-	//cyan + black
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::LIGHT_CYAN, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 2) }, Color::LIGHT_CYAN, Color::BLACK);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::LIGHT_CYAN, Color::BLACK);
-
-	//black
-	for (int i = 2; i <= 9; i++) {
-		if(i==7) View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
-		else View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
-	}
-
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	
-	for (int i = 2; i <= 9; i++) {
-		if(i == 3 || i == 8) 	View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::LIGHT_CYAN, Color::BLACK);
-		else View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	}
-	
-	for (int i = 2; i <= 9; i++) {
-		if (i == 3 || i == 8) 	View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::LIGHT_CYAN, Color::BLACK);
-		else View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::BLACK, Color::BLACK);
-	}
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 0) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 0) }, Color::BLACK, Color::WHITE);
-}
-void View::drawSpidermanAvatar(int x, int y) {
-	//int x, y;
-	//x = 113;		
-	//y = -2;
-	View::drawBackGroundAvatar(2,x+7, x+7 + 18, y+2, y+2 + 10);	
-	//red
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLACK, Color::WHITE);
-	for (int i = 2; i <= 10; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
-
-	}
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-
-	for (int i = 3; i <= 9; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::RED, Color::WHITE);
-	}
-	
-	//black
-
-	for (int i = 2; i <= 10; i++) {
-		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::LIGHT_CYAN);
-	}
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 12),(short)(y + 2 + 2) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 5) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 7),(short)(y + 2 + 5) }, Color::BLACK, Color::LIGHT_CYAN);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 8) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::BLACK, Color::LIGHT_CYAN);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_CYAN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::BLACK, Color::LIGHT_CYAN);
-
-	//red + black
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 4),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color::RED, Color::BLACK);
-
-	for (int i = 4; i <= 8; i++) {
-		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
-	}
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
-
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::RED, Color::BLACK);
-}
-
-void View::drawThanosAvatar(int x, int y) {
-	//int x, y;
-	//x = 69;		
-	//y = -2;
-
-	View::drawBackGroundAvatar(3,x + 7, x+ 7 + 18, y+ 2, y+ 2 + 10);	
-	//blue
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 8),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 2) }, Color::BLUE, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
-	for (int i = 3; i <= 9; i++) {
-		if (i == 6) continue;
-		else View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 3) }, Color::BLUE, Color::WHITE);
-	}
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::BLUE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::BLUE, Color::WHITE);
-	//blue + yellow
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 4) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 7),(short)(y + 2 + 4) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::BLUE, Color::YELLOW);
-
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 4) }, Color::BLUE, Color::YELLOW);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 4) }, Color::BLUE, Color::YELLOW);
-
-	//yellow
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 2) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 8),(short)(y + 2 + 4) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
-
-
-	//purple
-	for (int i = 3; i <= 9; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::LIGHT_PURPLE, Color::YELLOW);
-	}
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color::LIGHT_PURPLE, Color::YELLOW);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 5) }, Color::LIGHT_PURPLE, Color::YELLOW);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 6) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 6) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 6) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 6) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 6) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 8),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 5),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::BLACK);			//---------------
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::BLACK);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::BLACK);
-	for (int i = 3; i <= 9; i++) {
-		if (i == 4 || i == 6 || i == 8) {
-			View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::BLACK, Color::BLACK);
-		}else View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::LIGHT_PURPLE, Color::BLACK);
-	}
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::YELLOW);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::LIGHT_PURPLE, Color::YELLOW);
-
-	//blue + black
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::BLUE, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::BLUE, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 2) }, Color::BLUE, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::BLUE, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLUE, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLUE, Color::BLACK);
-	//black
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 8),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 4),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + -1),(short)(y + 2 + 6) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 13),(short)(y + 2 + 6) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 7) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 12),(short)(y + 2 + 7) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 8) }, Color::BLACK, Color::GREEN);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 8) }, Color::BLACK, Color::GREEN);
-	for (int i = 4; i <= 8; i++) {
-		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::GREEN);
-	}
-
-}
-void View::drawIronmanAvatar(int x, int y) {
-
-	//int x, y;
-	//x = 69;
-	//y = -2;
-	//View::drawBackGroundAvatar(1,71, 71 + 20, 2, 2 + 10);	
-	View::drawBackGroundAvatar(1, x + 7, x + 7 + 18, y + 2, y + 2 + 10);
-	//red
-	for (int i = 4; i <= 8; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 2) }, Color::RED, Color::WHITE);
-	}
-	View::printCharactors(L"█", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 7),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 3) }, Color::RED, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 4) }, Color::RED, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 6) }, Color::RED, Color::WHITE);
-
-	//black
-	for (int i = 2; i <= 10; i++) {
-		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 1) }, Color::BLACK, Color::LIGHT_BLUE);
-	}
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + -1),(short)(y + 2 + 5) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 13),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 4) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 12),(short)(y + 2 + 6) }, Color::BLACK, Color::WHITE);
-
-
-	//YELLOW + BLACK
-	for(int i = 2 ; i<=10 ; i++){
-		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color::YELLOW, Color::BLACK);
-
-	}
-	for (int i = 2; i <= 10; i++) {
-		if (i >=5 && i <=7) View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::YELLOW, Color::BLACK);
-		else{
-			View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);						//----------------LIGHT_BLUE
-		}
-	}
-	for (int i = 4; i <= 8; i++) {
-		View::printCharactors(L"\x2584", { (short)(x + 10 + i),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
-	}
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 7) }, Color::YELLOW, Color::BLACK);
-
-	//yellow
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 9),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 10),(short)(y + 2 + 3) }, Color::YELLOW, Color::WHITE);
-
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 1),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
-	View::printCharactors(L"\x2588", { (short)(x + 10 + 11),(short)(y + 2 + 5) }, Color::YELLOW, Color::WHITE);
-	for (int i = 2; i <= 10; i++) {
-		View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 6) }, Color::YELLOW, Color::WHITE);
-	}
-
-
-	// yellow+ red
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 9),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 10),(short)(y + 2 + 2) }, Color::YELLOW, Color::RED);
-
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 4),(short)(y + 2 + 3) }, Color::YELLOW, Color::RED);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 8),(short)(y + 2 + 3) }, Color::YELLOW, Color::RED);
-
-	//red + black
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 11),(short)(y + 2 + 2) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 10),(short)(y + 2 + 7) }, Color::RED, Color::BLACK);
-	for (int i = 4; i <= 8; i++) {
-		View::printCharactors(L"\x2580", { (short)(x + 10 + i),(short)(y + 2 + 8) }, Color::RED, Color::BLACK);
-	}
-
-	//black + WHITE
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 0),(short)(y + 2 + 2) }, Color::BLACK, Color::LIGHT_BLUE);
-	View::printCharactors(L"\x2584", { (short)(x + 10 + 12),(short)(y + 2 + 2) }, Color::BLACK, Color::LIGHT_BLUE);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 1),(short)(y + 2 + 7) }, Color::BLACK, Color::LIGHT_BLUE);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 11),(short)(y + 2 + 7) }, Color::BLACK, Color::LIGHT_BLUE);
-
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 3),(short)(y + 2 + 8) }, Color::BLACK, Color::LIGHT_BLUE);
-	View::printCharactors(L"\x2580", { (short)(x + 10 + 9),(short)(y + 2 + 8) }, Color::BLACK, Color::LIGHT_BLUE);
 }
 
 void View::drawBackGroundAvatar(int n,int left , int right, int top , int bot) {
@@ -1189,7 +1728,6 @@ void View::drawBackGroundAvatar(int n,int left , int right, int top , int bot) {
 
 	
 }
-
 void View::drawVSText() {
 	int x, y;
 	x = 91;
@@ -1218,8 +1756,6 @@ void View::drawVSText() {
 	View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 1) }, Color::BLACK, Color::WHITE);
 
 }
-
-//-------------------------------------------splash screen------------------------------
 void View::splashScreenInfo() {
 	int x, y;
 	x = 50;
@@ -1253,47 +1789,10 @@ void View::splashScreen() {
 	Sleep(100);
 
 	View::splashScreenInfo();
-	View::drawPacman();
+	View::DrawPacman();
 
 	InputHandle::GetKey();
 }
-void View::drawPacman() {
-	int x, y;
-	x = -5;
-	y = 25;
-	int color;
-	//srand((unsigned int)time(NULL));				//?
-	for (int i = 1; i <= 14; i++) {				//number of ghosts
-
-		color = View::GetRandom(1, 13);
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 2),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 4),(short)(y + 2 + 2) }, Color(color), Color::BLACK);
-
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 0),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 3),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
-		View::printCharactors(L"\x2588", { (short)(x + 10 + 6),(short)(y + 2 + 3) }, Color(color), Color::BLACK);
-
-		for (int i = 0; i <= 6; i++) {
-			View::printCharactors(L"\x2588", { (short)(x + 10 + i),(short)(y + 2 + 4) }, Color(color), Color::BLACK);
-		}
-
-		View::printCharactors(L"\x2584", { (short)(x + 10 + 1),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
-		View::printCharactors(L"\x2584", { (short)(x + 10 + 5),(short)(y + 2 + 2) }, Color(color), Color::WHITE);
-
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 0),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 4),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 6),(short)(y + 2 + 5) }, Color(color), Color::WHITE);
-
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 2),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-		View::printCharactors(L"\x2580", { (short)(x + 10 + 5),(short)(y + 2 + 3) }, Color::BLACK, Color::WHITE);
-		Sleep(100);
-
-		x += 10;
-	}
-}
-
 //random function in range
 int View::GetRandom(int min, int max) {							
 	return min + (int)(rand() * (max - min + 1.0) / (1.0 + RAND_MAX));
@@ -1305,7 +1804,6 @@ void View::gotoXY(short x, short y) {
 	COORD coord = { x, y };
 	SetConsoleCursorPosition(h, coord);
 }
-
 void View::fixConsoleWindow() {
 	system("color f0");
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
@@ -1314,11 +1812,9 @@ void View::fixConsoleWindow() {
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
-
 void View::textColor(int color) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
-
 void View::textStyle(int fontSize) {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);
@@ -1330,7 +1826,6 @@ void View::textStyle(int fontSize) {
 	std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
-
 void View::clearRectangleArea(
 	COORD start, 
 	int width, 
@@ -1356,14 +1851,20 @@ void View::printCharactors(
 	std::wstring content, 
 	COORD spot, 
 	Color text_color,
-	Color background_color
+	Color background_color,
+	short maxLength
 ) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD Written;
 
 	// convert text color and background color to WORD that in range of 0-265 in color code table
 	int color = (int)text_color + (int)background_color * 16;
-
+	
+	// if the content is too long
+	if (maxLength != -1) {
+		content = content.substr(0, maxLength) + L"...";
+	}
+	
 	for (int i = 0; i < content.length(); i++) {
 		// set text background color
 		FillConsoleOutputAttribute(hOut, color, 1, spot, &Written);
@@ -1379,8 +1880,14 @@ void View::printVerticalCenteredCharactors(
 	SMALL_RECT box,
 	short y_offset,
 	View::Color text_color,
-	View::Color background_color
+	View::Color background_color,
+	short maxLength
 ) {
+	// if content is too long
+	if (maxLength != -1) {
+		content = content.substr(0, maxLength) + L"...";
+	}
+
 	short x = box.Left + (box.Right - box.Left) / 2 - content.length() / 2;
  	printCharactors(content, { x, short(box.Top + y_offset) }, text_color, background_color);
 }
@@ -1686,7 +2193,3 @@ void View::pressAnyKey(SMALL_RECT box) {
 	InputHandle::GetKey();
 }
 
-void View::displayTimer() {
-	while (false) {
-	}
-}
