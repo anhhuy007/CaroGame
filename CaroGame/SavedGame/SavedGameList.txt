@@ -1,1 +1,2 @@
 firstGame@10-04-2023 - 06:18:12@Player vs Player
+game1@10-04-2023 - 06:28:49@Player vs Computer (Easy)

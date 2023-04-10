@@ -148,10 +148,35 @@ namespace View {
 	void DrawPacman();
 	
 	//win screen
-	void drawWinner(int winplayer, std::wstring player1_name, std::wstring player2_name);
-	void drawWinDrawBanner(bool win ,int x, int y);
-	void showWinningMoves(int player, std::vector<COORD> winning_moves);
-	void drawFireWork(int k,int color, int x, int y);
+	void drawWinner(
+		int winplayer, 
+		std::wstring player1_name, 
+		Avatar avatar1, 
+		std::wstring player2_name, 
+		Avatar avatar2
+	);
+	void drawWinDrawBanner(
+		bool win ,
+		int x, 
+		int y
+	);
+	void showWinningMoves(
+		int player, 
+		std::vector<COORD> winning_moves
+	);
+	void drawFireWork(
+		int k,
+		int color, 
+		int x, 
+		int y
+	);
 	void drawFireWorkList(int k);
-	void displayGameResult(int player, std::vector<COORD> winning_moves, std::wstring name1, std::wstring name2);
+	void displayGameResult(
+		int player,
+		std::vector<COORD> winning_moves,
+		std::wstring name1,
+		Avatar avatar1,
+		std::wstring name2,
+		Avatar avatar2
+	);
 }

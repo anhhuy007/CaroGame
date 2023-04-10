@@ -17,8 +17,8 @@ void Control::StartGame() {
 	View::textStyle(22);
 
 	// show splash screen
-	View::splashScreen();
-	system("cls");
+	/*View::splashScreen();
+	system("cls");*/
 
 	// show menu screen
 	Control::NavigationController();
@@ -172,7 +172,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 		// if game is end
 		if (result.first != 0) {
 			game_info.endGame = true;
-			View::displayGameResult(result.first, result.second, name1, name2);
+			View::displayGameResult(result.first, result.second, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
 
 			// show dialog check if player want to play again or return menu
 			system("cls");
@@ -224,8 +224,8 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 		std::pair<int, std::vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
 		if (result.first != 0) {
 			game_info.endGame = true;
-			View::displayGameResult(result.first, result.second, name1, name2);
-			
+			View::displayGameResult(result.first, result.second, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
+
 			// show dialog check if player want to play again or return menu
 			system("cls");
 			View::confirmDialog(

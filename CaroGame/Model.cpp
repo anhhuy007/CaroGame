@@ -384,7 +384,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	std::wstring score = std::to_wstring(game_info.player1.score) + L" - " + std::to_wstring(game_info.player2.score);
 	View::printVerticalCenteredCharactors(
 		score,
-		{ short(spot.X + 1),short(spot.Y + 6),short(spot.X + 20),short(spot.Y + 6 + (height / 2 - 2) / 2) },
+		{ short(spot.X + ((width - 4) / 3 + 1)),short(spot.Y + 2),short((spot.X + ((width - 4) / 3 + 1)) + ((width - 4) / 3 + 3)),short(spot.Y + 4) },
 		short(((height / 2 - 2) / 2) / 2),
 		View::Color::BLACK,
 		View::Color::WHITE

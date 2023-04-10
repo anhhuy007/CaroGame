@@ -257,36 +257,37 @@ void View::displayGameResult(
 	int player, 
 	std::vector<COORD> winning_moves, 
 	std::wstring name1, 
-	std::wstring name2
+	Avatar avatar1,
+	std::wstring name2,
+	Avatar avatar2
 ) {
 	View::showWinningMoves(player, winning_moves);
 	View::clearRectangleArea({ 70, 0 }, 70, 40); 
-	View::drawWinner(player, name1, name2);
+	View::drawWinner(player, name1, avatar1, name2, avatar2);
 }
 //who win, 1 :player1, 2:player2 , 0 draw
-void View::drawWinner(int winplayer, wstring player1_name, wstring player2_name) {
+void View::drawWinner(int winplayer, wstring player1_name, Avatar avatar1, wstring player2_name, Avatar avatar2) {
 	int x, y;
 	//avatar coordinate: x = 88, y = 5
 	//banner coordinate: x = 75, y = 20
 	
 	if (winplayer == 1) {
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player1_name);
-		View::DrawIronmanAvatar(88, 5);
+		View::DrawAvatar(avatar1, 88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
 		View::drawFireWorkList(1);
 	}
 	else if (winplayer == 2) {
 		View::drawBorder3(94, 94 + 20, 7, 7 + 10, player2_name);
-		View::DrawBMOAvatar(88, 5);
+		View::DrawAvatar(avatar2, 88, 5);
 		View::drawWinDrawBanner(1, 75, 20);
 		View::drawFireWorkList(1);
 	}
 	else {
 		View::drawBorder3(94 - 15, 94 - 15 + 20, 7, 7 + 10, player1_name);
-		View::DrawIronmanAvatar(88 - 15, 5);
-
+		View::DrawAvatar(avatar1, 88 - 15, 5);
 		View::drawBorder3(94 + 15, 94 + 15 + 20, 7, 7 + 10, player2_name);
-		View::DrawBMOAvatar(88 + 15, 5);
+		View::DrawAvatar(avatar2, 88 + 15, 5);
 		View::drawWinDrawBanner(0, 75, 20);
 		View::drawFireWorkList(0);
 	}
