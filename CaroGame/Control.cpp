@@ -83,13 +83,11 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 		std::string p1 = InputHandle::GetPlayerName("Enter Player 1 name: ", "");
 		// if exit game
 		if (p1 == "-1") {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 		// get player 1 avatar
 		int avatar1 = InputHandle::GetAvatar(L"Player 1");
 		if (avatar1 == -1) {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 
@@ -97,13 +95,11 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 		std::string p2 = InputHandle::GetPlayerName("Enter Player 2 name: ", p1);
 		// if exit game
 		if (p2 == "-1") {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 		// get player 2 avatar
 		int avatar2 = InputHandle::GetAvatar(L"Player 2");
 		if (avatar2 == -1) {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 
@@ -118,13 +114,11 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 
 		// if exit game
 		if (p1 == "-1") {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 		// get player avatar
 		int avatar1 = InputHandle::GetAvatar(L"Player");
 		if (avatar1 == -1) {
-			Control::ReturnMenu();
 			return GameInformation();
 		}
 
@@ -158,6 +152,11 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 	std::wstring name1 = game_info.player1.getWStringName();
 	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
+
+	if (name1 == L"" || name2 == L"") {
+		Control::ReturnMenu();
+		return;
+	}
 
 	// draw game board and game information
 	system("cls");
@@ -210,6 +209,11 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 	std::wstring name1 = game_info.player1.getWStringName();
 	std::wstring name2 = game_info.player2.getWStringName();
 	escPressed = false;
+
+	if (name1 == L"") {
+		Control::ReturnMenu();
+		return;
+	}
 
 	// draw game board and game information
 	system("cls");
