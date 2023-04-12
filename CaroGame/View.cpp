@@ -219,9 +219,9 @@ void View::drawFireWorkList(int k) {
 				p3++;
 			}
 			count++;
-			if (count >= 80) break;
+			if (count >= 60) break;
 			View::gotoXY(90, 35);
-			if (count % 10 == 0) std::cout << "***** Game end in " << 7 - (count / 10) + 1 << "s *****";
+			if (count % 10 == 0) std::cout << "***** Game end in " << 5 - (count / 10) + 1 << "s *****";
 			Sleep(100);
 		}
 	}
@@ -245,9 +245,9 @@ void View::drawFireWorkList(int k) {
 				drawFireWork(7 + (p3 % 6), color[rand() % 5], x, y);
 				p3++;
 			}
-			if (count >= 80) break;
+			if (count >= 60) break;
 			View::gotoXY(90, 35);
-			if (count % 10 == 0) std::cout << "***** Game end in " << 7 - (count / 10) + 1 << "s *****";
+			if (count % 10 == 0) std::cout << "***** Game end in " << 5 - (count / 10) + 1 << "s *****";
 			Sleep(100);
 		}
 	}
@@ -261,9 +261,11 @@ void View::displayGameResult(
 	std::wstring name2,
 	Avatar avatar2
 ) {
+	Sound::repeatSound(Sound::WIN);
 	View::showWinningMoves(player, winning_moves);
 	View::clearRectangleArea({ 70, 0 }, 70, 40); 
 	View::drawWinner(player, name1, avatar1, name2, avatar2);
+	Sound::closeSound(Sound::WIN);
 }
 //who win, 1 :player1, 2:player2 , 0 draw
 void View::drawWinner(int winplayer, wstring player1_name, Avatar avatar1, wstring player2_name, Avatar avatar2) {
@@ -388,12 +390,12 @@ void View::drawGameBoard() {
 	View::printCharactors(L"n", { (short)(x + 54),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"o", { (short)(x + 58),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
 	//View::printCharactors(L"p", { (short)(x + 62),(short)(y + 2 * space_row - 1 + 2) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"15", { (short)(x - 2),(short)(y + 2 * space_row - 29) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"14", { (short)(x - 2),(short)(y + 2 * space_row - 27) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"13", { (short)(x - 2),(short)(y + 2 * space_row - 25) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"12", { (short)(x - 2),(short)(y + 2 * space_row - 23) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"11", { (short)(x - 2),(short)(y + 2 * space_row - 21) }, Color::BLACK, Color::WHITE);
-	View::printCharactors(L"10", { (short)(x - 2 ),(short)(y + 2 * space_row - 19 ) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"15", { (short)(x - 3),(short)(y + 2 * space_row - 29) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"14", { (short)(x - 3),(short)(y + 2 * space_row - 27) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"13", { (short)(x - 3),(short)(y + 2 * space_row - 25) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"12", { (short)(x - 3),(short)(y + 2 * space_row - 23) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"11", { (short)(x - 3),(short)(y + 2 * space_row - 21) }, Color::BLACK, Color::WHITE);
+	View::printCharactors(L"10", { (short)(x - 3 ),(short)(y + 2 * space_row - 19 ) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"9", { (short)(x - 2 ),(short)(y + 2 * space_row - 17 ) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"8", { (short)(x - 2 ),(short)(y + 2 * space_row - 15 ) }, Color::BLACK, Color::WHITE);
 	View::printCharactors(L"7", { (short)(x - 2 ),(short)(y + 2 * space_row - 13 ) }, Color::BLACK, Color::WHITE);
@@ -1832,10 +1834,6 @@ void View::clearRectangleArea(
 	int width, 
 	int height
 ) {
-	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	DWORD dwWritten;
-	int startY = start.Y;
-	int color = (int)View::Color::WHITE + (int)View::Color::WHITE * 16;
 	short x = start.X;
 
 	for (int i = 0; i < height; i++) {
@@ -2176,16 +2174,6 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::WHITE
 	);
 }
-
-void View::drawMove(short x, short y, int player) {
-	printCharactors(
-		player == 1 ? L"X" : L"O",
-		{ short(x * 2 + 1), short(y * 2 + 1) },
-		Color::BLACK,
-		Color::WHITE
-	);
-}
-
 
 void View::pressAnyKey(SMALL_RECT box) {
 	wstring message = L"Press any key to continue...";

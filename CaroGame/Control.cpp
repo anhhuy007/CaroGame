@@ -87,7 +87,7 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 			return GameInformation();
 		}
 		// get player 1 avatar
-		int avatar1 = InputHandle::GetAvatar();
+		int avatar1 = InputHandle::GetAvatar(L"Player 1");
 		if (avatar1 == -1) {
 			Control::ReturnMenu();
 			return GameInformation();
@@ -101,7 +101,7 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 			return GameInformation();
 		}
 		// get player 2 avatar
-		int avatar2 = InputHandle::GetAvatar();
+		int avatar2 = InputHandle::GetAvatar(L"Player 2");
 		if (avatar2 == -1) {
 			Control::ReturnMenu();
 			return GameInformation();
@@ -122,7 +122,7 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 			return GameInformation();
 		}
 		// get player avatar
-		int avatar1 = InputHandle::GetAvatar();
+		int avatar1 = InputHandle::GetAvatar(L"Player");
 		if (avatar1 == -1) {
 			Control::ReturnMenu();
 			return GameInformation();

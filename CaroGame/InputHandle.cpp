@@ -2,6 +2,7 @@
 #include <iostream>
 #include "View.h"
 #include "FileIO.h"
+#include "Sound.h"
 
 // this function is used for get the input from keyboard
 std::wstring InputHandle::GetKey() {
@@ -190,7 +191,7 @@ std::string InputHandle::GetPlayerName(std::string message, std::string player1N
 	}
 }
 
-int InputHandle::GetAvatar() {
+int InputHandle::GetAvatar(std::wstring message) {
 	std::wstring key = L"";
 	short posX = 5, posY = 5;
 
@@ -204,6 +205,10 @@ int InputHandle::GetAvatar() {
 				x = 5;
 				y += 14;
 			}
+		}
+
+		if (InputHandle::isMoveKey(key)) {
+			Sound::playSound(Sound::VALID);
 		}
 
 		if (key == L"UP") {
@@ -223,7 +228,7 @@ int InputHandle::GetAvatar() {
 			if (posX > 105) posX = 105;
 		}
 
-		View::drawBorder3(posX + 5, posX + 26, posY + 2, posY + 12, L"Player 1");
+		View::drawBorder3(posX + 5, posX + 26, posY + 2, posY + 12, message);
 		key = InputHandle::GetKey();
 		View::clearRectangleArea({ posX, posY }, posX + 25, posY + 12);
 

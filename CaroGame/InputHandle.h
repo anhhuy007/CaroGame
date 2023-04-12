@@ -12,6 +12,6 @@ namespace InputHandle {
 	// check if key is move key (arrow key)
 	bool isMoveKey(std::wstring key);
 	bool isValidName(std::string userName);
-	int GetAvatar();
+	int GetAvatar(std::wstring message);
 }
 

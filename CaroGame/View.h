@@ -69,6 +69,8 @@ namespace View {
 		Color background_color,
 		short maxLength = -1
 	);
+	
+	// 
 	void printVerticalCenteredCharactors(
 		std::wstring content, 
 		SMALL_RECT box,
@@ -103,7 +105,6 @@ namespace View {
 
 	// display game information
 	void drawGamePlayInfoBox(COORD spot, int width, int height, Color color);
-	void drawMove(short x, short y, int player);
 
 	// draw game board and game pieces
 	void drawGameBoard();
@@ -112,8 +113,20 @@ namespace View {
 	void drawInstructionText();
 	void drawLoadGameText();
 	void drawSettingText();
-	void DisplayGame(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE], std::wstring name1, Avatar avatar1, std::wstring name2, Avatar avatar2);
-	void drawXO(int board[BOARD_SIZE][BOARD_SIZE], COORD cell[BOARD_SIZE][BOARD_SIZE]);
+	// draw all game pieces
+	void DisplayGame(
+		int board[BOARD_SIZE][BOARD_SIZE], 
+		COORD cell[BOARD_SIZE][BOARD_SIZE], 
+		std::wstring name1, 
+		Avatar avatar1, 
+		std::wstring name2, 
+		Avatar avatar2
+	);
+	// display all X and O on board
+	void drawXO(
+		int board[BOARD_SIZE][BOARD_SIZE], 
+		COORD cell[BOARD_SIZE][BOARD_SIZE]
+	);
 	void drawAboutText();
 	void splashScreenInfo();
 	void splashScreen();

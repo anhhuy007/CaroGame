@@ -351,7 +351,7 @@ void settingMenuOptionChanged(
 
 void SettingMenu() {
 	system("cls");
-	COORD start = { 70, 10 };
+	COORD start = { 70, 15 };
 	int index = 0;
 	std::vector<SettingItem> setting_items = {
 		{ 0, L"BACKGROUND SOUND: ", soundManager.backgroundSound, L"ON", L"OFF"},
@@ -359,6 +359,7 @@ void SettingMenu() {
 		{ 2, L"BACK", false, L"", L""}
 	};
 
+	// draw setting menu
 	drawSettingMenu(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index, setting_items.size());
 	settingMenuOptionChanged(setting_items, start, View::Color::BLACK, View::Color::PURPLE, &index);
 

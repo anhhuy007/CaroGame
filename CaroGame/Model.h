@@ -93,14 +93,6 @@ namespace Model {
 		inline void addMoveNoGUI(int x, int y, bool computer) {
 			value[x][y] = computer ? 2 : 1;
 		}
-
-		inline bool addMove(int x, int y, bool black) {
-			if (value[x][y] != 0) return false;
-
-			value[x][y] = black ? 2 : 1;
-			View::drawMove(gui[x][y].X, gui[x][y].Y, value[x][y]);
-			return true;
-		}
 		
 		std::vector<COORD> generateMoves() {
 			std::vector<COORD> moveList;

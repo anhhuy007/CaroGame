@@ -38,7 +38,7 @@ void Model::previousMove(Model::GameInformation& game_info) {
 
 void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) {
 	// move up
-	if (key == L"UP") {
+	if (key == L"UP" || key == L"w") {
 		if (game_info.curY > View::TOP + 1) {
 			game_info.curY -= 2;
 		}
@@ -48,7 +48,7 @@ void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) 
 	}
 
 	// move down
-	else if (key == L"DOWN") {
+	else if (key == L"DOWN" || key == L"s") {
 		if (game_info.curY < View::BOT - 1) {
 			game_info.curY += 2;
 		}
@@ -58,7 +58,7 @@ void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) 
 	}
 
 	// move left
-	else if (key == L"LEFT") {
+	else if (key == L"LEFT" || key == L"a") {
 		if (game_info.curX > View::LEFT + 2) {
 			game_info.curX -= 4;
 		}
@@ -68,7 +68,7 @@ void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) 
 	}
 
 	// move right
-	else if (key == L"RIGHT") {
+	else if (key == L"RIGHT" || key == L"d") {
 		if (game_info.curX < View::RIGHT - 2) {
 			game_info.curX += 4;
 		}
@@ -220,7 +220,7 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 }
 
 void Model::computerTurn(Model::Player player, Model::GameInformation& game_info) {
-	COORD move = AI::findNextMove(2, game_info.board);
+	COORD move = AI::findNextMove(2	, game_info.board);
 
 	COORD spot = game_info.board.getSpot(move.X, move.Y);
 	game_info.curX = spot.X;
