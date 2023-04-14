@@ -1932,9 +1932,9 @@ void View::confirmDialog(
 	std::function<void()> positiveAction,
 	std::function<void()> negativeAction
 ) {
-	int width = content.size() + 20;
+	int width = content.size() + 30;
 	COORD spot = View::getCenteredSpot(content, box);
-	spot.X -= 10; spot.Y -= 5;
+	spot.X -= 15; spot.Y -= 5;
 	View::drawRectangleBorder(spot, width, 10, View::Color::BLACK);
 	// print dialog title
 	View::printVerticalCenteredCharactors(

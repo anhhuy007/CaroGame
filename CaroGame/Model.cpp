@@ -269,7 +269,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 }
 
 void Model::computerTurn(Model::Player player, Model::GameInformation& game_info) {
-	COORD move = AI::findNextMove(2	, game_info.board);
+	int depth = game_info.gameMode.level == Model::EASY ? 1 : 2;
+	COORD move = AI::findNextMove(depth	, game_info.board);
 
 	COORD spot = game_info.board.getSpot(move.X, move.Y);
 	game_info.curX = spot.X;

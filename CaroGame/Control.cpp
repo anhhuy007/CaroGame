@@ -371,7 +371,7 @@ void Control::LoadGame() {
 	View::drawLoadGameText();
 
 	// show saved game list and return game name 
-	std::string fileName = GetSavedGameTitle(FileIO::GetSavedGameList(), { 45, 15, 95, 30 });
+	std::string fileName = GetSavedGameTitle(FileIO::GetSavedGameList(), { 42, 17, 95, 32 });
 
 	// check if player want to return menu
 	if (fileName == "-1") {

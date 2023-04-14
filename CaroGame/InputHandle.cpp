@@ -3,6 +3,7 @@
 #include "View.h"
 #include "FileIO.h"
 #include "Sound.h"
+#include "Control.h"
 
 // this function is used for get the input from keyboard
 std::wstring InputHandle::GetKey() {
@@ -60,7 +61,7 @@ std::wstring InputHandle::GetKey() {
 }
 
 bool InputHandle::isMoveKey(std::wstring key) {
-	return key == L"UP" || key == L"DOWN" || key == L"LEFT" || key == L"RIGHT";
+	return key == L"UP" || key == L"DOWN" || key == L"LEFT" || key == L"RIGHT" || key == L"a" || key == L"d" || key == L"w" || key == L"s";
 }
 
 // input file name from keyboard 
@@ -208,22 +209,22 @@ int InputHandle::GetAvatar(std::wstring message) {
 		}
 
 		if (InputHandle::isMoveKey(key)) {
-			Sound::playSound(Sound::VALID);
+			Sound::playEffectSound(Sound::VALID, Control::soundManager);
 		}
 
-		if (key == L"UP") {
+		if (key == L"UP" || key == L"w") {
 			posY -= 14;
 			if (posY < 5) posY = 5;
 		}
-		else if (key == L"DOWN") {
+		else if (key == L"DOWN" || key == L"s") {
 			posY += 14;
 			if (posY > 19) posY = 19;
 		}
-		else if (key == L"LEFT") {
+		else if (key == L"LEFT" || key == L"a") {
 			posX -= 25;
 			if (posX < 5) posX = 5;
 		}
-		else if (key == L"RIGHT") {
+		else if (key == L"RIGHT" || key == L"d") {
 			posX += 25;
 			if (posX > 105) posX = 105;
 		}
