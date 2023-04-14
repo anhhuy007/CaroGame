@@ -1,7 +1,5 @@
 #include "Control.h"
 #include "View.h"
-#include "AI.h"
-#include "InputHandle.h"
 using namespace std;
 
 int main() {
@@ -11,6 +9,8 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 
 	Control::StartGame();
+
+	system("pause");
 	
 	return 0;
 }

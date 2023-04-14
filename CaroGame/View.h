@@ -17,7 +17,7 @@ namespace View {
 	const int BOARD_SIZE = 15;
 	const int LEFT = 4;
 	const int RIGHT = LEFT + 4 * BOARD_SIZE;
-	const int TOP = 2;
+	const int TOP = 4;
 	const int BOT = TOP + 2 * BOARD_SIZE;
 	const int SCREEN_WIDTH = 146;
 	const int SCREEN_HEIGHT = 37;
@@ -70,7 +70,7 @@ namespace View {
 		short maxLength = -1
 	);
 	
-	// 
+	// print text with centering in the box 
 	void printVerticalCenteredCharactors(
 		std::wstring content, 
 		SMALL_RECT box,
@@ -113,10 +113,12 @@ namespace View {
 	void drawInstructionText();
 	void drawLoadGameText();
 	void drawSettingText();
+	void drawTitleAndStatus(std::string title, bool isSaved);
 	// draw all game pieces
 	void DisplayGame(
 		int board[BOARD_SIZE][BOARD_SIZE], 
-		COORD cell[BOARD_SIZE][BOARD_SIZE], 
+		COORD cell[BOARD_SIZE][BOARD_SIZE],
+		std::string gameName,
 		std::wstring name1, 
 		Avatar avatar1, 
 		std::wstring name2, 
@@ -156,7 +158,7 @@ namespace View {
 	void DrawBMOAvatar(int x, int y);
 	void DrawMarioAvatar(int x, int y);
 	void DrawAmongUsAvatar(int x, int y);
-	void DrawJakeAvatar(int x, int y);
+	void DrawDuckAvatar(int x, int y);
 	void DrawCrocodileAvatar(int x, int y);
 	void DrawPacman();
 	

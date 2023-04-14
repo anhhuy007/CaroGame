@@ -1,8 +1,11 @@
 #pragma once
 #include <iostream>
 #include "Model.h"
+#include "Sound.h"
 
 namespace Control {
+	extern Sound::SoundManager soundManager;
+	extern bool gameSaved;
 	void NavigationController();
 	void StartGame();
 	void ReturnMenu();

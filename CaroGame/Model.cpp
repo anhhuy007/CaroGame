@@ -34,6 +34,11 @@ void Model::previousMove(Model::GameInformation& game_info) {
 	View::printCharactors(L" ", { game_info.curX, game_info.curY }, View::Color::WHITE, View::Color::WHITE);
 	View::gotoXY(game_info.curX, game_info.curY);
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
+
+	if (Control::gameSaved == true) {
+		View::drawTitleAndStatus(game_info.name, false);
+		Control::gameSaved = false;
+	}
 }
 
 void Model::makePlayerMove(std::wstring key, Model::GameInformation& game_info) {
@@ -84,6 +89,7 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 	
 	// if the board is empty
 	if (game_info.board[i][j] == 0) {
+		Sound::playEffectSound(Sound::MOVE, Control::soundManager);
 		// mark move
 		game_info.board[i][j] = playerNum;
 		// add move to history
@@ -103,6 +109,11 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 		// change player turn
 		game_info.isFirstPlayerTurn = !game_info.isFirstPlayerTurn;
 		endTurn = true;
+
+		if (Control::gameSaved == true) {
+			View::drawTitleAndStatus(game_info.name, false);
+			Control::gameSaved = false;
+		}
 	}
 }
 
@@ -160,6 +171,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 					Control::SaveGame(game_info);
 					// restore screen's information
 					View::writeScreenBuffer(buffer);
+					View::drawTitleAndStatus(game_info.name, Control::gameSaved);
+					View::gotoXY(game_info.curX, game_info.curY);
 				},
 				[&]() -> void {
 					// if click NO then continue game
@@ -424,7 +437,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 		char character = char((move.move.X - 6) / 4 + 97);
 		std::string tmp_string(1, character);
 		std::wstring moveX(tmp_string.begin(), tmp_string.end());
-		std::wstring moveY = std::to_wstring(int(16 - (move.move.Y - 1) / 2));
+		std::wstring moveY = std::to_wstring(int(16 - (move.move.Y - 1) / 2) + 1);
 		history += L" - (" + moveY + L"," + moveX + L")" + L" ";
 		x = short(spot.X + 22 + (width-22)/2 - (history.length() / 2));
 		View::printCharactors(history, { x, short(y + cnt * 2) }, View::Color::BLACK, View::Color::WHITE);

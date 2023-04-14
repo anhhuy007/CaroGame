@@ -9,12 +9,21 @@
 #include <string>
 
 bool escPressed = false;
+bool Control::gameSaved = false;
+Sound::SoundManager Control::soundManager;
 
 void Control::StartGame() {
 	// initialize default configuration
 	system("color f0");
 	View::fixConsoleWindow();
 	View::textStyle(22);
+
+	// initialize game setting
+	Setting soundSetting = FileIO::ReadSetting("GameSetting.dat");
+	Sound::prepareSound();
+	soundManager.backgroundPlaying = false;
+	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.backgroundPlaying };
+	Sound::playBackgroundSound(soundManager);
 
 	// show splash screen
 	/*View::splashScreen();
@@ -31,7 +40,7 @@ void Control::NavigationController() {
 	MenuOption option = MenuScreen();
 	
 	switch (option) {
-	case MenuOption::NEW_GAME_VS_PLAYER:
+	case MenuOption::NEW_GAME_VS_HUMAN:
 		Control::PlayWithHuman(InitNewGame({ Model::PLAY_WITH_HUMAN, Model::EASY }));
 		break;
 		
@@ -116,6 +125,7 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 		if (p1 == "-1") {
 			return GameInformation();
 		}
+		
 		// get player avatar
 		int avatar1 = InputHandle::GetAvatar(L"Player");
 		if (avatar1 == -1) {
@@ -143,7 +153,7 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 	game_info.curX = View::LEFT + 38;
 	game_info.curY = View::TOP + 19;
 	game_info.endGame = false;
-
+	
 	return game_info;
 }
 
@@ -161,7 +171,15 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 	// draw game board and game information
 	system("cls");
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
+	View::DisplayGame(
+		game_info.board.value, 
+		game_info.board.gui, 
+		game_info.name,
+		name1, 
+		game_info.player1.avatar, 
+		name2, 
+		game_info.player2.avatar
+	);
 	
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
@@ -218,7 +236,15 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 	// draw game board and game information
 	system("cls");
 	Model::updateInform(game_info, { 75, 13 }, 64, 15, View::Color::BLACK);
-	View::DisplayGame(game_info.board.value, game_info.board.gui, name1, game_info.player1.avatar, name2, game_info.player2.avatar);
+	View::DisplayGame(
+		game_info.board.value, 
+		game_info.board.gui, 
+		game_info.name, 
+		name1, 
+		game_info.player1.avatar, 
+		name2, 
+		game_info.player2.avatar
+	);
 
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
@@ -289,6 +315,7 @@ void Control::ReturnMenu() {
 	// return to menu screen
 	system("cls");
 	Control::NavigationController();
+	return;
 }
 // save game to file
 void Control::SaveGame(Model::GameInformation& game_info) {
@@ -326,6 +353,7 @@ void Control::SaveGame(Model::GameInformation& game_info) {
 			{0, 0},
 			game_info.gameMode
 		);
+		gameSaved = true;
 		information.updateNewDate();
 		FileIO::SaveGameGeneralInformation(fileName, information);
 	}
@@ -360,6 +388,7 @@ void Control::LoadGame() {
 	Model::GameInformation game_info = FileIO::ReadGameInfoFromFile(file);
 	if (game_info.name != "") {
 		system("cls");
+		Control::gameSaved = true;
 		if (game_info.gameMode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 			// two players game
 			Control::PlayWithHuman(game_info);

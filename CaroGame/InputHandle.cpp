@@ -68,7 +68,7 @@ std::string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
 	std::string fileName = ""; std::wstring key = L"";
 
 	std::wstring wstr = L"Enter file name: ";
-	std::wstring note = L"Note: File name must contain only alphabet and number";
+	std::wstring note = L"Note: File name must contain only alphabet, number and spacing";
 	std::wstring exitNote = L"Press ESC to exit";
 	COORD spot = View::getCenteredSpot(note, box);
 	View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
@@ -81,10 +81,10 @@ std::string InputHandle::GetFileName(bool checkExisted, SMALL_RECT box) {
 				bool isExisted = FileIO::fileNameExisted(fileName);
 				
 				if (!checkExisted && isExisted) {
-					View::printCenteredToast(L"File name is existed!", box, View::Color::BLACK, View::Color::WHITE);
+					View::printCenteredToast(L"File name existed!", box, View::Color::BLACK, View::Color::WHITE);
 				}
 				else if (checkExisted && !isExisted) {
-					View::printCenteredToast(L"File name is not existed!", box, View::Color::BLACK, View::Color::WHITE);
+					View::printCenteredToast(L"File name not existed!", box, View::Color::BLACK, View::Color::WHITE);
 				}
 				else if (!isValidName(fileName)) {
 					View::printCenteredToast(L"File name is invalid!", box, View::Color::BLACK, View::Color::WHITE);
@@ -137,9 +137,9 @@ bool InputHandle::isValidName(std::string userName) {
 
 // input player name from keyboard
 std::string InputHandle::GetPlayerName(std::string message, std::string player1Name) {
-	std::string fileName = ""; std::wstring key = L"";
+	std::string playerName = ""; std::wstring key = L"";
 	SMALL_RECT box = View::WINDOW_SIZE;
-	std::wstring note = L"Note: Player name must contain only alphabet and number";
+	std::wstring note = L"Note: Player name must contain only alphabet, number and spacing";
 	std::wstring exitNote = L"Press ESC to exit";
 	COORD spot = View::getCenteredSpot(note, box);
 	View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
@@ -147,17 +147,17 @@ std::string InputHandle::GetPlayerName(std::string message, std::string player1N
 
 	while (1) {
 		if (key == L"ENTER") {
-			if (fileName != "") {
+			if (playerName != "") {
 				system("cls");
 
-				if (fileName == player1Name) {
+				if (playerName == player1Name) {
 					View::printCenteredToast(L"Player name must be different from player 1!", box, View::Color::BLACK, View::Color::WHITE);
 				}
-				else if (!isValidName(fileName)) {
+				else if (!isValidName(playerName)) {
 					View::printCenteredToast(L"User name is invalid!", box, View::Color::BLACK, View::Color::WHITE);
 				}
 				else {
-					return fileName;
+					return playerName;
 				}
 
 				View::printCharactors(note, { spot.X, short(spot.Y + 1) }, View::Color::BLACK, View::Color::WHITE);
@@ -172,21 +172,21 @@ std::string InputHandle::GetPlayerName(std::string message, std::string player1N
 		else if (key == L"BACKSPACE") {
 			// delete the last character
 			View::clearRectangleArea({ short(spot.X + message.length()), short(spot.Y) }, 30, 1);
-			if (fileName.length() > 0) {
-				fileName.pop_back();
+			if (playerName.length() > 0) {
+				playerName.pop_back();
 			}
 		}
 
 		else if (key.length() == 1) {
 			// add character
-			if (fileName.length() <= 20) {
-				fileName += key[0];
+			if (playerName.length() < 19) {
+				playerName += key[0];
 			}
 		}
 
 		View::gotoXY(spot.X, spot.Y);
 		std::cout << message;
-		std::cout << fileName;
+		std::cout << playerName;
 		key = InputHandle::GetKey();
 	}
 }

@@ -5,11 +5,11 @@
 #include "Sound.h"
 #include "InputHandle.h"
 #include "FileIO.h"
+#include "Control.h"
 #include <vector>
 #include <string.h>
 
 // global variable 
-Sound::SoundManager soundManager;
 bool menuEscPressed = false;
 bool escEnable = false;
 
@@ -102,20 +102,20 @@ void menuOptionChanged(
 		if (key == L"UP" || key == L"W" || key == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, menu_items.size())) {
-				Sound::playEffectSound(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 			}
 			else {
-				Sound::playEffectSound(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, Control::soundManager);
 			}
 		}
 		// move down
 		else if (key == L"DOWN" || key == L"S" || key == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, menu_items.size())) {
-				Sound::playEffectSound(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 			}
 			else {
-				Sound::playEffectSound(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, Control::soundManager);
 			}
 		}
 		else if (key == L"ESC" && escEnable) {
@@ -161,7 +161,7 @@ MenuOption NewGameMenu(
 	int menu_size = 4;
 	start = { 70, 15 };
 	std::vector<MenuItem> newgame_menu_items = {
-		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_PLAYER },
+		{0, L"VS HUMAN", MenuOption::NEW_GAME_VS_HUMAN },
 		{1, L"VS COMPUTER (EASY)", MenuOption::NEW_GAME_VS_COMPUTER_EASY },
 		{2, L"VS COMPUTER (HARD)", MenuOption::NEW_GAME_VS_COMPUTER_HARD },
 		{3, L"BACK", MenuOption::BACK},
@@ -173,14 +173,7 @@ MenuOption NewGameMenu(
 	return newgame_menu_items[index].menu_option;
 }
 
-MenuOption MenuScreen() {
-	Setting soundSetting = FileIO::ReadSetting("GameSetting.dat");
-	Sound::openSound(Sound::BACKGROUND);
-	Sound::openSound(Sound::INVALID);
-	Sound::openSound(Sound::VALID);
-	soundManager = { soundSetting.backgroundSound, soundSetting.soundEffect, soundManager.backgroundPlaying };
-	Sound::playBackgroundSound(soundManager);
-	
+MenuOption MenuScreen() {	
 	MenuOption option = MainMenu({ 70, 15 }, View::Color::BLACK, View::Color::PURPLE);
 
 	switch (option) {
@@ -223,7 +216,7 @@ MenuOption AboutMenu() {
 
 	while (key != L"ESC") {
 		key = InputHandle::GetKey();
-		Sound::playEffectSound(Sound::INVALID, soundManager);
+		Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 	}
 
 	return MenuOption::ABOUT;
@@ -262,7 +255,7 @@ MenuOption InstructionMenu() {
 
 	while (key != L"ESC") {
 		key = InputHandle::GetKey();
-		Sound::playEffectSound(Sound::INVALID, soundManager);
+		Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 	}
 	
 	return MenuOption::INSTRUCTION;
@@ -317,19 +310,19 @@ void settingMenuOptionChanged(
 		if (selected_item == L"UP" || selected_item == L"W" || selected_item == L"w") {
 			*cur_index -= 1;
 			if (checkIndex(cur_index, setting_items.size())) {
-				Sound::playEffectSound(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 			}
 			else {
-				Sound::playEffectSound(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, Control::soundManager);
 			}
 		}
 		else if (selected_item == L"DOWN" || selected_item == L"S" || selected_item == L"s") {
 			*cur_index += 1;
 			if (checkIndex(cur_index, setting_items.size())) {
-				Sound::playEffectSound(Sound::INVALID, soundManager);
+				Sound::playEffectSound(Sound::INVALID, Control::soundManager);
 			}
 			else {
-				Sound::playEffectSound(Sound::VALID, soundManager);
+				Sound::playEffectSound(Sound::VALID, Control::soundManager);
 			}
 		}
 		else if (selected_item == L"ENTER") {
@@ -339,9 +332,9 @@ void settingMenuOptionChanged(
 
 			// update sound manager and setting items
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
-			soundManager = { setting_items[0].status, setting_items[1].status };
-			Sound::playBackgroundSound(soundManager);
-			Sound::playEffectSound(Sound::VALID, soundManager);
+			Control::soundManager = { setting_items[0].status, setting_items[1].status };
+			Sound::playBackgroundSound(Control::soundManager);
+			Sound::playEffectSound(Sound::VALID, Control::soundManager);
 		}
 		View::clearRectangleArea({ 40,10 }, 50, 10);
 		drawSettingMenu(setting_items, start, text_color, selected_textcolor, cur_index, setting_items.size());
@@ -354,8 +347,8 @@ void SettingMenu() {
 	COORD start = { 70, 15 };
 	int index = 0;
 	std::vector<SettingItem> setting_items = {
-		{ 0, L"BACKGROUND SOUND: ", soundManager.backgroundSound, L"ON", L"OFF"},
-		{ 1, L"SOUND EFFECT: ", soundManager.effectSound, L"ON", L"OFF"},
+		{ 0, L"BACKGROUND SOUND: ", Control::soundManager.backgroundSound, L"ON", L"OFF"},
+		{ 1, L"SOUND EFFECT: ", Control::soundManager.effectSound, L"ON", L"OFF"},
 		{ 2, L"BACK", false, L"", L""}
 	};
 

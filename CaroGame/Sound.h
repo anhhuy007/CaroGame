@@ -7,8 +7,9 @@ namespace Sound {
 	const std::wstring BACKGROUND = L"Sound\\Cipher2.wav";
 	const std::wstring VALID = L"Sound\\Right.wav";
 	const std::wstring INVALID = L"Sound\\Wrong.wav";
-	const std::wstring WIN = L"Sound\\Win.wav";
+	const std::wstring WIN = L"Sound\\GameWin.wav";
 	const std::wstring LOSE = L"Sound\\Lose.wav";
+	const std::wstring MOVE = L"Sound\\Tap.wav";
 
 	struct SoundManager {
 		bool backgroundSound = true;
@@ -25,4 +26,5 @@ namespace Sound {
 	void playBackgroundSound(SoundManager& soundManager);
 	void playEffectSound(std::wstring path, SoundManager soundManager);
 	std::wstring findAlias(std::wstring path);
+	void prepareSound();
 }
