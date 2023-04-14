@@ -88,7 +88,7 @@ namespace View {
 	
 	void confirmDialog(
 		std::wstring content,
-		COORD spot,
+		SMALL_RECT box,
 		std::function<void()> positiveAction,
 		std::function<void()> negativeAction
 	);

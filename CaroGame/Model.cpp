@@ -135,24 +135,36 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 		// quit game
 		else if (key == L"F1") {
 			// show a dialog that ask user to confirm to exit
+		
+			std::wstring content;
+
+			// if user already save the game
+			if (Control::gameSaved) {
+				content = L"Are you sure you want to exit?";
+			}
+			// if game not saved
+			else {
+				content = L"Are you sure you want to exit? Your game will not be saved.";
+			}
+
 			// get current screen's information before display confirm dialog
 			PCHAR_INFO buffer = View::getScreenBuffer();
-			
+
 			system("cls");
 			View::confirmDialog(
-				L"Your current game will not be saved. Are you sure you want to exit?",
-				{ 25, 10 },
+				content,
+				View::WINDOW_SIZE,
 				[]() -> void {
 					// if click YES then return menu
 					endTurn = true;
 					Control::ReturnMenu();
-					},
+				},
 				[&]() -> void {
 					// if click NO then continue game
 					// restore screen's information
 					View::writeScreenBuffer(buffer);
 				}
-			);
+				);
 		}
 
 		// save game
@@ -161,10 +173,17 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			PCHAR_INFO buffer = View::getScreenBuffer();
 			system("cls");
 
+			if (Control::gameSaved) {
+				system("cls");
+				View::printCenteredToast(L"Game already saved!", View::WINDOW_SIZE, View::Color::BLACK, View::Color::WHITE);
+				View::writeScreenBuffer(buffer);
+				continue;
+			}
+
 			// show a dialog that ask user to confirm to save
 			View::confirmDialog(
 				L"Are you sure you want to save this game?",
-				{ 40, 10 },
+				View::WINDOW_SIZE,
 				[&]() -> void {
 					// if click YES then save game
 					system("cls");
@@ -187,25 +206,42 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 			// get current screen's information before display confirm dialog
 			PCHAR_INFO buffer = View::getScreenBuffer();
 
-			system("cls");
-			View::confirmDialog(
-				L"Do you want to save this game before loading another game?",
-				{ 35, 10 },
-				[&]() -> void {
-					// if click YES then return menu
-					system("cls");
-					endTurn = true;
-					Control::SaveGame(game_info);
-					// restore screen's information
-					Control::LoadGame();
-				},
-				[&]() -> void {
-					// if click NO then continue game
-					// restore screen's information
-					system("cls");
-					Control::LoadGame();
-				}
-				);
+			if (Control::gameSaved) {
+				system("cls");
+				View::confirmDialog(
+					L"Do you want to load another game?",
+					View::WINDOW_SIZE,
+					[]() -> void {
+						Control::LoadGame();
+					},
+					[&]() -> void {
+						// if click NO then continue game
+						// restore screen's information
+						View::writeScreenBuffer(buffer);
+					}
+					);
+			}
+			else {
+				system("cls");
+				View::confirmDialog(
+					L"Do you want to save this game before loading another game?",
+					View::WINDOW_SIZE,
+					[&]() -> void {
+						// if click YES then return menu
+						system("cls");
+						endTurn = true;
+						Control::SaveGame(game_info);
+						// restore screen's information
+						Control::LoadGame();
+					},
+					[]() -> void {
+						// if click NO then continue game
+						// restore screen's information
+						system("cls");
+						Control::LoadGame();
+					}
+					);
+			}
 		}
 
 		// undo move

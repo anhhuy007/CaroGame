@@ -1928,11 +1928,13 @@ void View::writeScreenBuffer(PCHAR_INFO buffer) {
 
 void View::confirmDialog(
 	std::wstring content,
-	COORD spot,
+	SMALL_RECT box,
 	std::function<void()> positiveAction,
 	std::function<void()> negativeAction
 ) {
 	int width = content.size() + 20;
+	COORD spot = View::getCenteredSpot(content, box);
+	spot.X -= 10; spot.Y -= 5;
 	View::drawRectangleBorder(spot, width, 10, View::Color::BLACK);
 	// print dialog title
 	View::printVerticalCenteredCharactors(

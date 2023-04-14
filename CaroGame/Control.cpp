@@ -195,7 +195,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 			system("cls");
 			View::confirmDialog(
 				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
-				{ 15, 10 },
+				View::WINDOW_SIZE,
 				[&]() -> void {
 					// if click YES then play again
 
@@ -260,7 +260,7 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 			system("cls");
 			View::confirmDialog(
 				L"Do you want to play again? (Your current game will be lost and player score will be updated)",
-				{ 15, 10 },
+				View::WINDOW_SIZE,
 				[&]() -> void {
 					// if click YES then play again
 
