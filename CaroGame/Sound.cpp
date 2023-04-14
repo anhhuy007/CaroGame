@@ -6,10 +6,7 @@
 
 void Sound::playBackgroundSound(SoundManager& soundManager) {
 	if (soundManager.backgroundSound) {
-		if (soundManager.backgroundPlaying) {
-			resumeSound(BACKGROUND);
-		}
-		else {
+		if (!soundManager.backgroundPlaying) {
 			repeatSound(BACKGROUND);
 			soundManager.backgroundPlaying = true;
 		}

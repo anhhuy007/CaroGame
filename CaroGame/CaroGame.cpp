@@ -9,8 +9,6 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 
 	Control::StartGame();
-
-	system("pause");
 	
 	return 0;
 }

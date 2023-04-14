@@ -332,7 +332,7 @@ void settingMenuOptionChanged(
 
 			// update sound manager and setting items
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
-			Control::soundManager = { setting_items[0].status, setting_items[1].status };
+			Control::soundManager = { setting_items[0].status, setting_items[1].status, Control::soundManager.backgroundPlaying };
 			Sound::playBackgroundSound(Control::soundManager);
 			Sound::playEffectSound(Sound::VALID, Control::soundManager);
 		}
