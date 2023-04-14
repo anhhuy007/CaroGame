@@ -444,6 +444,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	int w = int(spot.X + width) - int(spot.X + 22);
 	int h = int(spot.Y + height) - int(spot.Y + 6);
 	View::clearRectangleArea({ short(spot.X + 22),short(spot.Y + 6) }, w, h);
+
 	// display game history
 	x = spot.X + 44;
 	y = spot.Y + 7;

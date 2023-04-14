@@ -2171,28 +2171,6 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		View::Color::BLACK,
 		View::Color::WHITE
 	);
-	int moveX = 0, moveY = 0;
-	int count = 0;
-	x = spot.X;
-	y = spot.Y + (height / 2 - 2) / 2;
-	std::wstring xMoves = format(moveX);
-	View::printVerticalCenteredCharactors(
-		xMoves,
-		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-		short(((height / 2 - 2) / 2) / 2),
-		View::Color::BLACK,
-		View::Color::WHITE
-	);
-	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	y = spot.Y + (height / 2 - 2) / 2;
-	std::wstring yMoves = format(moveY);
-	View::printVerticalCenteredCharactors(
-		yMoves,
-		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-		short(((height / 2 - 2) / 2) / 2),
-		View::Color::BLACK,
-		View::Color::WHITE
-	);
 }
 
 void View::pressAnyKey(SMALL_RECT box) {
