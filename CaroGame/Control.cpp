@@ -26,8 +26,8 @@ void Control::StartGame() {
 	Sound::playBackgroundSound(soundManager);
 
 	// show splash screen
-	/*View::splashScreen();
-	system("cls");*/
+	View::splashScreen();
+	system("cls");
 
 	// show menu screen
 	Control::NavigationController();
@@ -141,8 +141,8 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 		game_info.player1.avatar = (View::Avatar)avatar1;
 		game_info.player2.avatar = (View::Avatar)avatar2;
 		strcpy(game_info.player1.name, p1.c_str());
-		if (mode.level == Model::EASY) strcpy(game_info.player2.name, "Computer (EASY)");
-		else strcpy(game_info.player2.name, "Computer (HARD)");
+		if (mode.level == Model::EASY) strcpy(game_info.player2.name, "Computer(EASY)");
+		else strcpy(game_info.player2.name, "Computer(HARD)");
 	}
 
 	// initialize game information
@@ -246,11 +246,10 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 		name2, 
 		game_info.player2.avatar
 	);
-	system("pause");
 
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
-		if (strcmp(player.name, "Computer (EASY)") == 0 || strcmp(player.name, "Computer (HARD)") == 0) Model::computerTurn(player, game_info);
+		if (strcmp(player.name, "Computer(EASY)") == 0 || strcmp(player.name, "Computer(HARD)") == 0) Model::computerTurn(player, game_info);
 		else Model::playerTurn(player, game_info);
 		
 		std::pair<int, std::vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);

@@ -115,6 +115,9 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 			Control::gameSaved = false;
 		}
 	}
+	else {
+		Sound::playEffectSound(Sound::INVALID, Control::soundManager);
+	}
 }
 
 void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {

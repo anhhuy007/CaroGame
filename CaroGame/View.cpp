@@ -87,7 +87,7 @@ void View::drawTitleAndStatus(std::string name, bool isSaved) {
 		View::printCharactors(L" Saved!", { 53, 2 }, Color::WHITE, Color::GREEN);
 	}
 	else {
-		View::printCharactors(L"Not saved!", { 52, 2 }, Color::WHITE, Color::RED);
+		View::printCharactors(L" Not saved!", { 52, 2 }, Color::WHITE, Color::RED);
 	}
 
 	std::wstring gameName = std::wstring(name.begin(), name.end());

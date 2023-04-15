@@ -1,6 +1,4 @@
 #include "Control.h"
-#include "View.h"
-using namespace std;
 
 int main() {
 	/*This file is not contain any sound effect because of the lack of memory*/	
