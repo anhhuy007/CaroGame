@@ -429,6 +429,6 @@ std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box)
 	escEnable = false;
 	
 	// if user press ESC, return 
-	if (menuEscPressed) return "-1";
+	if (menuEscPressed || gameList.size() == 0) return "-1";
 	return gameList[index].substr(0, gameList[index].find_first_of("@"));
 }

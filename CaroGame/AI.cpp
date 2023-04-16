@@ -2,13 +2,11 @@
 #include "Model.h"
 
 static int evaluationCount = 0;
+
 /* playersTurn = 1: human's turn
    playersTurn = 0: computer's turn */
 int AI::getScore(Model::Board board, bool playerTurn) {
 	evaluationCount++;
-	/*View::clearRectangleArea({ 0, 0 }, 50, 1);
-	View::gotoXY(0, 0);
-	cout << "Evaluation count: " << evaluationCount << endl;*/
 	double playerScore = AI::evaluateHorizontal(board, true, playerTurn)
 		+ AI::evaluateVertical(board, true, playerTurn)
 		+ AI::evaluateDiagonal(board, true, playerTurn);
@@ -110,7 +108,7 @@ AI::EvaluatedMove AI::findWinningMove(Model::Board board) {
 		dummyBoard.addMoveNoGUI(move.X, move.Y, false);
 
 		// if first player wins then return winning move
-		if (AI::getScore(dummyBoard, false) >= AI::MAX_SCORE) {
+		if (AI::getScore(dummyBoard, true) >= AI::MAX_SCORE) {
 			winningMove.move = move;
 			winningMove.score = AI::MAX_SCORE;
 			return winningMove;

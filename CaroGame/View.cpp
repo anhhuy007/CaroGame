@@ -1833,15 +1833,13 @@ void View::fixConsoleWindow() {
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
-void View::textColor(int color) {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-}
+
 void View::textStyle(int fontSize) {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
 	cfi.dwFontSize.X = 0;                   // Width of each character in the font
-	cfi.dwFontSize.Y = fontSize;                  // Height
+	cfi.dwFontSize.Y = fontSize;            // Height
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 	std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
