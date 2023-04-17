@@ -228,12 +228,13 @@ MenuOption InstructionMenu() {
 	View::drawInstructionText();
 	COORD start = { 70, 10 };
 	std::wstring key;
-	std::wstring instruction_content[12] = {
+	std::wstring instruction_content[13] = {
 		L"Controls",
 		L"Press 'W' or '↑' to move UP",
 		L"Press 'S' or '↓' to move DOWN",
 		L"Press 'A' or '←' to move LEFT",
 		L"Press 'D' or '→' to move RIGHT",
+		L"Press 'ENTER' to select",
 		L"",
 		L"Rules",
 		L"1. The game is played on a board of 15x15 squares.",
