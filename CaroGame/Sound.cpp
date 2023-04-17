@@ -6,10 +6,7 @@
 
 void Sound::playBackgroundSound(SoundManager& soundManager) {
 	if (soundManager.backgroundSound) {
-		if (soundManager.backgroundPlaying) {
-			resumeSound(BACKGROUND);
-		}
-		else {
+		if (!soundManager.backgroundPlaying) {
 			repeatSound(BACKGROUND);
 			soundManager.backgroundPlaying = true;
 		}
@@ -72,7 +69,7 @@ std::wstring Sound::findAlias(std::wstring path) {
 		return L"0";
 	if (path == L"Sound\\Right.wav")
 		return L"1";
-	if (path == L"Sound\\Wrong.wav")
+	if (path == L"Sound\\Error.wav")
 		return L"2";
 	if (path == L"Sound\\GameWin.wav")
 		return L"3";

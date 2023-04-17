@@ -115,6 +115,9 @@ void Model::markPlayerMove(COORD spot, int playerNum, Model::GameInformation &ga
 			Control::gameSaved = false;
 		}
 	}
+	else {
+		Sound::playEffectSound(Sound::INVALID, Control::soundManager);
+	}
 }
 
 void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) {
@@ -269,7 +272,8 @@ void Model::playerTurn(Model::Player player, Model::GameInformation& game_info) 
 }
 
 void Model::computerTurn(Model::Player player, Model::GameInformation& game_info) {
-	COORD move = AI::findNextMove(2	, game_info.board);
+	int depth = game_info.gameMode.level == Model::EASY ? 1 : 2;
+	COORD move = AI::findNextMove(depth	, game_info.board);
 
 	COORD spot = game_info.board.getSpot(move.X, move.Y);
 	game_info.curX = spot.X;
@@ -443,6 +447,7 @@ void Model::updateInform(GameInformation &game_info, COORD spot, int width, int 
 	int w = int(spot.X + width) - int(spot.X + 22);
 	int h = int(spot.Y + height) - int(spot.Y + 6);
 	View::clearRectangleArea({ short(spot.X + 22),short(spot.Y + 6) }, w, h);
+
 	// display game history
 	x = spot.X + 44;
 	y = spot.Y + 7;

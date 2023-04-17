@@ -6,7 +6,7 @@
 namespace Sound {
 	const std::wstring BACKGROUND = L"Sound\\Cipher2.wav";
 	const std::wstring VALID = L"Sound\\Right.wav";
-	const std::wstring INVALID = L"Sound\\Wrong.wav";
+	const std::wstring INVALID = L"Sound\\Error.wav";
 	const std::wstring WIN = L"Sound\\GameWin.wav";
 	const std::wstring LOSE = L"Sound\\Lose.wav";
 	const std::wstring MOVE = L"Sound\\Tap.wav";

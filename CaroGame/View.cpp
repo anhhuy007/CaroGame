@@ -87,7 +87,7 @@ void View::drawTitleAndStatus(std::string name, bool isSaved) {
 		View::printCharactors(L" Saved!", { 53, 2 }, Color::WHITE, Color::GREEN);
 	}
 	else {
-		View::printCharactors(L"Not saved!", { 52, 2 }, Color::WHITE, Color::RED);
+		View::printCharactors(L" Not saved!", { 52, 2 }, Color::WHITE, Color::RED);
 	}
 
 	std::wstring gameName = std::wstring(name.begin(), name.end());
@@ -1833,15 +1833,13 @@ void View::fixConsoleWindow() {
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME);
 	SetWindowLong(consoleWindow, GWL_STYLE, style);
 }
-void View::textColor(int color) {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-}
+
 void View::textStyle(int fontSize) {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof(cfi);
 	cfi.nFont = 0;
 	cfi.dwFontSize.X = 0;                   // Width of each character in the font
-	cfi.dwFontSize.Y = fontSize;                  // Height
+	cfi.dwFontSize.Y = fontSize;            // Height
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 	std::wcscpy(cfi.FaceName, L"Consolas"); // Choose your font
@@ -1932,9 +1930,9 @@ void View::confirmDialog(
 	std::function<void()> positiveAction,
 	std::function<void()> negativeAction
 ) {
-	int width = content.size() + 20;
+	int width = content.size() + 30;
 	COORD spot = View::getCenteredSpot(content, box);
-	spot.X -= 10; spot.Y -= 5;
+	spot.X -= 15; spot.Y -= 5;
 	View::drawRectangleBorder(spot, width, 10, View::Color::BLACK);
 	// print dialog title
 	View::printVerticalCenteredCharactors(
@@ -2168,28 +2166,6 @@ void View::drawGamePlayInfoBox(COORD spot, int width, int height, Color color) {
 		L"HISTORY",
 		{ x,y,short(x + width - 21 + 2),short(y + ((height / 2 - 2) / 2)) },
 		2,
-		View::Color::BLACK,
-		View::Color::WHITE
-	);
-	int moveX = 0, moveY = 0;
-	int count = 0;
-	x = spot.X;
-	y = spot.Y + (height / 2 - 2) / 2;
-	std::wstring xMoves = format(moveX);
-	View::printVerticalCenteredCharactors(
-		xMoves,
-		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-		short(((height / 2 - 2) / 2) / 2),
-		View::Color::BLACK,
-		View::Color::WHITE
-	);
-	x = spot.X + (((width - 4) / 3) * 2 + 3);
-	y = spot.Y + (height / 2 - 2) / 2;
-	std::wstring yMoves = format(moveY);
-	View::printVerticalCenteredCharactors(
-		yMoves,
-		{ x,y,short(x + (width - 4) / 3 + 2),short(y + ((height / 2 - 2) / 2)) },
-		short(((height / 2 - 2) / 2) / 2),
 		View::Color::BLACK,
 		View::Color::WHITE
 	);

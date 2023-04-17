@@ -2,10 +2,8 @@
 #include "Model.h"
 
 namespace AI {
-	const int MAX_NUMBER_OF_MOVES = 400;
-	const int BOARD_SZ = 15;
 	const int MAX_SCORE = 100000000;
-	const int MIN_SCORE = -100000000; 
+	const int MIN_SCORE = -100000000;
 
 	// store the information of a move with evaluated score
 	struct EvaluatedMove {

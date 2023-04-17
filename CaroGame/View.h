@@ -58,7 +58,6 @@ namespace View {
 	// init console window function
 	void gotoXY(short x, short y);
 	void fixConsoleWindow();
-	void textColor(int color);	
 	void textStyle(int fontSize);
 	
 	// print text 
@@ -93,7 +92,6 @@ namespace View {
 		std::function<void()> negativeAction
 	);
 
-	
 	// funcional functions
 	void clearRectangleArea(COORD start, int width, int height);
 	void writeScreenBuffer(PCHAR_INFO buffer);

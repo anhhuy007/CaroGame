@@ -1,6 +1,4 @@
 #include "Control.h"
-#include "View.h"
-using namespace std;
 
 int main() {
 	/*This file is not contain any sound effect because of the lack of memory*/	
@@ -9,8 +7,6 @@ int main() {
 	Choose New Game -> VS Human to start new game*/
 
 	Control::StartGame();
-
-	system("pause");
 	
 	return 0;
 }

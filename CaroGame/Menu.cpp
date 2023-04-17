@@ -333,7 +333,7 @@ void settingMenuOptionChanged(
 
 			// update sound manager and setting items
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
-			Control::soundManager = { setting_items[0].status, setting_items[1].status };
+			Control::soundManager = { setting_items[0].status, setting_items[1].status, Control::soundManager.backgroundPlaying };
 			Sound::playBackgroundSound(Control::soundManager);
 			Sound::playEffectSound(Sound::VALID, Control::soundManager);
 		}
@@ -386,32 +386,39 @@ std::wstring formatStringToWidth(std::vector<std::string> contents, std::vector<
 
 // display saved games table and return the selected game that user want to load
 std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box) {
+	View::drawBorder2(box.Left + 10, box.Right - 10, box.Top - 6, box.Top - 4);
+	View::printCharactors(L"TOTAL SAVED GAMES:", { short(box.Left + 12), short(box.Top - 5) }, View::Color::WHITE, View::Color::BLACK);
+	View::printCharactors(std::to_wstring(gameList.size()) + L" games", {short(box.Left + 33), short(box.Top - 5)}, View::Color::BLACK, View::Color::WHITE);
 	// display saved games' table
 	box.Bottom = box.Top + gameList.size() + 4;
-	View::drawBoxLoad({ 25,12 }, 91, 20,View::Color::BLACK);
-	View::printCharactors(L"╠", { 25,14 }, View::Color::BLACK, View::Color::BLACK);
-	View::printCharactors(L"╣", { 116,14 }, View::Color::BLACK, View::Color::BLACK);
-	for (short x = 26; x < 116; x++) {
-		for (short y = 13; y < 14; y++) {
-			View::printCharactors(L" ", { x,y }, View::Color::BLACK, View::Color::BLACK);
+	short x = 25;
+	short y = 14;
+	short width = 91;
+	short height = 20;
+	View::drawBoxLoad({ x,y }, width, height, View::Color::BLACK);
+	View::printCharactors(L"╠", { x,short(y + 2) }, View::Color::BLACK, View::Color::BLACK);
+	View::printCharactors(L"╣", { short(x + width),short(y + 2) }, View::Color::BLACK, View::Color::BLACK);
+	for (short i = x + 1; i < x + width; i++) {
+		for (short j = y + 1; j < y + 2; j++) {
+			View::printCharactors(L" ", { i,j }, View::Color::BLACK, View::Color::BLACK);
 		}
 	}
 
 	// print table header
-	View::printVerticalCenteredCharactors(L"NAME", { 25,12,55 ,14 }, 1, View::Color::WHITE, View::Color::BLACK);
-	View::printVerticalCenteredCharactors(L"DATE", { 55,12,86,14 }, 1, View::Color::WHITE, View::Color::BLACK);
-	View::printVerticalCenteredCharactors(L"TYPE", { 86,12,116,14 }, 1, View::Color::WHITE, View::Color::BLACK);
+	View::printVerticalCenteredCharactors(L"NAME", { x,y, short(x + width / 3) ,short(y + 2) }, 1, View::Color::WHITE, View::Color::BLACK);
+	View::printVerticalCenteredCharactors(L"DATE", { short(x + width / 3),y,short(x + (width / 3) * 2),short(y + 2) }, 1, View::Color::WHITE, View::Color::BLACK);
+	View::printVerticalCenteredCharactors(L"TYPE", { short(x + (width / 3) * 2),y,short(x + width),short(y + 2) }, 1, View::Color::WHITE, View::Color::BLACK);
 	
 	std::vector<MenuItem> titles;
 
 	for (int i = 0; i < gameList.size(); i++) {
 		//gameList pattern: name@date@type
-		std::string name = gameList[i].substr(0, gameList[i].find_first_of("@"));
+		std::string name = std::to_string(i + 1) + ". " + gameList[i].substr(0, gameList[i].find_first_of("@"));
 		std::string date = gameList[i].substr(gameList[i].find_first_of("@") + 1, gameList[i].find_last_of("@") - gameList[i].find_first_of("@") - 1);
 		std::string type = gameList[i].substr(gameList[i].find_last_of("@") + 1, gameList[i].length() - gameList[i].find_last_of("@") - 1);
 		
 		std::vector<std::string> contents = { name, date, type };
-		std::wstring data = formatStringToWidth(contents, { 25, 30, 18 });
+		std::wstring data = formatStringToWidth(contents, { 27, 33, 18 });
 		titles.push_back({ i, data, MenuOption::NONE });
 	}
 
@@ -423,6 +430,6 @@ std::string GetSavedGameTitle(std::vector<std::string> gameList, SMALL_RECT box)
 	escEnable = false;
 	
 	// if user press ESC, return 
-	if (menuEscPressed) return "-1";
+	if (menuEscPressed || gameList.size() == 0) return "-1";
 	return gameList[index].substr(0, gameList[index].find_first_of("@"));
 }

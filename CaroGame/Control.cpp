@@ -26,8 +26,8 @@ void Control::StartGame() {
 	Sound::playBackgroundSound(soundManager);
 
 	// show splash screen
-	/*View::splashScreen();
-	system("cls");*/
+	View::splashScreen();
+	system("cls");
 
 	// show menu screen
 	Control::NavigationController();
@@ -84,7 +84,8 @@ void Control::NavigationController() {
 // initialize information for new game
 Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
-
+	Control::gameSaved = false;
+	
 	system("cls");
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
@@ -141,7 +142,8 @@ Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 		game_info.player1.avatar = (View::Avatar)avatar1;
 		game_info.player2.avatar = (View::Avatar)avatar2;
 		strcpy(game_info.player1.name, p1.c_str());
-		strcpy(game_info.player2.name, "Computer");
+		if (mode.level == Model::EASY) strcpy(game_info.player2.name, "Computer(EASY)");
+		else strcpy(game_info.player2.name, "Computer(HARD)");
 	}
 
 	// initialize game information
@@ -210,7 +212,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 					Control::ResetGame(game_info);
 					Control::PlayWithHuman(game_info);
 				},
-				[&]() -> void {
+				[]() -> void {
 					// if click NO then return menu
 					Control::ReturnMenu();
 					return;
@@ -248,7 +250,7 @@ void Control::PlayWithComputer(Model::GameInformation game_info) {
 
 	while (!game_info.endGame && !escPressed) {
 		Player player = game_info.isFirstPlayerTurn ? game_info.player1 : game_info.player2;
-		if (strcmp(player.name, "Computer") == 0) Model::computerTurn(player, game_info);
+		if (strcmp(player.name, "Computer(EASY)") == 0 || strcmp(player.name, "Computer(HARD)") == 0) Model::computerTurn(player, game_info);
 		else Model::playerTurn(player, game_info);
 		
 		std::pair<int, std::vector<COORD>> result = Model::checkResult(game_info.isFirstPlayerTurn ? 2 : 1, game_info.board.value);
@@ -371,7 +373,7 @@ void Control::LoadGame() {
 	View::drawLoadGameText();
 
 	// show saved game list and return game name 
-	std::string fileName = GetSavedGameTitle(FileIO::GetSavedGameList(), { 45, 15, 95, 30 });
+	std::string fileName = GetSavedGameTitle(FileIO::GetSavedGameList(), { 42, 17, 95, 32 });
 
 	// check if player want to return menu
 	if (fileName == "-1") {
@@ -387,7 +389,6 @@ void Control::LoadGame() {
 	// read game information from file
 	Model::GameInformation game_info = FileIO::ReadGameInfoFromFile(file);
 	if (game_info.name != "") {
-		system("cls");
 		Control::gameSaved = true;
 		if (game_info.gameMode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
 			// two players game
