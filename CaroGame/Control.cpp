@@ -84,7 +84,8 @@ void Control::NavigationController() {
 // initialize information for new game
 Model::GameInformation Control::InitNewGame(Model::GameMode mode) {
 	Model::GameInformation game_info;
-
+	Control::gameSaved = false;
+	
 	system("cls");
 	// if player2 is human
 	if (mode.isPlayWithHuman == Model::PLAY_WITH_HUMAN) {
@@ -211,7 +212,7 @@ void Control::PlayWithHuman(Model::GameInformation game_info) {
 					Control::ResetGame(game_info);
 					Control::PlayWithHuman(game_info);
 				},
-				[&]() -> void {
+				[]() -> void {
 					// if click NO then return menu
 					Control::ReturnMenu();
 					return;
