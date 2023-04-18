@@ -326,6 +326,7 @@ void settingMenuOptionChanged(
 			}
 		}
 		else if (selected_item == L"ENTER") {
+			// back to main menu
 			if (*cur_index == 2) {
 				return;
 			}
