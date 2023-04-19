@@ -10,6 +10,8 @@ namespace Sound {
 	const std::wstring WIN = L"Sound\\GameWin.wav";
 	const std::wstring LOSE = L"Sound\\Lose.wav";
 	const std::wstring MOVE = L"Sound\\Tap.wav";
+	const std::wstring CLICK = L"Sound\\Click.wav";
+	const std::wstring DRAW = L"Sound\\Draw.wav";
 
 	struct SoundManager {
 		bool backgroundSound = true;

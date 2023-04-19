@@ -77,6 +77,10 @@ std::wstring Sound::findAlias(std::wstring path) {
 		return L"4";
 	if (path == L"Sound\\Tap.wav")
 		return L"5";
+	if (path == L"Sound\\Click.wav") 
+		return L"6";
+	if (path == L"Sound\\Draw.wav")
+		return L"7";
 }
 
 void Sound::prepareSound() {
@@ -86,4 +90,6 @@ void Sound::prepareSound() {
 	Sound::openSound(Sound::MOVE);
 	Sound::openSound(Sound::WIN);
 	Sound::openSound(Sound::LOSE);
+	Sound::openSound(Sound::CLICK);
+	Sound::openSound(Sound::DRAW);
 }

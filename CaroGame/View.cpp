@@ -281,7 +281,7 @@ void View::drawFireWorkList(int k) {
 }
 
 void View::displayGameResult(
-	int player, 
+	int result, 
 	std::vector<COORD> winning_moves, 
 	std::wstring name1, 
 	Avatar avatar1,
@@ -289,20 +289,22 @@ void View::displayGameResult(
 	Avatar avatar2
 ) {
 	std::wstring sound = L"";
-	if (player == 1) {
-		sound = Sound::WIN;
-	}
-	else if (player == 2) {
-		sound = Sound::LOSE;
+	
+	if (name2 == L"Computer(EASY)" || name2 == L"Computer(HARD)") {
+		if (result == 1) sound = Sound::WIN;
+		if (result == 2) sound = Sound::LOSE;
+		else sound = Sound::DRAW;
 	}
 	else {
-		sound = Sound::WIN;
+		if (result == 1 || result == 2) sound = Sound::WIN;
+		else sound = Sound::DRAW;
 	}
+
 	Sound::playSound(sound);
 	
-	View::showWinningMoves(player, winning_moves);
+	View::showWinningMoves(result, winning_moves);
 	View::clearRectangleArea({ 70, 0 }, 70, 40); 
-	View::drawWinner(player, name1, avatar1, name2, avatar2);
+	View::drawWinner(result, name1, avatar1, name2, avatar2);
 	
 	Sound::closeSound(sound);
 }

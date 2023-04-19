@@ -332,6 +332,8 @@ void settingMenuOptionChanged(
 				return;
 			}
 
+			Sound::playEffectSound(Sound::CLICK, Control::soundManager);
+
 			// update sound manager and setting items
 			setting_items[*cur_index].status = !setting_items[*cur_index].status;
 			Control::soundManager = { setting_items[0].status, setting_items[1].status, Control::soundManager.backgroundPlaying };
