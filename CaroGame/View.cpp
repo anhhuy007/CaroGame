@@ -292,7 +292,7 @@ void View::displayGameResult(
 	
 	if (name2 == L"Computer(EASY)" || name2 == L"Computer(HARD)") {
 		if (result == 1) sound = Sound::WIN;
-		if (result == 2) sound = Sound::LOSE;
+		else if (result == 2) sound = Sound::LOSE;
 		else sound = Sound::DRAW;
 	}
 	else {
